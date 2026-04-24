@@ -2,15 +2,17 @@
 
 [English](README.md) | [한국어](README.ko.md) | [中文](README.zh-CN.md)
 
-`imweb-ai-toolkit` は `imweb` CLI を対応する AI coding surface に接続します。このリポジトリは skill asset、surface metadata、サンプル、install/bootstrap script を提供します。CLI バイナリと release payload は公開 `imweb-cli-release` 配布面から取得します。
+`imweb-ai-toolkit` は `imweb` CLI をインストールし、対応する AI coding tool に接続します。このリポジトリは、ユーザーが CLI の配布構造を意識せずに始められるように、skill asset、surface metadata、サンプル、bootstrap script を提供します。
 
 ```mermaid
 flowchart LR
-  CLI["imweb-cli"] --> Release["imweb-cli-release"]
-  Release --> Toolkit["imweb-ai-toolkit"]
+  Toolkit["imweb-ai-toolkit"] --> CLI["imweb-cli"]
   Toolkit --> Codex["Codex"]
   Toolkit --> Claude["Claude"]
   Toolkit --> Cursor["Cursor"]
+  Codex --> CLI
+  Claude --> CLI
+  Cursor --> CLI
 ```
 
 ## 含まれるもの
@@ -37,7 +39,7 @@ PowerShell:
 ./install/bootstrap-imweb.ps1 -Tool claude -Scope user
 ```
 
-Installer は既定で公開 `imweb-cli-release` stable channel を使用します。ローカルまたは固定バージョンのテストでは、[docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md) に記載されている release manifest file を渡してください。
+Bootstrap script は必要に応じて `imweb` CLI をインストールまたは更新し、選択した tool に `imweb` skill をインストールします。高度なローカル設定や固定バージョンのテストは [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md) を参照してください。
 
 ## 最初に読むもの
 
