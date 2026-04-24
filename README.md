@@ -2,15 +2,17 @@
 
 [한국어](README.ko.md) | [日本語](README.ja.md) | [中文](README.zh-CN.md)
 
-`imweb-ai-toolkit` connects the `imweb` CLI to supported AI coding surfaces. It provides skill assets, surface metadata, examples, and install/bootstrap scripts; the CLI binary and release payloads come from the public `imweb-cli-release` distribution plane.
+`imweb-ai-toolkit` installs the `imweb` CLI and connects it to supported AI coding tools. It provides the skill assets, surface metadata, examples, and bootstrap scripts needed to get started without requiring users to understand the release infrastructure behind the CLI.
 
 ```mermaid
 flowchart LR
-  CLI["imweb-cli"] --> Release["imweb-cli-release"]
-  Release --> Toolkit["imweb-ai-toolkit"]
+  Toolkit["imweb-ai-toolkit"] --> CLI["imweb-cli"]
   Toolkit --> Codex["Codex"]
   Toolkit --> Claude["Claude"]
   Toolkit --> Cursor["Cursor"]
+  Codex --> CLI
+  Claude --> CLI
+  Cursor --> CLI
 ```
 
 ## What This Repo Contains
@@ -37,7 +39,7 @@ PowerShell:
 ./install/bootstrap-imweb.ps1 -Tool claude -Scope user
 ```
 
-The installer defaults to the public `imweb-cli-release` stable channel. For local or pinned testing, pass a release manifest file as documented in [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md).
+The bootstrap script installs or updates the `imweb` CLI as needed, then installs the `imweb` skill for the selected tool. Advanced local or pinned-version setup is documented in [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md).
 
 ## Start Here
 
