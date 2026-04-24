@@ -1,0 +1,38 @@
+{
+  "name": "imweb-ai-toolkit",
+  "description": "imweb CLI와 공개 skill `imweb`를 Claude Code, Claude Desktop 중심으로 연결하고 Claude Cowork에는 문서 기반 수동 연결 기준을 제공하는 Claude 표면 메타데이터입니다.",
+  "version": "0.2.0",
+  "author": {
+    "name": "imweb",
+    "url": "https://github.com/imwebme"
+  },
+  "homepage": "https://github.com/imwebme/imweb-ai-toolkit",
+  "repository": "https://github.com/imwebme/imweb-ai-toolkit.git",
+  "license": "Apache-2.0",
+  "keywords": [
+    "imweb",
+    "imweb-cli",
+    "claude",
+    "claude-code",
+    "claude-desktop",
+    "claude-cowork",
+    "agent-toolkit"
+  ],
+  "surface": "claude",
+  "rootPlugin": "../plugin.json",
+  "skills": "../skills/",
+  "docs": "../docs/",
+  "entrypoint": "../skills/imweb/SKILL.md",
+  "supportMatrix": "../docs/surface-support-matrix.md",
+  "supports": [
+    "claude-code",
+    "claude-desktop"
+  ],
+  "limited_supports": [
+    "claude-cowork"
+  ],
+  "install": {
+    "bootstrap": "../install/bootstrap-imweb.sh --tool claude --scope user",
+    "skill_install": "../install/install-skills.sh --tool claude --scope user --mode copy"
+  }
+}

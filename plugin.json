@@ -1,0 +1,43 @@
+{
+  "name": "imweb-ai-toolkit",
+  "version": "0.2.0",
+  "description": "imweb CLI와 공개 skill `imweb`를 Codex, Claude, Cursor 표면에서 일관되게 연결하기 위한 plugin-first toolkit 메타데이터입니다.",
+  "author": {
+    "name": "imweb",
+    "url": "https://github.com/imwebme"
+  },
+  "homepage": "https://github.com/imwebme/imweb-ai-toolkit",
+  "repository": "https://github.com/imwebme/imweb-ai-toolkit.git",
+  "license": "Apache-2.0",
+  "skills": "./skills",
+  "docs": "./docs",
+  "assets": "./assets",
+  "install": "./install",
+  "examples": "./examples",
+  "entrypoints": {
+    "codex": "./.codex-plugin/plugin.json",
+    "claude": "./.claude-plugin/plugin.json",
+    "claudeManifest": "./.claude-plugin/manifest.json",
+    "claudeMarketplace": "./.claude-plugin/marketplace.json",
+    "cursor": "./.cursor-plugin/plugin.json",
+    "cursorMarketplace": "./.cursor-plugin/marketplace.json",
+    "mcp": "./.mcp.json",
+    "supportMatrix": "./docs/surface-support-matrix.md"
+  },
+  "support": {
+    "codex": [
+      "codex-cli",
+      "codex-app"
+    ],
+    "claude": [
+      "claude-code",
+      "claude-desktop"
+    ],
+    "claude_limited": [
+      "claude-cowork"
+    ],
+    "cursor": [
+      "cursor-workspace"
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "imweb-ai-toolkit",
+  "version": "0.2.0",
+  "private": true,
+  "description": "AI surface manifests, public skill assets, and install metadata for connecting imweb-cli to Codex, Claude, and Cursor.",
+  "author": "imweb",
+  "license": "Apache-2.0",
+  "keywords": [
+    "imweb",
+    "imweb-cli",
+    "codex-plugin",
+    "claude-plugin",
+    "cursor-plugin",
+    "agent-toolkit"
+  ]
+}

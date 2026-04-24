@@ -1,0 +1,29 @@
+# Surface Support Matrix
+
+이 문서는 `imweb-ai-toolkit`가 각 AI surface에 어떤 메타 파일을 제공하고, 어느 정도까지 안내하는지 한눈에 정리한 기준 문서입니다.
+
+## 지원 매트릭스
+
+| Surface | 주 메타 파일 | Marketplace 메타 | 현재 연결 방식 | 상태 |
+| --- | --- | --- | --- | --- |
+| Codex CLI | `.codex-plugin/plugin.json` | 없음 | bootstrap 후 `skills/imweb/` discovery | 지원 |
+| Codex App | `.codex-plugin/plugin.json` | 없음 | bootstrap 후 `skills/imweb/` discovery | 지원 |
+| Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | bootstrap 또는 skill 설치 | 지원 |
+| Claude Desktop | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | bootstrap 또는 skill 설치 | 지원 |
+| Claude Cowork | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | 문서 기반 수동 연결 | 제한적 지원 |
+| Cursor workspace | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | `.mcp.json` 기준 수동 연결 | 제한적 지원 |
+
+## 해석 원칙
+
+- `지원`: 현재 레포가 bootstrap 또는 공식 skill 설치 흐름을 문서화해 제공하는 surface입니다.
+- `제한적 지원`: 표면 메타와 참조 문서는 제공하지만, 전용 설치기, one-click 설치, 런타임 자동 연결은 아직 범위 밖인 surface입니다.
+- `지원`이어도 실제 로드 확인과 host 앱 내부 동작은 각 surface 버전과 사용자 환경에 따라 달라질 수 있습니다.
+- Claude는 `plugin.json`을 canonical entrypoint로 보고, `manifest.json`은 이전 참조와의 호환성을 위한 compatibility entrypoint로만 유지합니다.
+- Cursor는 marketplace 메타를 제공하지만 실제 연결은 여전히 `.mcp.json`을 기준으로 수동 설정합니다.
+
+## 권장 확인 순서
+
+1. 루트 `plugin.json`에서 표면별 entrypoint를 확인합니다.
+2. 대상 surface의 `plugin.json` 또는 `marketplace.json`을 읽습니다.
+3. 설치가 필요한 표면이면 `docs/skill-installation-and-usage.md`와 `install/` 스크립트를 확인합니다.
+4. 수동 연결 표면이면 해당 surface README, `.mcp.json`, `marketplace.json`을 함께 봅니다.

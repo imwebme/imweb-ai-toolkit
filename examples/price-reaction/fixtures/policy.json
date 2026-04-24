@@ -1,0 +1,24 @@
+{
+  "products": [
+    {
+      "prodNo": 2001,
+      "competitorSku": "alpha-hoodie",
+      "cost": 14000,
+      "floorPrice": 15500,
+      "ceilingPrice": 24000,
+      "minMarginRate": 0.15,
+      "undercutAmount": 100,
+      "raiseStepLimit": 600
+    },
+    {
+      "prodNo": 2002,
+      "competitorSku": "beta-cap",
+      "cost": 21000,
+      "floorPrice": 25500,
+      "ceilingPrice": 33000,
+      "minMarginRate": 0.1,
+      "undercutAmount": 100,
+      "raiseStepLimit": 800
+    }
+  ]
+}

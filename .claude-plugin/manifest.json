@@ -1,0 +1,24 @@
+{
+  "name": "imweb-ai-toolkit",
+  "version": "0.2.0",
+  "surface": "claude",
+  "entrypoint": "./plugin.json",
+  "plugin": "./plugin.json",
+  "marketplace": "./marketplace.json",
+  "skills": "../skills",
+  "docs": "../docs",
+  "supportMatrix": "../docs/surface-support-matrix.md",
+  "install": {
+    "bootstrap": "../install/bootstrap-imweb.sh --tool claude --scope user",
+    "skill_install": "../install/install-skills.sh --tool claude --scope user --mode copy"
+  },
+  "surfaces": [
+    "claude-code",
+    "claude-desktop",
+    "claude-cowork"
+  ],
+  "limited_supports": [
+    "claude-cowork"
+  ],
+  "status": "compatibility-entrypoint"
+}

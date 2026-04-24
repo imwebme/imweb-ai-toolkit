@@ -1,0 +1,22 @@
+{
+  "products": [
+    {
+      "prodNo": 2001,
+      "data": {
+        "prodNo": 2001,
+        "name": "알파 후디",
+        "price": 19000,
+        "unitCode": "u-price-lab"
+      }
+    },
+    {
+      "prodNo": 2002,
+      "data": {
+        "prodNo": 2002,
+        "name": "베타 캡",
+        "price": 33000,
+        "unitCode": "u-price-lab"
+      }
+    }
+  ]
+}
