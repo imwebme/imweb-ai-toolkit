@@ -26,11 +26,23 @@ flowchart LR
 
 ## 설치
 
-권장 plugin setup:
+Claude Code plugin setup:
 
 ```bash
 claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
 claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
+```
+
+Claude Code chat form:
+
+```text
+/plugin marketplace add imwebme/imweb-ai-toolkit
+/plugin install imweb-ai-toolkit@imweb-ai-toolkit
+```
+
+Codex marketplace setup:
+
+```bash
 codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 ```
 
@@ -46,13 +58,13 @@ npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
-Claude Cowork에서는 Claude에게 Claude Desktop을 조작하게 하지 말고 package 생성과 검증만 맡깁니다.
+Claude Cowork에서는 Claude에게 installer를 실행하고 생성된 plugin 파일을 제시하게 합니다.
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
-이 명령은 `imweb-skill.zip`과 `imweb-ai-toolkit-plugin.zip`을 만듭니다. 현재 Cowork task가 task 파일에서 새 Skill을 바로 로드할 수 없으면, 검증된 zip은 사용자, workspace admin, 또는 지원되는 Cowork Skill 설치 흐름에서 나중에 provisioning해야 합니다. Claude에게 줄 no-UI 요청문은 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md), 전체 checklist는 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다.
+이 명령은 `imweb-ai-toolkit.plugin`과 fallback용 `imweb-skill.zip`을 만듭니다. Claude는 package 내용을 검증하고 `imweb-ai-toolkit.plugin`을 설치 가능한 Cowork plugin artifact로 제시해야 합니다. Claude Desktop 설정을 열거나 computer-use로 조작하게 하지 않습니다. Claude에게 줄 요청문은 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md), 전체 checklist는 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다.
 
 지원 surface에는 bootstrap script를 사용합니다.
 
@@ -75,7 +87,7 @@ Plugin-first setup은 toolkit plugin을 등록하거나 설치합니다.
 ```bash
 ./install/install-plugins.sh --tool codex
 ./install/install-plugins.sh --tool claude --scope user
-./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.sh --package imweb-ai-toolkit.plugin
 ```
 
 PowerShell:
@@ -83,10 +95,10 @@ PowerShell:
 ```powershell
 ./install/install-plugins.ps1 -Tool codex
 ./install/install-plugins.ps1 -Tool claude -Scope user
-./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
 ```
 
-Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는 등록된 marketplace에서 바로 설치하고 `/imweb-ai-toolkit:imweb`로 plugin skill을 검증할 수 있습니다. Claude Cowork의 직접 `/imweb`는 provisioning된 custom Skill package가 제공하고, 생성된 plugin zip은 plugin UI 또는 조직 marketplace 흐름에 사용합니다.
+Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는 등록된 marketplace에서 바로 설치하고 `/imweb-ai-toolkit:imweb`로 plugin skill을 검증할 수 있습니다. Claude Cowork는 생성된 `.plugin` artifact를 설치해 Cowork slash 메뉴에 `imweb` Skill을 노출하는 경로를 사용하고, `imweb-skill.zip`은 fallback package로만 유지합니다.
 
 ## 먼저 볼 문서
 

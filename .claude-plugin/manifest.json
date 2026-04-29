@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "surface": "claude",
   "entrypoint": "./plugin.json",
   "plugin": "./plugin.json",
@@ -18,6 +18,6 @@
     "claude-desktop",
     "claude-cowork"
   ],
-  "desktop_upload": "../install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip",
+  "desktop_upload": "../install/install-plugins.sh --package imweb-ai-toolkit.plugin",
   "status": "compatibility-entrypoint"
 }

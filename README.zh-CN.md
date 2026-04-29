@@ -26,11 +26,23 @@ flowchart LR
 
 ## 安装
 
-推荐的 plugin setup：
+Claude Code plugin setup：
 
 ```bash
 claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
 claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
+```
+
+Claude Code chat form：
+
+```text
+/plugin marketplace add imwebme/imweb-ai-toolkit
+/plugin install imweb-ai-toolkit@imweb-ai-toolkit
+```
+
+Codex marketplace setup：
+
+```bash
 codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 ```
 
@@ -46,13 +58,13 @@ npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
-在 Claude Cowork 中，请让 Claude 只创建并验证 package，不要操作 Claude Desktop。
+在 Claude Cowork 中，请让 Claude 运行 installer 并展示生成的 plugin 文件。
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
-此命令会生成 `imweb-skill.zip` 和 `imweb-ai-toolkit-plugin.zip`。如果当前 Cowork task 不能从 task files 直接加载新的 Skill，经过验证的 zip 需要稍后由用户、workspace admin 或受支持的 Cowork Skill installation flow provisioning。给 Claude 的 no-UI 请求文本见 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)，完整 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
+此命令会生成 `imweb-ai-toolkit.plugin` 和 fallback 用的 `imweb-skill.zip`。Claude 应验证 package 内容，并把 `imweb-ai-toolkit.plugin` 作为可安装的 Cowork plugin artifact 展示出来。不要让 Claude 打开 Claude Desktop settings 或用 computer-use 操作桌面。给 Claude 的请求文本见 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)，完整 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
 
 对受支持的 surface 使用 bootstrap script。
 
@@ -75,7 +87,7 @@ Plugin-first setup 会注册或安装 toolkit plugin。
 ```bash
 ./install/install-plugins.sh --tool codex
 ./install/install-plugins.sh --tool claude --scope user
-./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.sh --package imweb-ai-toolkit.plugin
 ```
 
 PowerShell:
@@ -83,10 +95,10 @@ PowerShell:
 ```powershell
 ./install/install-plugins.ps1 -Tool codex
 ./install/install-plugins.ps1 -Tool claude -Scope user
-./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
 ```
 
-Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Cowork 的直接 `/imweb` 由已 provisioning 的 custom Skill package 提供，生成的 plugin zip 用于 plugin UI 或组织 marketplace 流程。
+Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Cowork 使用生成的 `.plugin` artifact 安装 plugin，让 Cowork slash menu 显示 `imweb` Skill；`imweb-skill.zip` 仅作为 fallback package 保留。
 
 ## 从这里开始
 

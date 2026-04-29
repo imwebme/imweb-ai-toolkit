@@ -10,7 +10,7 @@
 | Codex App | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` | `install-plugins`로 marketplace 등록 후 Plugins UI 설치 | 지원 |
 | Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | `install-plugins`로 marketplace 등록 및 plugin 설치, `/imweb-ai-toolkit:imweb`로 plugin skill 확인 | 지원 |
 | Agent Skills CLI | `skills/imweb/SKILL.md` | 해당 없음 | `npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex`로 표준 Skill 설치 | 지원 |
-| Claude Desktop Cowork | `imweb-skill.zip`, `.claude-plugin/plugin.json` package | `.claude-plugin/marketplace.json` | Cowork task는 package 생성/검증까지만 수행. 직접 `/imweb`는 별도 Cowork Skill provisioning 필요. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
+| Claude Desktop Cowork | `imweb-ai-toolkit.plugin`, `.claude-plugin/plugin.json` package | `.claude-plugin/marketplace.json` | Cowork task가 `.plugin` package를 생성/검증하고 host에 install artifact로 제시. `imweb-skill.zip`은 fallback. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
 | Cursor workspace | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | `.mcp.json` 기준 수동 연결 | 제한적 지원 |
 
 ## 해석 원칙

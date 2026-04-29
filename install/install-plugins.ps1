@@ -47,8 +47,9 @@ Options:
   -Scope    Claude 설치 범위. user, project, local. 기본값: user
             Codex는 현재 marketplace 등록까지만 자동화합니다.
   -Source   marketplace source. 기본값: 이 toolkit repo root
-  -Package  Claude Desktop Cowork plugin/조직 provisioning용 zip 생성 경로
-  -SkillPackage Claude Cowork /imweb 직접 호출용 custom skill provisioning zip 생성 경로
+  -Package  Claude Desktop Cowork installable plugin package 생성 경로
+            Cowork 파일 카드 설치를 위해 .plugin 확장자를 권장합니다.
+  -SkillPackage Claude Cowork fallback custom skill zip 생성 경로
   -DryRun   실행할 명령만 출력
   -Help     도움말 출력
 "@
@@ -164,6 +165,10 @@ function New-PluginPackage([string]$OutputPath) {
                 }
                 [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($Archive, $Item.FullName, $EntryName) | Out-Null
             }
+        }
+        $Suffix = [System.IO.Path]::GetExtension($ResolvedOutput).ToLowerInvariant()
+        if ($Suffix -and $Suffix -ne '.plugin') {
+            Write-Warning "Cowork install cards expect a .plugin extension; got $Suffix"
         }
         Write-Host 'plugin package created'
         Write-Host "  path: $ResolvedOutput"
