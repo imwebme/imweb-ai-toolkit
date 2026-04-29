@@ -26,79 +26,44 @@ flowchart LR
 
 ## 설치
 
-Claude Code plugin setup:
-
-```bash
-claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
-claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
-```
-
-Claude Code chat form:
+- Claude Code에서는 Claude Code 채팅에 아래 두 줄을 실행합니다.
 
 ```text
 /plugin marketplace add imwebme/imweb-ai-toolkit
 /plugin install imweb-ai-toolkit@imweb-ai-toolkit
 ```
 
-Codex marketplace setup:
+- Codex에서는 marketplace를 등록한 뒤 Plugins UI에서 `imweb-ai-toolkit`을 추가합니다.
 
 ```bash
 codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 ```
 
-Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Codex skill discovery를 바로 확인해야 하거나 AI coding agent에게 설치를 맡기는 경우 public `npx` installer를 사용합니다.
+- Claude Desktop Cowork에서는 Cowork task 안에서 Claude에게 아래 요청을 보냅니다.
 
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```text
+Set up imweb AI toolkit for this Cowork task:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+Present imweb-ai-toolkit.plugin so I can save it.
 ```
 
-표준 Agent Skills fallback:
+- AI coding agent에게 Codex와 Claude Code 로컬 설치를 맡길 때는 아래 한 줄을 사용합니다.
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool both
+```
+
+Cowork 명령은 `imweb-ai-toolkit.plugin`과 fallback `imweb-skill.zip`을 생성합니다. 제시된 plugin card를 저장한 뒤 `/imweb`로 시작합니다. zip은 fallback package로만 사용합니다.
+
+## 기타 설치 경로
+
+대상 도구가 plugin을 지원하지 않으면 표준 Agent Skill을 직접 설치합니다.
 
 ```bash
 npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
-Claude Cowork에서는 Claude에게 installer를 실행하고 생성된 plugin 파일을 제시하게 합니다.
-
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
-```
-
-이 명령은 `imweb-ai-toolkit.plugin`과 fallback용 `imweb-skill.zip`을 만듭니다. Claude는 package 내용을 검증하고 `imweb-ai-toolkit.plugin`을 설치 가능한 Cowork plugin artifact로 제시해야 합니다. Claude Desktop 설정을 열거나 computer-use로 조작하게 하지 않습니다. Claude에게 줄 요청문은 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md), 전체 checklist는 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다.
-
-지원 surface에는 bootstrap script를 사용합니다.
-
-```bash
-./install/bootstrap-imweb.sh --tool codex --scope user
-./install/bootstrap-imweb.sh --tool claude --scope user
-```
-
-PowerShell:
-
-```powershell
-./install/bootstrap-imweb.ps1 -Tool codex -Scope user
-./install/bootstrap-imweb.ps1 -Tool claude -Scope user
-```
-
-Bootstrap script는 필요하면 `imweb` CLI를 설치하거나 업데이트한 뒤, 선택한 tool에 `imweb` skill을 설치합니다. 고급 로컬 설치나 고정 버전 테스트는 [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)를 봅니다.
-
-Plugin-first setup은 toolkit plugin을 등록하거나 설치합니다.
-
-```bash
-./install/install-plugins.sh --tool codex
-./install/install-plugins.sh --tool claude --scope user
-./install/install-plugins.sh --package imweb-ai-toolkit.plugin
-```
-
-PowerShell:
-
-```powershell
-./install/install-plugins.ps1 -Tool codex
-./install/install-plugins.ps1 -Tool claude -Scope user
-./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
-```
-
-Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는 등록된 marketplace에서 바로 설치하고 `/imweb-ai-toolkit:imweb`로 plugin skill을 검증할 수 있습니다. Claude Cowork는 생성된 `.plugin` artifact를 설치해 Cowork slash 메뉴에 `imweb` Skill을 노출하는 경로를 사용하고, `imweb-skill.zip`은 fallback package로만 유지합니다.
+전체 installer flag, 검증 절차, manual clone fallback은 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다. 고급 로컬 설치나 고정 버전 테스트는 [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)를 봅니다.
 
 ## 먼저 볼 문서
 

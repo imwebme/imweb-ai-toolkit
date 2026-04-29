@@ -27,7 +27,7 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Codex CLI에서 바로 skill discovery까지 확인하거나 AI coding agent에게 설치를 맡길 때는 public repo를 clone하기보다 `npx` installer를 사용합니다.
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
 표준 Agent Skills fallback만 필요하면 아래 경로를 사용합니다.

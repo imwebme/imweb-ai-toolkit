@@ -32,7 +32,7 @@ function usage() {
   console.log(`imweb-ai-toolkit installer
 
 Usage:
-  npx --yes github:imwebme/imweb-ai-toolkit --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
+  npx -y github:imwebme/imweb-ai-toolkit --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
   npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
   node install/imweb-ai-toolkit-install.mjs --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
 

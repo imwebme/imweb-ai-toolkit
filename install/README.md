@@ -5,7 +5,7 @@
 AI coding agent가 public repo에서 직접 설치해야 할 때는 `imweb-ai-toolkit-install.mjs`를 `npx`로 실행합니다.
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
 tool-native plugin 경로를 직접 사용할 수도 있습니다.
@@ -25,13 +25,13 @@ npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-c
 Claude Desktop Cowork용 plugin package만 만들 때는 아래처럼 실행합니다.
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
 Claude Cowork fallback 검증이 필요하면 custom Skill package도 생성합니다.
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
 이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. Cowork plugin package는 agent가 명령을 실행한 디렉터리에 `imweb-ai-toolkit.plugin`으로 생성하고, fallback Skill package는 `imweb-skill.zip`로 생성합니다. Cowork task 안에서는 computer-use나 Claude Desktop UI 조작으로 설치를 시도하지 않습니다. Claude에게 package 생성, 검증, `.plugin` artifact 제시를 맡기는 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md), 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
