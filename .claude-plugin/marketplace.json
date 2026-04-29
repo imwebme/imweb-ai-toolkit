@@ -11,7 +11,7 @@
       "name": "imweb-ai-toolkit",
       "source": "./",
       "description": "Connect imweb CLI guidance and the public `imweb` skill for Claude Code and Claude Desktop Cowork",
-      "version": "0.2.1",
+      "version": "0.2.2",
       "author": {
         "name": "imweb",
         "url": "https://github.com/imwebme"
