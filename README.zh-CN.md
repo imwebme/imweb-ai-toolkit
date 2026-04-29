@@ -26,79 +26,44 @@ flowchart LR
 
 ## 安装
 
-Claude Code plugin setup：
-
-```bash
-claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
-claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
-```
-
-Claude Code chat form：
+- 在 Claude Code 中，在 Claude Code 聊天里运行这两行：
 
 ```text
 /plugin marketplace add imwebme/imweb-ai-toolkit
 /plugin install imweb-ai-toolkit@imweb-ai-toolkit
 ```
 
-Codex marketplace setup：
+- 在 Codex 中，先注册 marketplace，然后从 Plugins UI 添加 `imweb-ai-toolkit`：
 
 ```bash
 codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 ```
 
-Codex 在注册 marketplace 后通过 Plugins UI 安装。如果需要立即验证 Codex skill discovery，或由 AI coding agent 执行安装，请使用 public `npx` installer。
+- 在 Claude Desktop Cowork 中，在 Cowork task 里让 Claude 执行：
 
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```text
+Set up imweb AI toolkit for this Cowork task:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+Present imweb-ai-toolkit.plugin so I can save it.
 ```
 
-标准 Agent Skills fallback：
+- 让 AI coding agent 为 Codex 和 Claude Code 执行本地安装时，使用这一行：
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool both
+```
+
+Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 fallback `imweb-skill.zip`。保存展示出的 plugin card 后，从 `/imweb` 开始；zip 只作为 fallback package 使用。
+
+## 其他安装方式
+
+如果目标工具不支持 plugin，请直接安装标准 Agent Skill：
 
 ```bash
 npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
-在 Claude Cowork 中，请让 Claude 运行 installer 并展示生成的 plugin 文件。
-
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
-```
-
-此命令会生成 `imweb-ai-toolkit.plugin` 和 fallback 用的 `imweb-skill.zip`。Claude 应验证 package 内容，并把 `imweb-ai-toolkit.plugin` 作为可安装的 Cowork plugin artifact 展示出来。不要让 Claude 打开 Claude Desktop settings 或用 computer-use 操作桌面。给 Claude 的请求文本见 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)，完整 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
-
-对受支持的 surface 使用 bootstrap script。
-
-```bash
-./install/bootstrap-imweb.sh --tool codex --scope user
-./install/bootstrap-imweb.sh --tool claude --scope user
-```
-
-PowerShell:
-
-```powershell
-./install/bootstrap-imweb.ps1 -Tool codex -Scope user
-./install/bootstrap-imweb.ps1 -Tool claude -Scope user
-```
-
-Bootstrap script 会按需安装或更新 `imweb` CLI，然后为所选 tool 安装 `imweb` skill。高级本地设置或固定版本测试请参见 [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)。
-
-Plugin-first setup 会注册或安装 toolkit plugin。
-
-```bash
-./install/install-plugins.sh --tool codex
-./install/install-plugins.sh --tool claude --scope user
-./install/install-plugins.sh --package imweb-ai-toolkit.plugin
-```
-
-PowerShell:
-
-```powershell
-./install/install-plugins.ps1 -Tool codex
-./install/install-plugins.ps1 -Tool claude -Scope user
-./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
-```
-
-Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Cowork 使用生成的 `.plugin` artifact 安装 plugin，让 Cowork slash menu 显示 `imweb` Skill；`imweb-skill.zip` 仅作为 fallback package 保留。
+完整 installer flag、验证步骤和 manual clone fallback 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。高级本地设置或固定版本测试请参见 [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)。
 
 ## 从这里开始
 

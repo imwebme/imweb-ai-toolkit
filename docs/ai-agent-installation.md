@@ -2,7 +2,7 @@
 
 This guide is the canonical install path when a user asks an AI coding agent to install `imweb-ai-toolkit`.
 
-The agent should prefer tool-native plugin installation where the target tool supports it. Use the public `npx` installer when the user wants one command that handles Codex and Claude Code local configuration without a prior clone. The installer registers the durable public Git repository as the marketplace source, not the temporary `npx` package directory.
+The agent should prefer tool-native plugin installation where the target tool supports it. Use the public `npx` installer when the user wants one short command that handles Codex and Claude Code local configuration without a prior clone. The installer registers the durable public Git repository as the marketplace source, not the temporary `npx` package directory.
 
 Install model:
 
@@ -36,7 +36,7 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 Codex currently uses the Plugins UI after marketplace registration. For immediate CLI skill discovery, also run:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool codex --scope user
+npx -y github:imwebme/imweb-ai-toolkit --tool codex
 ```
 
 Standard Agent Skills fallback:
@@ -48,13 +48,15 @@ npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-c
 Codex and Claude Code together:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
 Claude Desktop Cowork plugin setup:
 
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+```text
+Set up imweb AI toolkit for this Cowork task:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+Present imweb-ai-toolkit.plugin so I can save it.
 ```
 
 This creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.zip` in the task folder. Claude should verify the package contents, then present `imweb-ai-toolkit.plugin` as the installable Cowork plugin artifact. Do not ask Claude to open Customize, Settings, Skills, Plugins, or any Claude Desktop UI through computer-use.
@@ -62,7 +64,7 @@ This creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.zip` in the tas
 Claude Desktop plugin package only:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
 Equivalent `npm exec` form:
@@ -74,7 +76,7 @@ npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --t
 If the `imweb` CLI itself also needs to be installed or updated, add `--install-cli`:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user --install-cli
+npx -y github:imwebme/imweb-ai-toolkit --tool both --install-cli
 ```
 
 ## What The Installer Does
@@ -136,7 +138,7 @@ Claude Desktop Cowork does not read the Claude Code CLI plugin registry or `~/.c
 For the `/imweb` slash entrypoint, ask Claude to create and verify the Cowork plugin package:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
 This creates:
@@ -153,7 +155,7 @@ Local dogfood on 2026-04-29 observed Claude Desktop Cowork mounting `/mnt/.claud
 For Claude Desktop Cowork plugin package generation only, run:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
 Then present or provision `imweb-ai-toolkit.plugin` using a supported Cowork plugin flow. If a Team or Enterprise workspace restricts personal plugin installs, the same `.plugin` artifact is the package to hand to the workspace admin.
@@ -161,7 +163,7 @@ Then present or provision `imweb-ai-toolkit.plugin` using a supported Cowork plu
 If an explicit package path is needed, pass an absolute path or a path relative to the directory where the agent runs:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --package "$PWD/imweb-ai-toolkit.plugin"
+npx -y github:imwebme/imweb-ai-toolkit --package "$PWD/imweb-ai-toolkit.plugin"
 ```
 
 ## Manual Clone Fallback

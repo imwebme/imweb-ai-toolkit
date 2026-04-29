@@ -5,12 +5,20 @@ Use this when the user wants Claude Cowork to set up imweb instead of doing the 
 Copy this request inside a Claude Cowork task. Keep it as one message.
 
 ```text
+Set up imweb AI toolkit for this Cowork task:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+Present imweb-ai-toolkit.plugin so I can save it.
+```
+
+Use the longer request below when you need Claude to explicitly report every verification step.
+
+```text
 Set up the imweb AI toolkit for this Cowork task from https://github.com/imwebme/imweb-ai-toolkit.
 
 Use only terminal and file operations inside this task. Do not use computer-use. Do not open Customize, Settings, Skills, Plugins, or any Claude Desktop UI.
 
 Run:
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 
 Then verify the generated artifacts:
 1. imweb-ai-toolkit.plugin must contain .claude-plugin/plugin.json and skills/imweb/SKILL.md.

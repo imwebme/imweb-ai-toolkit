@@ -26,79 +26,44 @@ flowchart LR
 
 ## Install
 
-Claude Code plugin setup:
-
-```bash
-claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
-claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
-```
-
-Claude Code chat form:
+- For Claude Code, run these two commands in a Claude Code chat:
 
 ```text
 /plugin marketplace add imwebme/imweb-ai-toolkit
 /plugin install imweb-ai-toolkit@imweb-ai-toolkit
 ```
 
-Codex marketplace setup:
+- For Codex, register the marketplace, then add `imweb-ai-toolkit` from the Plugins UI:
 
 ```bash
 codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 ```
 
-Codex uses the Plugins UI after marketplace registration. For immediate Codex skill discovery, or when an AI coding agent is doing the setup for you, use the public `npx` installer:
+- For Claude Desktop Cowork, ask Claude in the Cowork task:
 
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```text
+Set up imweb AI toolkit for this Cowork task:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+Present imweb-ai-toolkit.plugin so I can save it.
 ```
 
-Standard Agent Skills fallback:
+- For an AI coding agent installing Codex and Claude Code locally:
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool both
+```
+
+The Cowork command creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.zip`. Save the presented plugin card, then start with `/imweb`; the zip is only a fallback package.
+
+## Other Install Methods
+
+If the target tool does not support plugins, install the standard Agent Skill directly:
 
 ```bash
 npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
-For Claude Cowork, ask Claude to run the installer and present the generated plugin file:
-
-```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
-```
-
-This creates `imweb-ai-toolkit.plugin` and the fallback `imweb-skill.zip`. Claude should verify the package contents and present `imweb-ai-toolkit.plugin` as the installable Cowork plugin artifact; do not ask Claude to open Claude Desktop settings or use computer-use. See [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md) for the exact prompt and [docs/ai-agent-installation.md](docs/ai-agent-installation.md) for the full checklist.
-
-Use the bootstrap script for supported surfaces:
-
-```bash
-./install/bootstrap-imweb.sh --tool codex --scope user
-./install/bootstrap-imweb.sh --tool claude --scope user
-```
-
-PowerShell:
-
-```powershell
-./install/bootstrap-imweb.ps1 -Tool codex -Scope user
-./install/bootstrap-imweb.ps1 -Tool claude -Scope user
-```
-
-The bootstrap script installs or updates the `imweb` CLI as needed, then installs the `imweb` skill for the selected tool. Advanced local or pinned-version setup is documented in [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md).
-
-For plugin-first setup, register or install the toolkit plugin:
-
-```bash
-./install/install-plugins.sh --tool codex
-./install/install-plugins.sh --tool claude --scope user
-./install/install-plugins.sh --package imweb-ai-toolkit.plugin
-```
-
-PowerShell:
-
-```powershell
-./install/install-plugins.ps1 -Tool codex
-./install/install-plugins.ps1 -Tool claude -Scope user
-./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
-```
-
-Codex uses the Plugins UI after marketplace registration. Claude Code can install directly from the registered marketplace and can verify the plugin skill with `/imweb-ai-toolkit:imweb`. Claude Cowork uses the generated `.plugin` artifact so the installed plugin can expose its `imweb` Skill in the Cowork slash menu; `imweb-skill.zip` remains only a fallback package.
+For full installer flags, verification steps, and manual clone fallback, see [docs/ai-agent-installation.md](docs/ai-agent-installation.md). Advanced local or pinned-version setup is documented in [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md).
 
 ## Start Here
 
