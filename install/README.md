@@ -2,6 +2,14 @@
 
 이 디렉터리는 CLI 설치, skill 설치, plugin 설치/패키징, bootstrap 진입점을 담습니다.
 
+AI coding agent가 public repo에서 직접 설치해야 할 때는 `imweb-ai-toolkit-install.mjs`를 `npx`로 실행합니다.
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```
+
+이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
+
 Codex 기준 skill 기본 설치 경로는 `$CODEX_HOME/skills`이며, `CODEX_HOME`이 없으면 `~/.codex/skills`를 사용합니다.
 
 `install-cli.*`와 `bootstrap-imweb.*` 기본값은 public `imweb-cli-release` stable pointer (`channels/stable.json`)를 읽고, 필요하면 여기서 `release_manifest_url`을 따라 실제 release manifest를 해석합니다. 기본 CLI binary fetch는 public surface 기준이라 `gh auth`를 전제로 하지 않습니다.
