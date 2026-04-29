@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "private": true,
   "description": "AI surface manifests, public skill assets, and install metadata for connecting imweb-cli to Codex, Claude, and Cursor.",
   "bin": {

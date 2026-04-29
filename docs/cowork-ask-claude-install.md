@@ -34,10 +34,11 @@ Expected result:
 - `imweb-skill.zip` is created and verified as a fallback Claude Skill package named `imweb`.
 - Claude does not use computer-use or UI automation.
 - Claude presents the `.plugin` artifact so the Cowork host can install and enable it.
+- After the plugin install card is accepted, the Cowork slash entry is `/imweb`. Do not use the Claude Code namespace form `/imweb-ai-toolkit:imweb` in Cowork.
 
 Important limitation:
 
 - A Cowork task can create and verify the plugin package itself.
 - If the task reports a read-only skills mount such as `/mnt/.claude/skills/`, treat that as the expected stop condition for a no-UI install request.
-- If the runtime cannot install the presented `.plugin` artifact during the current session, bare `/imweb` will not appear until the generated plugin is installed by the Cowork host or workspace admin.
+- If the runtime cannot install the presented `.plugin` artifact during the current session, `/imweb` will not appear until the generated plugin is installed by the Cowork host or workspace admin.
 - Claude Code plugin install and local `~/.claude/skills` discovery are separate from Claude Desktop Cowork.

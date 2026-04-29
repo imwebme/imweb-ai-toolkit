@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "description": "imweb CLI와 공개 skill `imweb`를 Claude Code, Claude Desktop Cowork plugin으로 연결하는 Claude 표면 메타데이터입니다.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": {
     "name": "imweb",
     "url": "https://github.com/imwebme"

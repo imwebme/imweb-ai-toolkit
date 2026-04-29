@@ -55,6 +55,8 @@ npx -y github:imwebme/imweb-ai-toolkit --tool both
 
 The Cowork command creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.zip`. Save the presented plugin card, then start with `/imweb`; the zip is only a fallback package.
 
+In Cowork, do not use the Claude Code namespace form `/imweb-ai-toolkit:imweb`. The expected Cowork entry is `/imweb`, and it appears only after the Cowork plugin package is installed/enabled.
+
 ## Other Install Methods
 
 If only the `imweb` CLI binary is missing:

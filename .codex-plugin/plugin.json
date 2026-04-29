@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Rust 기반 imweb-cli를 LLM과 에이전트가 일관되게 호출하도록 설명하는 Codex plugin 메타데이터입니다.",
   "author": {
     "name": "imweb",

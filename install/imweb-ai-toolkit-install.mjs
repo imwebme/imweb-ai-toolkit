@@ -71,7 +71,8 @@ Notes:
   - For Cowork, the default command creates imweb-ai-toolkit.plugin plus
     imweb-skill.zip as a fallback. Present the .plugin file to Cowork so the
     host can install/enable it; do not ask Cowork to use computer-use or
-    Claude Desktop UI automation to install itself.
+    Claude Desktop UI automation to install itself. After install, Cowork uses
+    /imweb, not the Claude Code namespace /imweb-ai-toolkit:imweb.
   - Standard Agent Skills fallback is: npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex.`);
 }
 
