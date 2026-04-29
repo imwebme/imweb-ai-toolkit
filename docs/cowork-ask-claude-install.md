@@ -13,22 +13,23 @@ Run:
 npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
 
 Then verify the generated artifacts:
-1. imweb-skill.zip must contain imweb/SKILL.md.
-2. imweb/SKILL.md must declare name: imweb.
-3. imweb-ai-toolkit-plugin.zip should also exist for plugin or organization provisioning.
+1. imweb-ai-toolkit.plugin must contain .claude-plugin/plugin.json and skills/imweb/SKILL.md.
+2. skills/imweb/SKILL.md must declare name: imweb.
+3. imweb-skill.zip should also exist as a fallback package and must contain imweb/SKILL.md.
 
-If this Cowork runtime supports project-local skills or commands without UI upload, install the generated imweb skill into that supported project-local location and verify by reading the installed SKILL.md. If it does not, do not try to operate the Claude app. Leave the zip files in the task folder and report that current-session bare /imweb requires user/admin Skill provisioning outside this task.
+Present imweb-ai-toolkit.plugin as the installable Cowork plugin artifact for this task. If this Cowork runtime provides a task-local plugin install or file-presentation API, use it so the host can show the plugin install card. If the host asks for confirmation, report that the user should click the install/accept button on the presented plugin card. Do not route the user through a manual builder or settings flow.
 ```
 
 Expected result:
 
-- `imweb-skill.zip` is created and verified as a Claude Skill named `imweb`.
-- `imweb-ai-toolkit-plugin.zip` is created for plugin or organization marketplace workflows.
+- `imweb-ai-toolkit.plugin` is created and verified as an installable Cowork plugin.
+- `imweb-skill.zip` is created and verified as a fallback Claude Skill package named `imweb`.
 - Claude does not use computer-use or UI automation.
+- Claude presents the `.plugin` artifact so the Cowork host can install and enable it.
 
 Important limitation:
 
-- A Cowork task can create and verify the packages itself.
+- A Cowork task can create and verify the plugin package itself.
 - If the task reports a read-only skills mount such as `/mnt/.claude/skills/`, treat that as the expected stop condition for a no-UI install request.
-- If the runtime cannot load new Skills from the task filesystem during the current session, bare `/imweb` will not appear until the generated Skill package is provisioned by the user, workspace admin, or a supported Cowork Skill installation flow.
+- If the runtime cannot install the presented `.plugin` artifact during the current session, bare `/imweb` will not appear until the generated plugin is installed by the Cowork host or workspace admin.
 - Claude Code plugin install and local `~/.claude/skills` discovery are separate from Claude Desktop Cowork.

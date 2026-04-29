@@ -9,7 +9,7 @@
 3. 대상 surface가 plugin marketplace를 지원하면 plugin을 등록하거나 설치합니다.
 4. 대상 surface의 plugin README와 metadata를 읽고 사용을 시작합니다.
 
-표준 설치 우선순위는 plugin, Agent Skills, package/provisioning 순서입니다.
+표준 설치 우선순위는 plugin, Agent Skills fallback, package 생성 순서입니다.
 
 Claude Code:
 
@@ -175,18 +175,18 @@ printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫
 Claude Desktop Cowork:
 
 ```bash
-./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.sh --package imweb-ai-toolkit.plugin
 ./install/install-plugins.sh --skill-package imweb-skill.zip
 ```
 
 PowerShell:
 
 ```powershell
-./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
 ./install/install-plugins.ps1 -SkillPackage imweb-skill.zip
 ```
 
-생성된 plugin zip은 지원되는 plugin 또는 조직 marketplace 흐름에서 provisioning합니다. 직접 `/imweb`가 acceptance target이면 `imweb-skill.zip`을 Cowork Skill로 provisioning합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork 자체의 Skill/plugin provisioning 또는 조직 배포 경로를 기준으로 합니다. Desktop 앱/계정에서 personal custom package action이 보이지 않으면 Team/Enterprise manual marketplace provisioning이나 organization Skill provisioning을 사용합니다. GitHub synced Cowork organization marketplace는 private/internal GitHub repo만 허용하므로 public repo는 npx/package source로 사용하고, 조직 배포에는 private/internal mirror를 둡니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성과 검증까지만 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
+생성된 `.plugin` package는 Cowork host가 설치/활성화할 수 있도록 제시하는 기본 artifact입니다. `imweb-skill.zip`은 fallback package로만 유지합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성, 검증, `.plugin` artifact 제시까지 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
 
 ## 표면별 시작점
 

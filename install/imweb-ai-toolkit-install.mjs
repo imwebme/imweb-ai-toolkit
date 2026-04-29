@@ -40,7 +40,8 @@ Options:
   --tool codex|claude|claude-code|claude-desktop|claude-cowork|both|all
                               Target AI surface. "claude" is an alias for Claude Code.
                               "both" installs Codex + Claude Code. "claude-cowork" creates
-                              the Cowork skill zip and plugin zip. "all" also creates both.
+                              the installable Cowork .plugin file and skill fallback zip.
+                              "all" also creates both.
   --scope user|project|local  Install scope for plugin tools. Default: user.
   --skill-mode copy|symlink   Skill install mode. Default: copy. Use copy for npx installs.
   --with-skill                Also install the imweb skill discovery bundle.
@@ -48,9 +49,10 @@ Options:
   --install-cli               Install or update the imweb CLI before tool wiring.
   --source SOURCE             Marketplace source. Default: ${PUBLIC_GIT_SOURCE}
   --ref REF                   Git ref for Codex marketplace add. Default: ${PUBLIC_GIT_REF}
-  --package PATH              Create Claude Desktop Cowork plugin zip. Relative paths are
+  --package PATH              Create Claude Desktop Cowork plugin package. Use a .plugin
+                              extension for installable Cowork file cards. Relative paths are
                               resolved from the directory where you run this command.
-  --skill-package PATH        Create Claude Cowork direct /imweb skill zip. Relative paths are
+  --skill-package PATH        Create Claude Cowork fallback imweb skill zip. Relative paths are
                               resolved from the directory where you run this command.
   --no-backup                 Skip timestamped backup of local Codex/Claude config paths.
   --no-replace                Do not replace existing imweb marketplace/plugin/skill entries.
@@ -64,9 +66,10 @@ Notes:
     imweb skill by default so command discovery works immediately.
   - Claude Code installs imweb-ai-toolkit from the registered marketplace.
   - Claude Desktop Cowork does not read Claude Code's CLI registry.
-  - For direct /imweb in Cowork, provision the generated imweb-skill.zip through
-    a supported Cowork Skill or organization flow. Do not ask Cowork to use
-    computer-use or Claude Desktop UI automation to install itself.
+  - For Cowork, the default command creates imweb-ai-toolkit.plugin plus
+    imweb-skill.zip as a fallback. Present the .plugin file to Cowork so the
+    host can install/enable it; do not ask Cowork to use computer-use or
+    Claude Desktop UI automation to install itself.
   - Standard Agent Skills fallback is: npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex.`);
 }
 
@@ -217,7 +220,7 @@ function resolveUserPath(path) {
 
 function normalizeOptions(opts) {
   if ((opts.tool === 'claude-desktop' || opts.tool === 'claude-cowork' || opts.tool === 'all') && !opts.packagePath) {
-    opts.packagePath = 'imweb-ai-toolkit-plugin.zip';
+    opts.packagePath = 'imweb-ai-toolkit.plugin';
   }
   if ((opts.tool === 'claude-cowork' || opts.tool === 'all') && !opts.skillPackagePath) {
     opts.skillPackagePath = 'imweb-skill.zip';
