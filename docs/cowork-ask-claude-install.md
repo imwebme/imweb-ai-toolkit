@@ -29,5 +29,6 @@ Expected result:
 Important limitation:
 
 - A Cowork task can create and verify the packages itself.
+- If the task reports a read-only skills mount such as `/mnt/.claude/skills/`, treat that as the expected stop condition for a no-UI install request.
 - If the runtime cannot load new Skills from the task filesystem during the current session, bare `/imweb` will not appear until the generated Skill package is provisioned by the user, workspace admin, or a supported Cowork Skill installation flow.
 - Claude Code plugin install and local `~/.claude/skills` discovery are separate from Claude Desktop Cowork.
