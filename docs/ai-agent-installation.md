@@ -80,7 +80,7 @@ For non-interactive smoke tests that must prove bundled skill files are readable
 allow Claude Code's `Read` tool and add the installed plugin cache directory:
 
 ```bash
-PLUGIN_DIR="$(claude plugin list --json | jq -r '.installed[] | select(.id == "imweb-ai-toolkit@imweb-ai-toolkit") | .installPath')"
+PLUGIN_DIR="$(claude plugin list --json --available | jq -r '.installed[] | select(.id == "imweb-ai-toolkit@imweb-ai-toolkit") | .installPath')"
 printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫 번째 H1 제목만 알려줘. 명령 실행은 하지 마.' \
   | claude -p --no-session-persistence --tools Read --allowedTools Read --add-dir "$PLUGIN_DIR"
 ```
