@@ -31,12 +31,15 @@ function usage() {
   console.log(`imweb-ai-toolkit installer
 
 Usage:
-  npx --yes github:imwebme/imweb-ai-toolkit --tool codex|claude|both [options]
-  npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --tool codex|claude|both [options]
-  node install/imweb-ai-toolkit-install.mjs --tool codex|claude|both [options]
+  npx --yes github:imwebme/imweb-ai-toolkit --tool codex|claude-code|claude-desktop|both|all [options]
+  npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --tool codex|claude-code|claude-desktop|both|all [options]
+  node install/imweb-ai-toolkit-install.mjs --tool codex|claude-code|claude-desktop|both|all [options]
 
 Options:
-  --tool codex|claude|both    Target AI tool. "both" installs Codex and Claude surfaces.
+  --tool codex|claude|claude-code|claude-desktop|claude-cowork|both|all
+                              Target AI surface. "claude" is an alias for Claude Code.
+                              "both" installs Codex + Claude Code. "all" also creates the
+                              Claude Desktop Cowork upload zip.
   --scope user|project|local  Install scope for plugin tools. Default: user.
   --skill-mode copy|symlink   Skill install mode. Default: copy. Use copy for npx installs.
   --with-skill                Also install the imweb skill discovery bundle.
@@ -44,7 +47,8 @@ Options:
   --install-cli               Install or update the imweb CLI before tool wiring.
   --source SOURCE             Marketplace source. Default: ${PUBLIC_GIT_SOURCE}
   --ref REF                   Git ref for Codex marketplace add. Default: ${PUBLIC_GIT_REF}
-  --package PATH              Create Claude Desktop Cowork upload zip.
+  --package PATH              Create Claude Desktop Cowork upload zip. Relative paths are
+                              resolved from the directory where you run this command.
   --no-backup                 Skip timestamped backup of local Codex/Claude config paths.
   --no-replace                Do not replace existing imweb marketplace/plugin/skill entries.
   --dry-run                   Print actions without changing the machine.
@@ -55,7 +59,9 @@ Notes:
   - The default npx path registers the public Git repository as the marketplace source.
   - Codex CLI currently supports marketplace registration; the installer also copies the
     imweb skill by default so command discovery works immediately.
-  - Claude Code installs imweb-ai-toolkit from the registered marketplace.`);
+  - Claude Code installs imweb-ai-toolkit from the registered marketplace.
+  - Claude Desktop Cowork does not read Claude Code's CLI registry. Upload the generated
+    plugin zip in Cowork's Plugins UI, then invoke the skill as /imweb-ai-toolkit:imweb.`);
 }
 
 function fail(message) {
@@ -74,7 +80,7 @@ function parseArgs(argv) {
     };
     switch (arg) {
       case '--tool':
-        opts.tool = readValue(arg);
+        opts.tool = normalizeTool(readValue(arg));
         break;
       case '--scope':
         opts.scope = readValue(arg);
@@ -124,8 +130,8 @@ function parseArgs(argv) {
   if (!opts.tool && !opts.packagePath) {
     fail('--tool or --package is required');
   }
-  if (opts.tool && !['codex', 'claude', 'both'].includes(opts.tool)) {
-    fail('--tool must be codex, claude, or both');
+  if (opts.tool && !['codex', 'claude', 'claude-desktop', 'both', 'all'].includes(opts.tool)) {
+    fail('--tool must be codex, claude-code, claude-desktop, both, or all');
   }
   if (!['user', 'project', 'local'].includes(opts.scope)) {
     fail('--scope must be user, project, or local');
@@ -134,6 +140,24 @@ function parseArgs(argv) {
     fail('--skill-mode must be copy or symlink');
   }
   return opts;
+}
+
+function normalizeTool(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  const aliases = {
+    codex: 'codex',
+    claude: 'claude',
+    'claude-code': 'claude',
+    'claude_cli': 'claude',
+    'claude-cli': 'claude',
+    'claude-desktop': 'claude-desktop',
+    'claude-cowork': 'claude-desktop',
+    cowork: 'claude-desktop',
+    desktop: 'claude-desktop',
+    both: 'both',
+    all: 'all',
+  };
+  return aliases[normalized] || normalized;
 }
 
 function quote(value) {
@@ -172,6 +196,28 @@ function expandHome(path) {
   if (path === '~') return homedir();
   if (path.startsWith('~/')) return join(homedir(), path.slice(2));
   return path;
+}
+
+function resolveUserPath(path) {
+  const expanded = expandHome(path);
+  if (expanded.startsWith('/') || /^[A-Za-z]:[\\/]/.test(expanded)) {
+    return resolve(expanded);
+  }
+  return resolve(process.cwd(), expanded);
+}
+
+function normalizeOptions(opts) {
+  if ((opts.tool === 'claude-desktop' || opts.tool === 'all') && !opts.packagePath) {
+    opts.packagePath = 'imweb-ai-toolkit-plugin.zip';
+  }
+  if (opts.packagePath) {
+    opts.packagePath = resolveUserPath(opts.packagePath);
+  }
+  return opts;
+}
+
+function needsLocalBackup(opts) {
+  return ['codex', 'claude', 'both', 'all'].includes(opts.tool);
 }
 
 function timestamp() {
@@ -327,12 +373,14 @@ function shouldInstallSkill(tool, opts) {
 }
 
 function main() {
-  const opts = parseArgs(process.argv.slice(2));
+  const opts = normalizeOptions(parseArgs(process.argv.slice(2)));
   opts.steps = [];
   opts.backupRoot = null;
   opts.backupEntries = [];
 
-  createBackup(opts);
+  if (needsLocalBackup(opts)) {
+    createBackup(opts);
+  }
 
   if (opts.packagePath) {
     createPackage(opts);
@@ -342,7 +390,7 @@ function main() {
     installCli(opts);
   }
 
-  const tools = opts.tool === 'both' ? ['codex', 'claude'] : (opts.tool ? [opts.tool] : []);
+  const tools = (opts.tool === 'both' || opts.tool === 'all') ? ['codex', 'claude'] : (['codex', 'claude'].includes(opts.tool) ? [opts.tool] : []);
   for (const tool of tools) {
     if (tool === 'codex') installCodex(opts);
     if (tool === 'claude') installClaude(opts);
@@ -358,6 +406,7 @@ function main() {
     scope: opts.scope,
     skillMode: opts.skillMode,
     backupRoot: opts.backupRoot,
+    packagePath: opts.packagePath || null,
     steps: opts.steps,
   };
 
@@ -368,6 +417,7 @@ function main() {
     if (opts.backupRoot) console.log(`  backup: ${opts.backupRoot}`);
     console.log(`  marketplace_source: ${opts.source}`);
     if (opts.tool) console.log(`  tool: ${opts.tool}`);
+    if (opts.packagePath) console.log(`  package: ${opts.packagePath}`);
   }
 }
 

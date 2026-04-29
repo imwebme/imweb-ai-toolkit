@@ -31,7 +31,7 @@ flowchart LR
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-此命令会将 public GitHub repository 注册为持久 marketplace source，安装 Claude Code plugin，并复制 `imweb` skill，方便 Codex 立即发现。面向 agent 的安装和验证 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
+此命令会将 public GitHub repository 注册为持久 marketplace source，安装 Claude Code plugin，并复制 `imweb` skill，方便 Codex 立即发现。对于 Claude Desktop Cowork，请让 agent 使用 `--tool claude-desktop` 创建 `imweb-ai-toolkit-plugin.zip`，然后在 Cowork Plugins UI 中上传。面向 agent 的安装和验证 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
 
 对受支持的 surface 使用 bootstrap script。
 
@@ -65,7 +65,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装。Claude Desktop Cowork 可以上传生成的 plugin zip，或使用组织 marketplace。
+Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Desktop Cowork 使用单独的 Desktop plugin 安装路径，因此需要上传生成的 plugin zip，或使用组织 marketplace。
 
 ## 从这里开始
 

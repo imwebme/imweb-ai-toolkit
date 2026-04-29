@@ -31,7 +31,7 @@ If an AI coding agent is doing the setup for you, use the public `npx` installer
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-This registers the public GitHub repository as the durable marketplace source, installs the Claude Code plugin, and copies the Codex `imweb` skill for immediate discovery. See [docs/ai-agent-installation.md](docs/ai-agent-installation.md) for the full agent-oriented install and verification checklist.
+This registers the public GitHub repository as the durable marketplace source, installs the Claude Code plugin, and copies the Codex `imweb` skill for immediate discovery. For Claude Desktop Cowork, ask the agent to create `imweb-ai-toolkit-plugin.zip` with `--tool claude-desktop`, then upload it in Cowork's Plugins UI. See [docs/ai-agent-installation.md](docs/ai-agent-installation.md) for the full agent-oriented install and verification checklist.
 
 Use the bootstrap script for supported surfaces:
 
@@ -65,7 +65,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex uses the Plugins UI after marketplace registration. Claude Code can install directly from the registered marketplace. Claude Desktop Cowork can upload the generated plugin zip or use an organization marketplace.
+Codex uses the Plugins UI after marketplace registration. Claude Code can install directly from the registered marketplace and can verify the plugin skill with `/imweb-ai-toolkit:imweb`. Claude Desktop Cowork uses a separate Desktop plugin install path: upload the generated plugin zip or use an organization marketplace.
 
 ## Start Here
 

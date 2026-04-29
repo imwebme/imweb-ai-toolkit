@@ -136,7 +136,7 @@ PowerShell:
 ```
 
 Claude Code는 `user`, `project`, `local` scope를 지원합니다. 설치 후 기존 세션에서는 `/reload-plugins`를 실행하거나 새 세션을 시작합니다.
-skill 로드를 결정적으로 확인해야 하는 CLI smoke에서는 `/imweb` 또는 `/imweb-ai-toolkit:imweb`로 프롬프트를 시작합니다. 일반 목적 요청은 모델과 세션 상태에 따라 skill 선택이 늦어질 수 있습니다.
+plugin skill 로드를 결정적으로 확인해야 하는 CLI smoke에서는 `/imweb-ai-toolkit:imweb`로 프롬프트를 시작합니다. 일반 목적 요청은 모델과 세션 상태에 따라 skill 선택이 늦어질 수 있습니다.
 
 Claude Desktop Cowork:
 
@@ -150,7 +150,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-생성된 zip은 Claude Desktop의 Cowork > Customize > Browse plugins 흐름에서 custom plugin file로 업로드합니다. Team/Enterprise 조직 배포는 `.claude-plugin/marketplace.json`를 기준으로 GitHub synced marketplace 또는 manual upload로 운영합니다.
+생성된 zip은 Claude Desktop의 Cowork > Customize > Browse plugins 흐름에서 custom plugin file로 업로드합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 이 zip upload 또는 조직 배포 경로를 기준으로 합니다. 설치/활성화 후에는 `/imweb-ai-toolkit:imweb`로 시작합니다. Desktop 앱/계정에서 personal custom upload가 보이지 않으면 Team/Enterprise manual marketplace upload를 사용합니다. GitHub synced Cowork organization marketplace는 private/internal GitHub repo만 허용하므로 public repo는 npx/package source로 사용하고, 조직 배포에는 private/internal mirror를 둡니다.
 
 ## 표면별 시작점
 

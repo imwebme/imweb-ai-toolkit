@@ -15,13 +15,19 @@ npx --yes github:imwebme/imweb-ai-toolkit --tool codex --scope user
 Claude Code:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --tool claude --scope user
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-code --scope user
 ```
 
 Codex and Claude Code together:
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```
+
+Claude Desktop Cowork package:
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
 Equivalent `npm exec` form:
@@ -38,10 +44,11 @@ npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user --install-cli
 
 ## What The Installer Does
 
-- Creates a timestamped backup under `~/.imweb-ai-toolkit-local-install-backups/`.
+- Creates a timestamped backup under `~/.imweb-ai-toolkit-local-install-backups/` when it changes Codex or Claude Code local config. Package-only Claude Desktop Cowork runs do not create a backup.
 - Registers `https://github.com/imwebme/imweb-ai-toolkit.git` as the marketplace source.
 - For Codex, registers the marketplace and copies `skills/imweb` into the user skill discovery path so CLI discovery works without waiting for a Plugins UI install.
 - For Claude Code, installs `imweb-ai-toolkit@imweb-ai-toolkit` in user scope.
+- For Claude Desktop Cowork, creates `imweb-ai-toolkit-plugin.zip` in the directory where the agent ran the command. The Desktop plugin still has to be uploaded in the Cowork Plugins UI.
 - Replaces existing `imweb-ai-toolkit` marketplace/plugin entries by default while preserving Claude plugin data.
 
 Use `--no-replace` to avoid replacing existing entries. Use `--no-backup` only in disposable automation environments.
@@ -66,7 +73,7 @@ Claude Code verification:
 
 ```bash
 claude plugin list --json --available
-claude -p --no-session-persistence '/imweb Answer exactly: IMWEB_CLAUDE_PLUGIN_VISIBLE'
+claude -p --no-session-persistence '/imweb-ai-toolkit:imweb Answer exactly: IMWEB_CLAUDE_PLUGIN_VISIBLE'
 ```
 
 Expected high-level result:
@@ -77,13 +84,23 @@ Expected high-level result:
 
 ## Claude Desktop Cowork
 
+Claude Desktop Cowork does not read the Claude Code CLI plugin registry or `~/.claude/skills` directly. It needs its own plugin install through the Cowork UI.
+
 For Claude Desktop Cowork custom upload, ask the agent to create the zip:
 
 ```bash
-npx --yes github:imwebme/imweb-ai-toolkit --package imweb-ai-toolkit-plugin.zip
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
-Then upload the zip in Claude Desktop Cowork using the custom plugin upload flow.
+Then upload `imweb-ai-toolkit-plugin.zip` in Claude Desktop Cowork using the custom plugin upload flow: Cowork > Customize > Browse plugins > custom plugin file upload. After it is enabled, invoke the skill as `/imweb-ai-toolkit:imweb`.
+
+Observed caveat: Claude Desktop 1.5354.0 may show the plugin directory without a personal custom upload action, depending on account or workspace settings. In that case, the zip is still the correct artifact for Team/Enterprise manual marketplace upload. GitHub-synced Cowork organization marketplaces require a private or internal GitHub repository, so the public repo is used for the npx/package path, not as a direct organization marketplace source.
+
+If an explicit package path is needed, pass an absolute path or a path relative to the directory where the agent runs:
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --package "$PWD/imweb-ai-toolkit-plugin.zip"
+```
 
 ## Manual Clone Fallback
 
@@ -95,6 +112,7 @@ cd imweb-ai-toolkit
 ./install/install-plugins.sh --tool codex
 ./install/install-skills.sh --tool codex --scope user --mode copy
 ./install/install-plugins.sh --tool claude --scope user
+./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
 ```
 
 For manual clones, `--mode symlink` is acceptable during development. For `npx`, keep the default `copy` mode because the package execution directory is temporary.
