@@ -61,7 +61,7 @@ Present imweb-ai-toolkit.plugin so I can save it.
 
 This creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.zip` in the task folder. Claude should verify the package contents, then present `imweb-ai-toolkit.plugin` as the installable Cowork plugin artifact. Do not ask Claude to open Customize, Settings, Skills, Plugins, or any Claude Desktop UI through computer-use.
 
-Cowork does not use the Claude Code namespace form. Do not type `/imweb-ai-toolkit:imweb` in Cowork. After the Cowork host installs and enables the presented plugin, start from the slash menu entry named `/imweb`.
+After the Cowork host installs and enables the presented plugin, start with `/imweb-ai-toolkit:imweb` or a natural-language imweb request. The plugin package includes a local `imweb-cli` MCP bridge, so Cowork can reuse the host `imweb` CLI and auth state instead of installing the CLI inside the task VM.
 
 Claude Desktop plugin package only:
 
@@ -125,7 +125,7 @@ claude plugin list --json --available
 claude -p --no-session-persistence '/imweb-ai-toolkit:imweb imweb CLI command discovery entrypoint를 한 문장으로 설명해줘.'
 ```
 
-The namespaced `/imweb-ai-toolkit:imweb` form is for Claude Code plugin skills. In Claude Desktop Cowork, the expected visible entry is `/imweb`, and it appears only after the Cowork plugin package has been installed/enabled by the Cowork host or organization provisioning.
+The namespaced `/imweb-ai-toolkit:imweb` form is the deterministic plugin skill smoke entry for Claude Code and the current Cowork plugin command entry after the package is installed/enabled by the Cowork host or organization provisioning.
 
 For non-interactive smoke tests that must prove bundled skill files are readable,
 allow Claude Code's `Read` tool and add the installed plugin cache directory:
@@ -141,14 +141,14 @@ Expected high-level result:
 - Codex has an `imweb` skill at `~/.codex/skills/imweb/SKILL.md`.
 - Claude Code lists `imweb-ai-toolkit@imweb-ai-toolkit` as installed and enabled.
 - The Claude Code file-read smoke returns `capability registry`.
-- Claude Cowork package generation creates a verified `imweb-ai-toolkit.plugin`; after the Cowork host installs/enables that package, `/imweb` is the intended slash entry.
+- Claude Cowork package generation creates a verified `imweb-ai-toolkit.plugin`; after the Cowork host installs/enables that package, `/imweb-ai-toolkit:imweb` or a natural-language imweb request is the intended entry.
 - The two `imweb --output json config ...` commands return valid JSON.
 
 ## Claude Desktop Cowork
 
 Claude Desktop Cowork does not read the Claude Code CLI plugin registry or `~/.claude/skills` directly. It needs its own Cowork plugin or organization provisioning path.
 
-For the `/imweb` slash entrypoint, ask Claude to create and verify the Cowork plugin package:
+For the Cowork entrypoint, ask Claude to create and verify the Cowork plugin package:
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
@@ -165,7 +165,7 @@ The prompt explicitly tells Claude not to use computer-use or UI automation. Cla
 
 Local dogfood on 2026-04-29 observed Claude Desktop Cowork mounting `/mnt/.claude/skills/` read-only. The supported no-UI path is therefore the `.plugin` artifact, not writing into that mount.
 
-Local dogfood on 2026-04-29 also confirmed that `/imweb-ai-toolkit:imweb` is a Claude Code namespace and is rejected as an unknown skill in Cowork before the plugin is installed. Cowork users should look for `/imweb` only after the plugin install card has been accepted.
+Local dogfood on 2026-04-29 confirmed that `/imweb-ai-toolkit:imweb` is rejected before the Cowork plugin is installed. After the plugin install card is accepted, use `/imweb-ai-toolkit:imweb` or ask naturally for an imweb task. The bundled local MCP bridge is the supported path for host CLI/auth access.
 
 For Claude Desktop Cowork plugin package generation only, run:
 

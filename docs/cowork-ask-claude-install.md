@@ -21,7 +21,7 @@ Run:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 
 Then verify the generated artifacts:
-1. imweb-ai-toolkit.plugin must contain .claude-plugin/plugin.json and skills/imweb/SKILL.md.
+1. imweb-ai-toolkit.plugin must contain .claude-plugin/plugin.json, .mcp.json, bin/imweb-mcp.mjs, and skills/imweb/SKILL.md.
 2. skills/imweb/SKILL.md must declare name: imweb.
 3. imweb-skill.zip should also exist as a fallback package and must contain imweb/SKILL.md.
 
@@ -34,11 +34,12 @@ Expected result:
 - `imweb-skill.zip` is created and verified as a fallback Claude Skill package named `imweb`.
 - Claude does not use computer-use or UI automation.
 - Claude presents the `.plugin` artifact so the Cowork host can install and enable it.
-- After the plugin install card is accepted, the Cowork slash entry is `/imweb`. Do not use the Claude Code namespace form `/imweb-ai-toolkit:imweb` in Cowork.
+- After the plugin install card is accepted, start with `/imweb-ai-toolkit:imweb` or a natural-language imweb request.
+- The plugin exposes a local `imweb-cli` MCP bridge so Cowork can reuse the host CLI and auth state instead of installing the CLI inside the task VM.
 
 Important limitation:
 
 - A Cowork task can create and verify the plugin package itself.
 - If the task reports a read-only skills mount such as `/mnt/.claude/skills/`, treat that as the expected stop condition for a no-UI install request.
-- If the runtime cannot install the presented `.plugin` artifact during the current session, `/imweb` will not appear until the generated plugin is installed by the Cowork host or workspace admin.
+- If the runtime cannot install the presented `.plugin` artifact during the current session, the imweb plugin command and MCP tools will not appear until the generated plugin is installed by the Cowork host or workspace admin.
 - Claude Code plugin install and local `~/.claude/skills` discovery are separate from Claude Desktop Cowork.

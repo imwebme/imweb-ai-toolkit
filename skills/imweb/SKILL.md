@@ -19,16 +19,19 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 - 공개 호출 표면은 이 `imweb` 하나만 사용합니다.
 
 기본 시작점:
-1. `command -v imweb`와 `imweb --version`으로 공식 CLI가 있는지 확인합니다.
-2. CLI가 없으면 `npx -y github:imwebme/imweb-ai-toolkit --tool cli`로 설치를 시도합니다.
-3. `imweb --output json config context`
-4. `imweb --output json config command-capabilities`
-5. 필요한 경우 `imweb --output json config command-capabilities --domain <domain>`
-6. exact 확인이 필요하면 `imweb --output json config command-capabilities --path "<exact path>"`
-7. 필요한 하위 명령만 `--help`
+1. Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list` 같은 MCP tools가 보이면 이것을 먼저 사용합니다.
+2. MCP tool이 없을 때만 `command -v imweb`와 `imweb --version`으로 공식 CLI가 있는지 확인합니다.
+3. CLI가 없으면 `npx -y github:imwebme/imweb-ai-toolkit --tool cli`로 설치를 시도합니다.
+4. `imweb --output json config context`
+5. `imweb --output json config command-capabilities`
+6. 필요한 경우 `imweb --output json config command-capabilities --domain <domain>`
+7. exact 확인이 필요하면 `imweb --output json config command-capabilities --path "<exact path>"`
+8. 필요한 하위 명령만 `--help`
 
 CLI/런타임 게이트:
 - npm registry의 `imweb` package는 공식 아임웹 CLI가 아니므로 조회하거나 설치하지 않습니다.
+- Claude Desktop Cowork에서는 plugin이 제공하는 local MCP bridge가 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. MCP tool이 있으면 VM shell에 CLI를 새로 설치하려고 하지 않습니다.
+- `imweb_cli_install` MCP tool은 사용자가 로컬 CLI 설치를 허용했을 때만 호출합니다.
 - Claude Desktop Cowork의 작업 shell은 사용자 Mac이 아니라 별도 Linux 런타임일 수 있습니다. `uname -s && uname -m`으로 현재 실행 환경을 확인합니다.
 - 현재 런타임에 CLI를 설치할 수 없거나 auth/profile이 없으면, 컴퓨터유즈나 사용자 터미널 실행으로 우회하지 말고 막힌 원인과 필요한 다음 조건만 짧게 보고합니다.
 - 사용자가 명시적으로 로컬 앱 조작을 요청하지 않았다면 Terminal, Customize, Settings, computer-use를 요청하지 않습니다.

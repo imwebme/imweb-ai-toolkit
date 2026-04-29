@@ -71,8 +71,8 @@ Notes:
   - For Cowork, the default command creates imweb-ai-toolkit.plugin plus
     imweb-skill.zip as a fallback. Present the .plugin file to Cowork so the
     host can install/enable it; do not ask Cowork to use computer-use or
-    Claude Desktop UI automation to install itself. After install, Cowork uses
-    /imweb, not the Claude Code namespace /imweb-ai-toolkit:imweb.
+    Claude Desktop UI automation to install itself. After install, start with
+    /imweb-ai-toolkit:imweb or a natural-language imweb request in Cowork.
   - Standard Agent Skills fallback is: npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex.`);
 }
 
@@ -188,10 +188,11 @@ function run(command, args, opts, options = {}) {
   if (opts.dryRun) {
     return { status: 0, stdout: '', stderr: '' };
   }
+  const capture = options.capture || opts.json;
   const result = spawnSync(command, args, {
     cwd: options.cwd || REPO_ROOT,
     encoding: 'utf8',
-    stdio: options.capture ? ['ignore', 'pipe', 'pipe'] : 'inherit',
+    stdio: capture ? ['ignore', 'pipe', 'pipe'] : 'inherit',
   });
   if (result.error) {
     if (options.allowFailure) return { status: 1, stdout: '', stderr: String(result.error.message || result.error) };
@@ -294,9 +295,11 @@ function createBackup(opts) {
 }
 
 function commandExists(command) {
-  const checker = platform() === 'win32' ? 'where' : 'command';
-  const args = platform() === 'win32' ? [command] : ['-v', command];
-  const result = spawnSync(checker, args, { stdio: 'ignore', shell: platform() !== 'win32' });
+  const checker = platform() === 'win32' ? 'where' : 'sh';
+  const args = platform() === 'win32'
+    ? [command]
+    : ['-c', 'command -v -- "$1" >/dev/null 2>&1', 'sh', command];
+  const result = spawnSync(checker, args, { stdio: 'ignore' });
   return result.status === 0;
 }
 

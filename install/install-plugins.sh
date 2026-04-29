@@ -95,6 +95,7 @@ include = [
     ".claude-plugin",
     ".cursor-plugin",
     "assets",
+    "bin",
     "commands",
     "docs/ai-agent-installation.md",
     "docs/cli-toolkit-integration.md",

@@ -1,8 +1,18 @@
 {
-  "mcpServers": {},
+  "mcpServers": {
+    "imweb-cli": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/bin/imweb-mcp.mjs"
+      ],
+      "env": {
+        "NO_COLOR": "1"
+      }
+    }
+  },
   "toolkit": {
     "name": "imweb-ai-toolkit",
-    "description": "이 레포는 자체 MCP 서버를 번들하지 않고, imweb CLI를 둘러싼 plugin/skill 자산과 연결 문서를 제공합니다.",
+    "description": "이 레포는 Claude Desktop Cowork용 local MCP bridge와 imweb CLI를 둘러싼 plugin/skill 자산, 연결 문서를 제공합니다.",
     "entrypoints": {
       "codex": "./.codex-plugin/plugin.json",
       "codexMarketplace": "./.agents/plugins/marketplace.json",
