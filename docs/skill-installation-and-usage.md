@@ -137,6 +137,13 @@ PowerShell:
 
 Claude Code는 `user`, `project`, `local` scope를 지원합니다. 설치 후 기존 세션에서는 `/reload-plugins`를 실행하거나 새 세션을 시작합니다.
 plugin skill 로드를 결정적으로 확인해야 하는 CLI smoke에서는 `/imweb-ai-toolkit:imweb`로 프롬프트를 시작합니다. 일반 목적 요청은 모델과 세션 상태에 따라 skill 선택이 늦어질 수 있습니다.
+`claude -p` 비대화형 smoke에서 bundle-local docs 읽기까지 확인하려면 설치된 plugin cache를 `--add-dir`로 허용하고 `Read` tool을 명시합니다.
+
+```bash
+PLUGIN_DIR="$(claude plugin list --json | jq -r '.installed[] | select(.id == "imweb-ai-toolkit@imweb-ai-toolkit") | .installPath')"
+printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫 번째 H1 제목만 알려줘. 명령 실행은 하지 마.' \
+  | claude -p --no-session-persistence --tools Read --allowedTools Read --add-dir "$PLUGIN_DIR"
+```
 
 Claude Desktop Cowork:
 

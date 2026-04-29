@@ -73,13 +73,23 @@ Claude Code verification:
 
 ```bash
 claude plugin list --json --available
-claude -p --no-session-persistence '/imweb-ai-toolkit:imweb Answer exactly: IMWEB_CLAUDE_PLUGIN_VISIBLE'
+claude -p --no-session-persistence '/imweb-ai-toolkit:imweb imweb CLI command discovery entrypoint를 한 문장으로 설명해줘.'
+```
+
+For non-interactive smoke tests that must prove bundled skill files are readable,
+allow Claude Code's `Read` tool and add the installed plugin cache directory:
+
+```bash
+PLUGIN_DIR="$(claude plugin list --json | jq -r '.installed[] | select(.id == "imweb-ai-toolkit@imweb-ai-toolkit") | .installPath')"
+printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫 번째 H1 제목만 알려줘. 명령 실행은 하지 마.' \
+  | claude -p --no-session-persistence --tools Read --allowedTools Read --add-dir "$PLUGIN_DIR"
 ```
 
 Expected high-level result:
 
 - Codex has an `imweb` skill at `~/.codex/skills/imweb/SKILL.md`.
 - Claude Code lists `imweb-ai-toolkit@imweb-ai-toolkit` as installed and enabled.
+- The Claude Code file-read smoke returns `capability registry`.
 - The two `imweb --output json config ...` commands return valid JSON.
 
 ## Claude Desktop Cowork
