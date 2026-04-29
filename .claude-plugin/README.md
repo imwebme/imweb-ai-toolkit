@@ -37,7 +37,7 @@ printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫
 
 Fallback Skill package가 필요하면 `./install/install-plugins.sh --skill-package imweb-skill.zip`로 `imweb-skill.zip`을 별도 생성합니다.
 
-Claude Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않습니다. local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않습니다. package 생성, 검증, `.plugin` artifact 제시 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md)를 봅니다.
+Claude Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않습니다. local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Claude Code namespace인 `/imweb-ai-toolkit:imweb`는 Cowork에서 쓰지 않고, Cowork plugin 설치 후 slash menu에 뜨는 `/imweb`만 사용합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않습니다. package 생성, 검증, `.plugin` artifact 제시 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md)를 봅니다.
 
 ## 공개 안내 범위
 

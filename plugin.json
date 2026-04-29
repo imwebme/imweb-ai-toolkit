@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "imweb CLI와 공개 skill `imweb`를 Codex, Claude, Cursor 표면에서 일관되게 연결하기 위한 plugin-first toolkit 메타데이터입니다.",
   "author": {
     "name": "imweb",
