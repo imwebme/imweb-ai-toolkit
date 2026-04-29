@@ -17,8 +17,8 @@
     "llm",
     "structured-output"
   ],
-  "skills": "../skills/",
-  "rootPlugin": "../plugin.json",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "imweb AI toolkit",
     "shortDescription": "아임웹 OpenAPI용 Rust CLI를 공개 skill `imweb`으로 안전하게 호출하도록 돕는 Codex 표면 메타입니다.",

@@ -5,6 +5,7 @@
     "description": "이 레포는 자체 MCP 서버를 번들하지 않고, imweb CLI를 둘러싼 plugin/skill 자산과 연결 문서를 제공합니다.",
     "entrypoints": {
       "codex": "./.codex-plugin/plugin.json",
+      "codexMarketplace": "./.agents/plugins/marketplace.json",
       "claude": "./.claude-plugin/plugin.json",
       "claudeManifest": "./.claude-plugin/manifest.json",
       "claudeMarketplace": "./.claude-plugin/marketplace.json",

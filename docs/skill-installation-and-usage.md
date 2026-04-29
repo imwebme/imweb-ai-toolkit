@@ -6,7 +6,8 @@
 
 1. `imweb` CLI를 설치하거나 업데이트합니다.
 2. 필요하면 skill `imweb`를 discovery 경로에 배치합니다.
-3. 대상 surface의 plugin README와 metadata를 읽고 사용을 시작합니다.
+3. 대상 surface가 plugin marketplace를 지원하면 plugin을 등록하거나 설치합니다.
+4. 대상 surface의 plugin README와 metadata를 읽고 사용을 시작합니다.
 
 지원 surface에서 한 번에 처리하려면 bootstrap을 사용합니다.
 
@@ -69,7 +70,7 @@ PowerShell:
 
 ## Skill 설치
 
-skill 설치기는 `skills/imweb/`를 Codex 또는 Claude discovery 경로에 복사하거나 링크합니다. Cursor와 Claude Cowork용 별도 설치기는 현재 제공하지 않습니다.
+skill 설치기는 `skills/imweb/`를 Codex 또는 Claude discovery 경로에 복사하거나 링크합니다. 이것은 로컬 authoring/discovery 경로입니다. Codex App, Claude Code, Claude Desktop Cowork처럼 plugin marketplace를 지원하는 표면에는 아래 "Plugin 설치" 흐름을 우선 사용합니다.
 
 - Codex user scope 기본 경로: `$CODEX_HOME/skills`
 - `CODEX_HOME`이 비어 있으면 Codex user scope 기본 경로: `~/.codex/skills`
@@ -101,9 +102,52 @@ PowerShell:
 
 bootstrap도 같은 계약을 그대로 따릅니다. 따라서 `bootstrap-imweb.*`를 `-SkillMode symlink`로 다시 실행했을 때 대상에 같은 source를 가리키는 symlink가 이미 있으면 skill 단계는 성공적으로 건너뜁니다.
 
+## Plugin 설치
+
+plugin 설치기는 이 toolkit repo 자체를 installable plugin으로 노출합니다.
+
+Codex:
+
+```bash
+./install/install-plugins.sh --tool codex
+```
+
+Codex CLI는 marketplace 등록 명령을 제공하지만 plugin 설치는 현재 Plugins UI에서 진행합니다. 위 명령 후 Codex App 또는 Codex CLI의 `/plugins` 화면에서 `imweb-ai-toolkit`을 설치합니다. repo 안에서 바로 테스트하는 경우 Codex는 `.agents/plugins/marketplace.json`도 marketplace 후보로 읽을 수 있습니다.
+
+Claude Code:
+
+```bash
+./install/install-plugins.sh --tool claude --scope user
+```
+
+PowerShell:
+
+```powershell
+./install/install-plugins.ps1 -Tool codex
+./install/install-plugins.ps1 -Tool claude -Scope user
+```
+
+Claude Code는 `user`, `project`, `local` scope를 지원합니다. 설치 후 기존 세션에서는 `/reload-plugins`를 실행하거나 새 세션을 시작합니다.
+skill 로드를 결정적으로 확인해야 하는 CLI smoke에서는 `/imweb` 또는 `/imweb-ai-toolkit:imweb`로 프롬프트를 시작합니다. 일반 목적 요청은 모델과 세션 상태에 따라 skill 선택이 늦어질 수 있습니다.
+
+Claude Desktop Cowork:
+
+```bash
+./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+```
+
+PowerShell:
+
+```powershell
+./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+```
+
+생성된 zip은 Claude Desktop의 Cowork > Customize > Browse plugins 흐름에서 custom plugin file로 업로드합니다. Team/Enterprise 조직 배포는 `.claude-plugin/marketplace.json`를 기준으로 GitHub synced marketplace 또는 manual upload로 운영합니다.
+
 ## 표면별 시작점
 
 - Codex 표면 안내: [../.codex-plugin/README.md](../.codex-plugin/README.md)
+- Codex marketplace 메타: [../.agents/plugins/marketplace.json](../.agents/plugins/marketplace.json)
 - Claude 표면 안내: [../.claude-plugin/README.md](../.claude-plugin/README.md)
 - Claude marketplace 메타: [../.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json)
 - Cursor 표면 안내: [../.cursor-plugin/README.md](../.cursor-plugin/README.md)

@@ -7,15 +7,15 @@
 - CLI binary와 release payload의 source-of-truth는 외부 `imweb-cli`가 가집니다.
 - 기본 distribution entrypoint는 public `imwebme/imweb-cli-release`의 stable pointer(`channels/stable.json`)가 제공합니다.
 - 이 레포의 `install/` 스크립트는 그 release metadata를 소비해 CLI를 설치하거나 업데이트합니다.
-- skill `imweb`는 설치 후 각 런타임 discovery 경로에 배치됩니다.
-- 표면별 `plugin.json`은 어느 런타임이 어떤 자산을 읽어야 하는지 알려줍니다.
+- skill `imweb`는 설치 후 각 런타임 discovery 경로에 배치되거나 plugin bundle 안에서 로드됩니다.
+- 표면별 `plugin.json`과 marketplace metadata는 어느 런타임이 어떤 자산을 읽어야 하는지 알려줍니다.
 
 ## 공개 연결 계약
 
 public-safe snapshot은 아래 계약만 외부에 노출합니다.
 
 - CLI 설치 기본값은 public stable release plane입니다.
-- toolkit은 bootstrap, skill 설치, surface metadata만 제공합니다.
+- toolkit은 bootstrap, skill 설치, plugin 설치/패키징, surface metadata를 제공합니다.
 - runtime별 제한이나 수동 연결 범위는 표면 metadata와 support matrix에서만 설명합니다.
 - 운영용 검증 기록과 배포 준비 문서는 public snapshot 계약에 포함하지 않습니다.
 
@@ -43,6 +43,8 @@ public-safe snapshot은 아래 계약만 외부에 노출합니다.
 - PowerShell bootstrap: `./install/bootstrap-imweb.ps1`
 - shell CLI installer: `./install/install-cli.sh`
 - shell skill installer: `./install/install-skills.sh`
+- shell plugin installer: `./install/install-plugins.sh`
+- PowerShell plugin installer: `./install/install-plugins.ps1`
 
 ## 흐름별 설명
 
@@ -74,18 +76,25 @@ CLI 바이너리만 별도로 맞출 수 있습니다.
 - 입력: `--tool`, `--scope`, `--mode`
 - 목적: Codex 또는 Claude discovery 경로에 `skills/imweb/`를 복사하거나 링크하는 것
 
-### 4. 수동 연결 흐름
+### 4. plugin-first 설치 흐름
 
-Claude Cowork와 Cursor는 현재 문서 기반 수동 연결이 기준입니다.
+plugin marketplace를 지원하는 표면은 toolkit repo 자체를 installable plugin으로 노출합니다.
+
+- Codex: `.agents/plugins/marketplace.json`를 등록한 뒤 Codex App 또는 CLI의 Plugins UI에서 설치합니다.
+- Claude Code: `.claude-plugin/marketplace.json`를 등록하고 `imweb-ai-toolkit@imweb-ai-toolkit`을 설치합니다.
+- Claude Desktop Cowork: `install-plugins`가 만든 zip을 custom plugin file로 업로드하거나 조직 marketplace를 사용합니다.
+
+### 5. 수동 연결 흐름
+
+Cursor는 현재 문서 기반 수동 연결이 기준입니다.
 
 - Cursor는 `.cursor-plugin/plugin.json`, `.cursor-plugin/marketplace.json`, `.mcp.json`을 함께 확인합니다.
-- Claude Cowork는 `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, [surface-support-matrix.md](./surface-support-matrix.md)를 함께 확인합니다.
 
 ## 지원 범위 해석
 
 - Codex CLI/App: 지원
-- Claude Code/Desktop: 지원
-- Claude Cowork: 제한적 지원
+- Claude Code: 지원
+- Claude Desktop Cowork: 지원
 - Cursor workspace: 제한적 지원
 
 정식 기준은 [surface-support-matrix.md](./surface-support-matrix.md)를 따릅니다.

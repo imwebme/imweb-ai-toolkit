@@ -1,6 +1,6 @@
 # install
 
-이 디렉터리는 CLI 설치, skill 설치, bootstrap 진입점을 담습니다.
+이 디렉터리는 CLI 설치, skill 설치, plugin 설치/패키징, bootstrap 진입점을 담습니다.
 
 Codex 기준 skill 기본 설치 경로는 `$CODEX_HOME/skills`이며, `CODEX_HOME`이 없으면 `~/.codex/skills`를 사용합니다.
 
@@ -16,11 +16,35 @@ authenticated GitHub Release URL override를 직접 주는 경우에는 `gh` fal
 
 `install-skills.*` 재실행 계약은 shell/PowerShell 공통입니다. `copy`는 기존 skill 경로가 있으면 실패하고, `symlink`는 같은 source를 가리키는 기존 symlink만 성공으로 건너뜁니다.
 
+`install-plugins.*`는 plugin-first 설치 표면을 연결합니다.
+
+- Codex: `codex plugin marketplace add`로 이 repo의 `.agents/plugins/marketplace.json`를 등록합니다. Codex App 또는 Codex CLI의 Plugins 화면에서 `imweb-ai-toolkit`을 설치합니다.
+- Claude Code: `claude plugin marketplace add` 후 `claude plugin install imweb-ai-toolkit@imweb-ai-toolkit`을 실행합니다.
+- Claude Desktop Cowork: `--package` 또는 `-Package`로 custom plugin upload용 zip을 생성합니다. Desktop UI에서 Cowork > Customize > Browse plugins > custom upload 흐름으로 올립니다.
+
+예시:
+
+```bash
+./install/install-plugins.sh --tool codex
+./install/install-plugins.sh --tool claude --scope user
+./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+```
+
+PowerShell:
+
+```powershell
+./install/install-plugins.ps1 -Tool codex
+./install/install-plugins.ps1 -Tool claude -Scope user
+./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+```
+
 현재 포함된 파일:
 
 - `install-cli.sh`
 - `install-cli.ps1`
 - `install-skills.sh`
 - `install-skills.ps1`
+- `install-plugins.sh`
+- `install-plugins.ps1`
 - `bootstrap-imweb.sh`
 - `bootstrap-imweb.ps1`

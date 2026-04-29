@@ -17,9 +17,9 @@ flowchart LR
 
 ## What This Repo Contains
 
-- `plugin.json` and surface metadata for Codex, Claude, Cursor, and MCP reference wiring.
+- `plugin.json`, marketplace metadata, and surface metadata for Codex, Claude, Cursor, and MCP reference wiring.
 - `skills/imweb/`, the `imweb` skill bundle and its local docs.
-- `install/`, bootstrap and installer scripts for CLI and skill setup.
+- `install/`, bootstrap and installer scripts for CLI, skill, and plugin setup.
 - `docs/`, public usage, integration, and support matrix documentation.
 - `examples/`, sample workflows and fixtures.
 
@@ -41,6 +41,24 @@ PowerShell:
 
 The bootstrap script installs or updates the `imweb` CLI as needed, then installs the `imweb` skill for the selected tool. Advanced local or pinned-version setup is documented in [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md).
 
+For plugin-first setup, register or install the toolkit plugin:
+
+```bash
+./install/install-plugins.sh --tool codex
+./install/install-plugins.sh --tool claude --scope user
+./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+```
+
+PowerShell:
+
+```powershell
+./install/install-plugins.ps1 -Tool codex
+./install/install-plugins.ps1 -Tool claude -Scope user
+./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+```
+
+Codex uses the Plugins UI after marketplace registration. Claude Code can install directly from the registered marketplace. Claude Desktop Cowork can upload the generated plugin zip or use an organization marketplace.
+
 ## Start Here
 
 1. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
@@ -50,7 +68,7 @@ The bootstrap script installs or updates the `imweb` CLI as needed, then install
 
 ## Support Scope
 
-Codex and Claude are the primary supported surfaces for automated bootstrap. Cursor and Claude Cowork are documented as limited/manual connection surfaces. The authoritative support detail is [docs/surface-support-matrix.md](docs/surface-support-matrix.md).
+Codex App/CLI, Claude Code, and Claude Desktop Cowork are the primary supported plugin surfaces. Cursor remains documented as a limited/manual connection surface. The authoritative support detail is [docs/surface-support-matrix.md](docs/surface-support-matrix.md).
 
 ## License
 
