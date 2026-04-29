@@ -57,6 +57,12 @@ The Cowork command creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.z
 
 ## Other Install Methods
 
+If only the `imweb` CLI binary is missing:
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool cli
+```
+
 If the target tool does not support plugins, install the standard Agent Skill directly:
 
 ```bash

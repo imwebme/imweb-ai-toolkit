@@ -8,6 +8,12 @@ AI coding agent가 public repo에서 직접 설치해야 할 때는 `imweb-ai-to
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
+CLI만 설치하거나 업데이트할 때는 아래처럼 실행합니다.
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool cli
+```
+
 tool-native plugin 경로를 직접 사용할 수도 있습니다.
 
 ```bash

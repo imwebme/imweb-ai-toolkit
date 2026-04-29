@@ -7,3 +7,6 @@
 - `commands.md`
 - `imweb-ai-toolkit.md`
 - `scenario-playbooks.md`
+
+CLI가 없을 때는 공식 installer만 사용합니다: `npx -y github:imwebme/imweb-ai-toolkit --tool cli`.
+사용자 명시 없이 npm registry의 `imweb` package, computer-use, Terminal UI 조작으로 우회하지 않습니다.
