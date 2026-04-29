@@ -2,28 +2,32 @@
 
 Use this when the user wants Claude Cowork to set up imweb instead of doing the install manually.
 
-Copy or adapt this request inside a Claude Cowork task:
+Copy this request inside a Claude Cowork task. Keep it as one message.
 
 ```text
-Install the imweb AI toolkit for this Claude Cowork environment.
+Set up the imweb AI toolkit for this Cowork task from https://github.com/imwebme/imweb-ai-toolkit.
 
-Source: https://github.com/imwebme/imweb-ai-toolkit
+Use only terminal and file operations inside this task. Do not use computer-use. Do not open Customize, Settings, Skills, Plugins, or any Claude Desktop UI.
 
-Please do the setup yourself:
-1. Create the direct Cowork skill package for the /imweb shortcut:
-   npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
-2. Review the generated imweb-skill.zip contents before enabling it. It must contain imweb/SKILL.md, and the SKILL.md name must be imweb.
-3. Install or upload imweb-skill.zip through Customize > Skills so the imweb skill is enabled.
-4. If plugin installation is also available in this workspace, install or upload imweb-ai-toolkit-plugin.zip through Customize > Plugins.
-5. Verify that /imweb appears in the slash menu. If the slash menu does not expose it, verify by asking: "Use the imweb skill to explain what config command-capabilities checks."
+Run:
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
 
-Do not ask me to do the file creation or upload steps unless your current environment cannot control Claude Desktop settings. If a confirmation prompt appears for installing a local skill or plugin, explain the source and ask me to approve that prompt.
+Then verify the generated artifacts:
+1. imweb-skill.zip must contain imweb/SKILL.md.
+2. imweb/SKILL.md must declare name: imweb.
+3. imweb-ai-toolkit-plugin.zip should also exist for plugin or organization provisioning.
+
+If this Cowork runtime supports project-local skills or commands without UI upload, install the generated imweb skill into that supported project-local location and verify by reading the installed SKILL.md. If it does not, do not try to operate the Claude app. Leave the zip files in the task folder and report that current-session bare /imweb requires user/admin Skill provisioning outside this task.
 ```
 
 Expected result:
 
-- `imweb-skill.zip` is installed as a Claude Skill named `imweb`.
-- `/imweb` appears in Cowork when Skills are enabled.
-- `imweb-ai-toolkit-plugin.zip` is optional for plugin/marketplace workflows; the direct `/imweb` shortcut is provided by the skill package.
+- `imweb-skill.zip` is created and verified as a Claude Skill named `imweb`.
+- `imweb-ai-toolkit-plugin.zip` is created for plugin or organization marketplace workflows.
+- Claude does not use computer-use or UI automation.
 
-If Claude cannot access the Skills upload UI, it should report that limitation and leave the generated `imweb-skill.zip` ready for organization provisioning or later upload.
+Important limitation:
+
+- A Cowork task can create and verify the packages itself.
+- If the runtime cannot load new Skills from the task filesystem during the current session, bare `/imweb` will not appear until the generated Skill package is provisioned by the user, workspace admin, or a supported Cowork Skill installation flow.
+- Claude Code plugin install and local `~/.claude/skills` discovery are separate from Claude Desktop Cowork.

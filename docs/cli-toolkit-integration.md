@@ -76,13 +76,19 @@ CLI 바이너리만 별도로 맞출 수 있습니다.
 - 입력: `--tool`, `--scope`, `--mode`
 - 목적: Codex 또는 Claude discovery 경로에 `skills/imweb/`를 복사하거나 링크하는 것
 
+표준 Agent Skills CLI를 쓰는 환경에서는 public repo에서 바로 가져올 수 있습니다.
+
+```bash
+npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
+```
+
 ### 4. plugin-first 설치 흐름
 
 plugin marketplace를 지원하는 표면은 toolkit repo 자체를 installable plugin으로 노출합니다.
 
 - Codex: `.agents/plugins/marketplace.json`를 등록한 뒤 Codex App 또는 CLI의 Plugins UI에서 설치합니다.
 - Claude Code: `.claude-plugin/marketplace.json`를 등록하고 `imweb-ai-toolkit@imweb-ai-toolkit`을 설치한 뒤 `/imweb-ai-toolkit:imweb`로 plugin skill을 확인합니다.
-- Claude Desktop Cowork: 직접 `/imweb`는 `install-plugins --skill-package imweb-skill.zip`으로 만든 custom Skill zip을 사용합니다. plugin/조직 배포는 `install-plugins --package imweb-ai-toolkit-plugin.zip`으로 만든 plugin zip 또는 조직 marketplace를 사용합니다. Claude Code CLI registry와 `~/.claude/skills`는 Desktop Cowork 설치를 대체하지 않습니다.
+- Claude Desktop Cowork: 직접 `/imweb`는 `install-plugins --skill-package imweb-skill.zip`으로 만든 custom Skill zip을 별도 provisioning해서 사용합니다. plugin/조직 배포는 `install-plugins --package imweb-ai-toolkit-plugin.zip`으로 만든 plugin zip 또는 조직 marketplace를 사용합니다. Claude Code CLI registry와 `~/.claude/skills`는 Desktop Cowork 설치를 대체하지 않습니다.
 
 ### 5. 수동 연결 흐름
 

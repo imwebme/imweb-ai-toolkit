@@ -28,9 +28,9 @@ Options:
   --scope    Claude 설치 범위. user, project, local. 기본값: user
              Codex는 현재 marketplace 등록까지만 자동화합니다.
   --source   marketplace source. 기본값: 이 toolkit repo root
-  --package  Claude Desktop Cowork custom upload용 plugin zip 생성 경로
+  --package  Claude Desktop Cowork plugin/조직 provisioning용 zip 생성 경로
   --skill-package
-             Claude Cowork /imweb 직접 호출용 custom skill zip 생성 경로
+             Claude Cowork /imweb 직접 호출용 custom skill provisioning zip 생성 경로
   --dry-run  실행할 명령만 출력
   --help     도움말 출력
 
@@ -38,8 +38,8 @@ Options:
   - codex: repo/personal marketplace를 Codex에 등록합니다.
            이후 Codex App 또는 CLI의 Plugins 화면에서 imweb-ai-toolkit을 설치합니다.
   - claude: marketplace를 Claude Code에 등록하고 imweb-ai-toolkit plugin을 설치합니다.
-  - package: Claude Desktop Cowork의 custom plugin upload에 사용할 zip을 생성합니다.
-  - skill-package: Claude Cowork Skills upload에 사용할 imweb skill zip을 생성합니다.
+  - package: Claude Desktop Cowork의 plugin/조직 provisioning에 사용할 zip을 생성합니다.
+  - skill-package: Claude Cowork Skill provisioning에 사용할 imweb skill zip을 생성합니다.
 USAGE
 }
 
