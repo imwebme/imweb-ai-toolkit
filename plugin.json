@@ -16,6 +16,7 @@
   "examples": "./examples",
   "entrypoints": {
     "codex": "./.codex-plugin/plugin.json",
+    "codexMarketplace": "./.agents/plugins/marketplace.json",
     "claude": "./.claude-plugin/plugin.json",
     "claudeManifest": "./.claude-plugin/manifest.json",
     "claudeMarketplace": "./.claude-plugin/marketplace.json",
@@ -31,9 +32,7 @@
     ],
     "claude": [
       "claude-code",
-      "claude-desktop"
-    ],
-    "claude_limited": [
+      "claude-desktop",
       "claude-cowork"
     ],
     "cursor": [

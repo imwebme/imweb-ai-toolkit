@@ -273,11 +273,15 @@ function Copy-Asset([string]$Source, [string]$Destination) {
 
     if ($Source.StartsWith('file://')) {
         $uri = [System.Uri]$Source
-        Copy-Item -LiteralPath $uri.LocalPath -Destination $Destination -Force
+        if (-not $uri.LocalPath) {
+            Fail "file asset 경로를 읽지 못했습니다: $Source"
+        }
+        [System.IO.File]::Copy($uri.LocalPath, $Destination, $true)
         return
     }
 
-    Copy-Item -LiteralPath $Source -Destination $Destination -Force
+    $ResolvedSource = (Resolve-Path -LiteralPath $Source).ProviderPath
+    [System.IO.File]::Copy($ResolvedSource, $Destination, $true)
 }
 
 function Get-FileSha256([string]$Path) {
@@ -425,7 +429,13 @@ try {
     Copy-Item -LiteralPath $InstalledBinary -Destination $BinPath -Force
     Set-Content -LiteralPath $VersionFile -Value $Manifest.version -NoNewline
 
-    $VersionCheck = & $BinPath --version 2>$null
+    $VersionCheck = $null
+    try {
+        $VersionCheck = & $BinPath --version 2>$null
+    }
+    catch {
+        $VersionCheck = $null
+    }
 
     Write-Host 'CLI 설치 완료'
     Write-Host "  version: $($Manifest.version)"

@@ -17,9 +17,9 @@ flowchart LR
 
 ## 포함 내용
 
-- Codex, Claude, Cursor, MCP reference wiring을 위한 `plugin.json`과 surface metadata
+- Codex, Claude, Cursor, MCP reference wiring을 위한 `plugin.json`, marketplace metadata, surface metadata
 - `skills/imweb/`: `imweb` skill bundle과 bundle-local docs
-- `install/`: CLI 및 skill setup용 bootstrap/installer script
+- `install/`: CLI, skill, plugin setup용 bootstrap/installer script
 - `docs/`: 공개 사용법, 통합, support matrix 문서
 - `examples/`: sample workflow와 fixture
 
@@ -41,6 +41,24 @@ PowerShell:
 
 Bootstrap script는 필요하면 `imweb` CLI를 설치하거나 업데이트한 뒤, 선택한 tool에 `imweb` skill을 설치합니다. 고급 로컬 설치나 고정 버전 테스트는 [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)를 봅니다.
 
+Plugin-first setup은 toolkit plugin을 등록하거나 설치합니다.
+
+```bash
+./install/install-plugins.sh --tool codex
+./install/install-plugins.sh --tool claude --scope user
+./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+```
+
+PowerShell:
+
+```powershell
+./install/install-plugins.ps1 -Tool codex
+./install/install-plugins.ps1 -Tool claude -Scope user
+./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+```
+
+Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는 등록된 marketplace에서 바로 설치할 수 있습니다. Claude Desktop Cowork는 생성한 plugin zip을 업로드하거나 조직 marketplace를 사용할 수 있습니다.
+
 ## 먼저 볼 문서
 
 1. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
@@ -50,7 +68,7 @@ Bootstrap script는 필요하면 `imweb` CLI를 설치하거나 업데이트한 
 
 ## 지원 범위
 
-Codex와 Claude는 automated bootstrap의 기본 지원 surface입니다. Cursor와 Claude Cowork는 제한적/수동 연결 surface로 문서화합니다. authoritative support detail은 [docs/surface-support-matrix.md](docs/surface-support-matrix.md)를 봅니다.
+Codex App/CLI, Claude Code, Claude Desktop Cowork는 기본 plugin 지원 surface입니다. Cursor는 제한적/수동 연결 surface로 문서화합니다. authoritative support detail은 [docs/surface-support-matrix.md](docs/surface-support-matrix.md)를 봅니다.
 
 ## 라이선스
 

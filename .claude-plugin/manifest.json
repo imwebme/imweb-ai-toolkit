@@ -10,15 +10,14 @@
   "supportMatrix": "../docs/surface-support-matrix.md",
   "install": {
     "bootstrap": "../install/bootstrap-imweb.sh --tool claude --scope user",
-    "skill_install": "../install/install-skills.sh --tool claude --scope user --mode copy"
+    "skill_install": "../install/install-skills.sh --tool claude --scope user --mode copy",
+    "plugin_install": "../install/install-plugins.sh --tool claude --scope user"
   },
   "surfaces": [
     "claude-code",
     "claude-desktop",
     "claude-cowork"
   ],
-  "limited_supports": [
-    "claude-cowork"
-  ],
+  "desktop_upload": "../install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip",
   "status": "compatibility-entrypoint"
 }

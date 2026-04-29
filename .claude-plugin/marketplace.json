@@ -10,13 +10,14 @@
     {
       "name": "imweb-ai-toolkit",
       "source": "./",
-      "description": "Connect imweb CLI guidance and the public `imweb` skill for Claude Code and Claude Desktop, with manual documentation references for Claude Cowork",
+      "description": "Connect imweb CLI guidance and the public `imweb` skill for Claude Code and Claude Desktop Cowork",
       "version": "0.2.0",
       "author": {
         "name": "imweb",
         "url": "https://github.com/imwebme"
       },
       "license": "Apache-2.0",
+      "category": "development",
       "homepage": "https://github.com/imwebme/imweb-ai-toolkit",
       "keywords": [
         "imweb",
