@@ -9,7 +9,7 @@
 | Codex CLI | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` | `install-plugins`로 marketplace 등록 후 Plugins UI 설치, 또는 bootstrap 후 `skills/imweb/` discovery | 지원 |
 | Codex App | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` | `install-plugins`로 marketplace 등록 후 Plugins UI 설치 | 지원 |
 | Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | `install-plugins`로 marketplace 등록 및 plugin 설치, `/imweb-ai-toolkit:imweb`로 plugin skill 확인 | 지원 |
-| Claude Desktop Cowork | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | 별도 Desktop plugin zip upload 또는 조직 marketplace | 지원 |
+| Claude Desktop Cowork | `imweb-skill.zip`, `.claude-plugin/plugin.json` package | `.claude-plugin/marketplace.json` | 직접 `/imweb`는 custom Skill zip, plugin/조직 배포는 plugin zip 또는 marketplace. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
 | Cursor workspace | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | `.mcp.json` 기준 수동 연결 | 제한적 지원 |
 
 ## 해석 원칙

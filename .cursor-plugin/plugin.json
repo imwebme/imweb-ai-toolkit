@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "description": "imweb CLI와 공개 skill `imweb`, 수동 MCP 연결 기준을 Cursor 워크스페이스에 맞춰 정리한 Cursor 표면 메타데이터입니다.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "author": {
     "name": "imweb",
     "url": "https://github.com/imwebme"

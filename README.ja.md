@@ -19,6 +19,7 @@ flowchart LR
 
 - Codex、Claude、Cursor、MCP reference wiring のための `plugin.json`、marketplace metadata、surface metadata
 - `skills/imweb/`: `imweb` skill bundle と bundle-local docs
+- `commands/imweb.md`: imweb workflow 用 Claude plugin command entrypoint
 - `install/`: CLI、skill、plugin setup のための bootstrap/installer script
 - `docs/`: 公開利用、統合、support matrix のドキュメント
 - `examples/`: sample workflow と fixture
@@ -31,7 +32,7 @@ AI coding agent にインストールを任せる場合は、public `npx` instal
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-このコマンドは public GitHub repository を永続的な marketplace source として登録し、Claude Code plugin をインストールし、Codex がすぐに discovery できるように `imweb` skill をコピーします。Claude Desktop Cowork 向けには、agent に `--tool claude-desktop` で `imweb-ai-toolkit-plugin.zip` を作成させ、Cowork Plugins UI でアップロードします。agent 向けのインストールと検証 checklist は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。
+このコマンドは public GitHub repository を永続的な marketplace source として登録し、Claude Code plugin をインストールし、Codex がすぐに discovery できるように `imweb` skill をコピーします。Claude Cowork で直接 `/imweb` が必要な場合は、Claude に `npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork` を実行させ、生成された `imweb-skill.zip` を Customize > Skills にインストールさせます。Claude に渡す依頼文は [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)、全体 checklist は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。
 
 対応 surface には bootstrap script を使用します。
 
@@ -65,15 +66,16 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex は marketplace 登録後に Plugins UI でインストールします。Claude Code は登録済み marketplace から直接インストールし、`/imweb-ai-toolkit:imweb` で plugin skill を検証できます。Claude Desktop Cowork は別の Desktop plugin install path を使うため、生成した plugin zip をアップロードするか、組織 marketplace を使用します。
+Codex は marketplace 登録後に Plugins UI でインストールします。Claude Code は登録済み marketplace から直接インストールし、`/imweb-ai-toolkit:imweb` で plugin skill を検証できます。Claude Cowork の直接 `/imweb` は生成された custom Skill package が提供し、plugin zip は plugin UI または組織 marketplace に使用します。
 
 ## 最初に読むもの
 
 1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)
-2. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
-3. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
-4. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
-5. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
+2. [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)
+3. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
+4. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
+5. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
+6. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
 
 ## サポート範囲
 

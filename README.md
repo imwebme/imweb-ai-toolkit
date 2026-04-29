@@ -19,6 +19,7 @@ flowchart LR
 
 - `plugin.json`, marketplace metadata, and surface metadata for Codex, Claude, Cursor, and MCP reference wiring.
 - `skills/imweb/`, the `imweb` skill bundle and its local docs.
+- `commands/imweb.md`, a Claude plugin command entrypoint for imweb workflows.
 - `install/`, bootstrap and installer scripts for CLI, skill, and plugin setup.
 - `docs/`, public usage, integration, and support matrix documentation.
 - `examples/`, sample workflows and fixtures.
@@ -31,7 +32,7 @@ If an AI coding agent is doing the setup for you, use the public `npx` installer
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-This registers the public GitHub repository as the durable marketplace source, installs the Claude Code plugin, and copies the Codex `imweb` skill for immediate discovery. For Claude Desktop Cowork, ask the agent to create `imweb-ai-toolkit-plugin.zip` with `--tool claude-desktop`, then upload it in Cowork's Plugins UI. See [docs/ai-agent-installation.md](docs/ai-agent-installation.md) for the full agent-oriented install and verification checklist.
+This registers the public GitHub repository as the durable marketplace source, installs the Claude Code plugin, and copies the Codex `imweb` skill for immediate discovery. For Claude Cowork direct `/imweb`, ask Claude to run `npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork`, then have Claude install the generated `imweb-skill.zip` through Customize > Skills. See [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md) for the prompt to give Claude and [docs/ai-agent-installation.md](docs/ai-agent-installation.md) for the full checklist.
 
 Use the bootstrap script for supported surfaces:
 
@@ -65,15 +66,16 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex uses the Plugins UI after marketplace registration. Claude Code can install directly from the registered marketplace and can verify the plugin skill with `/imweb-ai-toolkit:imweb`. Claude Desktop Cowork uses a separate Desktop plugin install path: upload the generated plugin zip or use an organization marketplace.
+Codex uses the Plugins UI after marketplace registration. Claude Code can install directly from the registered marketplace and can verify the plugin skill with `/imweb-ai-toolkit:imweb`. Claude Cowork direct `/imweb` is provided by the generated custom Skill package; the plugin zip remains available for plugin UI or organization marketplace workflows.
 
 ## Start Here
 
 1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)
-2. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
-3. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
-4. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
-5. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
+2. [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)
+3. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
+4. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
+5. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
+6. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
 
 ## Support Scope
 

@@ -10,6 +10,7 @@ SOURCE="$REPO_ROOT"
 MARKETPLACE_NAME="imweb-ai-toolkit"
 PLUGIN_NAME="imweb-ai-toolkit"
 PACKAGE_PATH=""
+SKILL_PACKAGE_PATH=""
 DRY_RUN=0
 
 usage() {
@@ -19,6 +20,7 @@ imweb plugin install helper
 Usage:
   ./install/install-plugins.sh --tool codex|claude [--scope user|project|local] [--source PATH] [--dry-run]
   ./install/install-plugins.sh --package PATH [--dry-run]
+  ./install/install-plugins.sh --skill-package PATH [--dry-run]
   ./install/install-plugins.sh --help
 
 Options:
@@ -27,6 +29,8 @@ Options:
              Codex는 현재 marketplace 등록까지만 자동화합니다.
   --source   marketplace source. 기본값: 이 toolkit repo root
   --package  Claude Desktop Cowork custom upload용 plugin zip 생성 경로
+  --skill-package
+             Claude Cowork /imweb 직접 호출용 custom skill zip 생성 경로
   --dry-run  실행할 명령만 출력
   --help     도움말 출력
 
@@ -35,6 +39,7 @@ Options:
            이후 Codex App 또는 CLI의 Plugins 화면에서 imweb-ai-toolkit을 설치합니다.
   - claude: marketplace를 Claude Code에 등록하고 imweb-ai-toolkit plugin을 설치합니다.
   - package: Claude Desktop Cowork의 custom plugin upload에 사용할 zip을 생성합니다.
+  - skill-package: Claude Cowork Skills upload에 사용할 imweb skill zip을 생성합니다.
 USAGE
 }
 
@@ -89,8 +94,10 @@ include = [
     ".claude-plugin",
     ".cursor-plugin",
     "assets",
+    "commands",
     "docs/ai-agent-installation.md",
     "docs/cli-toolkit-integration.md",
+    "docs/cowork-ask-claude-install.md",
     "docs/imweb-ai-toolkit.md",
     "docs/skill-installation-and-usage.md",
     "docs/surface-support-matrix.md",
@@ -141,6 +148,53 @@ print(f"  files: {len(seen)}")
 PY
 }
 
+create_skill_package() {
+  local output_path="$1"
+  [[ -n "$output_path" ]] || fail '--skill-package 경로가 필요합니다.'
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    printf '+ python3 <package imweb skill> %q\n' "$output_path"
+    return
+  fi
+
+  need_cmd python3
+  mkdir -p "$(dirname -- "$output_path")"
+  REPO_ROOT="$REPO_ROOT" OUTPUT_PATH="$output_path" python3 - <<'PY'
+import os
+import stat
+import time
+import zipfile
+from pathlib import Path
+
+repo_root = Path(os.environ["REPO_ROOT"]).resolve()
+output_path = Path(os.environ["OUTPUT_PATH"]).expanduser().resolve()
+skill_root = repo_root / "skills" / "imweb"
+if not (skill_root / "SKILL.md").is_file():
+    raise SystemExit("skill source missing: skills/imweb/SKILL.md")
+
+files = []
+for path in sorted(skill_root.rglob("*")):
+    if not path.is_file() or path.name in {"__pycache__", ".DS_Store"}:
+        continue
+    rel = path.relative_to(skill_root).as_posix()
+    files.append((path, f"imweb/{rel}"))
+
+with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    seen = set()
+    for path, rel in files:
+        if rel in seen:
+            continue
+        seen.add(rel)
+        info = zipfile.ZipInfo(rel, date_time=time.localtime(path.stat().st_mtime)[:6])
+        info.external_attr = (stat.S_IFREG | 0o644) << 16
+        with path.open("rb") as handle:
+            archive.writestr(info, handle.read(), compress_type=zipfile.ZIP_DEFLATED)
+
+print("skill package created")
+print(f"  path: {output_path}")
+print(f"  files: {len(seen)}")
+PY
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --tool)
@@ -163,6 +217,11 @@ while [[ $# -gt 0 ]]; do
       PACKAGE_PATH="$2"
       shift 2
       ;;
+    --skill-package)
+      [[ $# -ge 2 ]] || fail '--skill-package 값이 필요합니다.'
+      SKILL_PACKAGE_PATH="$2"
+      shift 2
+      ;;
     --dry-run)
       DRY_RUN=1
       shift
@@ -183,8 +242,12 @@ if [[ -n "$PACKAGE_PATH" ]]; then
   create_package "$PACKAGE_PATH"
 fi
 
+if [[ -n "${SKILL_PACKAGE_PATH:-}" ]]; then
+  create_skill_package "$SKILL_PACKAGE_PATH"
+fi
+
 if [[ -z "$TOOL" ]]; then
-  [[ -n "$PACKAGE_PATH" ]] || fail '--tool 또는 --package 중 하나는 필요합니다.'
+  [[ -n "$PACKAGE_PATH" || -n "${SKILL_PACKAGE_PATH:-}" ]] || fail '--tool, --package, --skill-package 중 하나는 필요합니다.'
   exit 0
 fi
 

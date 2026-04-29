@@ -19,6 +19,7 @@ flowchart LR
 
 - 用于 Codex、Claude、Cursor 和 MCP reference wiring 的 `plugin.json`、marketplace metadata 与 surface metadata
 - `skills/imweb/`: `imweb` skill bundle 及其 bundle-local docs
+- `commands/imweb.md`: 用于 imweb workflow 的 Claude plugin command entrypoint
 - `install/`: 用于 CLI、skill 和 plugin setup 的 bootstrap/installer script
 - `docs/`: 公开使用、集成和 support matrix 文档
 - `examples/`: sample workflow 和 fixture
@@ -31,7 +32,7 @@ flowchart LR
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-此命令会将 public GitHub repository 注册为持久 marketplace source，安装 Claude Code plugin，并复制 `imweb` skill，方便 Codex 立即发现。对于 Claude Desktop Cowork，请让 agent 使用 `--tool claude-desktop` 创建 `imweb-ai-toolkit-plugin.zip`，然后在 Cowork Plugins UI 中上传。面向 agent 的安装和验证 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
+此命令会将 public GitHub repository 注册为持久 marketplace source，安装 Claude Code plugin，并复制 `imweb` skill，方便 Codex 立即发现。如果 Claude Cowork 需要直接 `/imweb`，请让 Claude 运行 `npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork`，并把生成的 `imweb-skill.zip` 安装到 Customize > Skills。给 Claude 的请求文本见 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)，完整 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
 
 对受支持的 surface 使用 bootstrap script。
 
@@ -65,15 +66,16 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Desktop Cowork 使用单独的 Desktop plugin 安装路径，因此需要上传生成的 plugin zip，或使用组织 marketplace。
+Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Cowork 的直接 `/imweb` 由生成的 custom Skill package 提供，plugin zip 用于 plugin UI 或组织 marketplace 流程。
 
 ## 从这里开始
 
 1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)
-2. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
-3. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
-4. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
-5. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
+2. [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)
+3. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
+4. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
+5. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
+6. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
 
 ## 支持范围
 
