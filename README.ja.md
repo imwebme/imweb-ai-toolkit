@@ -26,13 +26,33 @@ flowchart LR
 
 ## インストール
 
-AI coding agent にインストールを任せる場合は、public `npx` installer を使用します。
+推奨 plugin setup:
+
+```bash
+claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
+claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
+codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
+```
+
+Codex は marketplace 登録後に Plugins UI でインストールします。Codex skill discovery をすぐに確認したい場合、または AI coding agent にセットアップを任せる場合は、public `npx` installer を使用します。
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-このコマンドは public GitHub repository を永続的な marketplace source として登録し、Claude Code plugin をインストールし、Codex がすぐに discovery できるように `imweb` skill をコピーします。Claude Cowork で直接 `/imweb` が必要な場合は、Claude に `npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork` を実行させ、生成された `imweb-skill.zip` を Customize > Skills にインストールさせます。Claude に渡す依頼文は [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)、全体 checklist は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。
+標準 Agent Skills fallback:
+
+```bash
+npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
+```
+
+Claude Cowork では、Claude に Claude Desktop を操作させず、package の作成と検証だけを依頼します。
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+```
+
+このコマンドは `imweb-skill.zip` と `imweb-ai-toolkit-plugin.zip` を作成します。現在の Cowork task が task files から新しい Skill を直接ロードできない場合、検証済み zip はユーザー、workspace admin、または対応する Cowork Skill installation flow で後から provisioning する必要があります。Claude に渡す no-UI 依頼文は [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)、全体 checklist は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。
 
 対応 surface には bootstrap script を使用します。
 
@@ -66,7 +86,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex は marketplace 登録後に Plugins UI でインストールします。Claude Code は登録済み marketplace から直接インストールし、`/imweb-ai-toolkit:imweb` で plugin skill を検証できます。Claude Cowork の直接 `/imweb` は生成された custom Skill package が提供し、plugin zip は plugin UI または組織 marketplace に使用します。
+Codex は marketplace 登録後に Plugins UI でインストールします。Claude Code は登録済み marketplace から直接インストールし、`/imweb-ai-toolkit:imweb` で plugin skill を検証できます。Claude Cowork の直接 `/imweb` は provisioning 済み custom Skill package が提供し、生成された plugin zip は plugin UI または組織 marketplace に使用します。
 
 ## 最初に読むもの
 

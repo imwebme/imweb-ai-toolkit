@@ -26,13 +26,33 @@ flowchart LR
 
 ## 安装
 
-如果由 AI coding agent 执行安装，请使用 public `npx` installer。
+推荐的 plugin setup：
+
+```bash
+claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
+claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
+codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
+```
+
+Codex 在注册 marketplace 后通过 Plugins UI 安装。如果需要立即验证 Codex skill discovery，或由 AI coding agent 执行安装，请使用 public `npx` installer。
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-此命令会将 public GitHub repository 注册为持久 marketplace source，安装 Claude Code plugin，并复制 `imweb` skill，方便 Codex 立即发现。如果 Claude Cowork 需要直接 `/imweb`，请让 Claude 运行 `npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork`，并把生成的 `imweb-skill.zip` 安装到 Customize > Skills。给 Claude 的请求文本见 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)，完整 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
+标准 Agent Skills fallback：
+
+```bash
+npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
+```
+
+在 Claude Cowork 中，请让 Claude 只创建并验证 package，不要操作 Claude Desktop。
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+```
+
+此命令会生成 `imweb-skill.zip` 和 `imweb-ai-toolkit-plugin.zip`。如果当前 Cowork task 不能从 task files 直接加载新的 Skill，经过验证的 zip 需要稍后由用户、workspace admin 或受支持的 Cowork Skill installation flow provisioning。给 Claude 的 no-UI 请求文本见 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md)，完整 checklist 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。
 
 对受支持的 surface 使用 bootstrap script。
 
@@ -66,7 +86,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Cowork 的直接 `/imweb` 由生成的 custom Skill package 提供，plugin zip 用于 plugin UI 或组织 marketplace 流程。
+Codex 在注册 marketplace 后通过 Plugins UI 安装。Claude Code 可以从已注册的 marketplace 直接安装，并用 `/imweb-ai-toolkit:imweb` 验证 plugin skill。Claude Cowork 的直接 `/imweb` 由已 provisioning 的 custom Skill package 提供，生成的 plugin zip 用于 plugin UI 或组织 marketplace 流程。
 
 ## 从这里开始
 

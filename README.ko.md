@@ -26,13 +26,33 @@ flowchart LR
 
 ## 설치
 
-AI coding agent에게 설치를 맡기는 경우 public `npx` installer를 사용합니다.
+권장 plugin setup:
+
+```bash
+claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
+claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
+codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
+```
+
+Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Codex skill discovery를 바로 확인해야 하거나 AI coding agent에게 설치를 맡기는 경우 public `npx` installer를 사용합니다.
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-이 명령은 public GitHub 저장소를 지속 가능한 marketplace source로 등록하고, Claude Code plugin을 설치하며, Codex가 바로 탐색할 수 있도록 `imweb` skill을 복사합니다. Claude Cowork에서 직접 `/imweb`가 필요하면 Claude에게 `npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork`를 실행하게 하고, 생성된 `imweb-skill.zip`을 Customize > Skills에 설치하게 합니다. Claude에게 줄 요청문은 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md), 전체 checklist는 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다.
+표준 Agent Skills fallback:
+
+```bash
+npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
+```
+
+Claude Cowork에서는 Claude에게 Claude Desktop을 조작하게 하지 말고 package 생성과 검증만 맡깁니다.
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+```
+
+이 명령은 `imweb-skill.zip`과 `imweb-ai-toolkit-plugin.zip`을 만듭니다. 현재 Cowork task가 task 파일에서 새 Skill을 바로 로드할 수 없으면, 검증된 zip은 사용자, workspace admin, 또는 지원되는 Cowork Skill 설치 흐름에서 나중에 provisioning해야 합니다. Claude에게 줄 no-UI 요청문은 [docs/cowork-ask-claude-install.md](docs/cowork-ask-claude-install.md), 전체 checklist는 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다.
 
 지원 surface에는 bootstrap script를 사용합니다.
 
@@ -66,7 +86,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는 등록된 marketplace에서 바로 설치하고 `/imweb-ai-toolkit:imweb`로 plugin skill을 검증할 수 있습니다. Claude Cowork의 직접 `/imweb`는 생성된 custom Skill package가 제공하고, plugin zip은 plugin UI 또는 조직 marketplace 흐름에 사용합니다.
+Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는 등록된 marketplace에서 바로 설치하고 `/imweb-ai-toolkit:imweb`로 plugin skill을 검증할 수 있습니다. Claude Cowork의 직접 `/imweb`는 provisioning된 custom Skill package가 제공하고, 생성된 plugin zip은 plugin UI 또는 조직 marketplace 흐름에 사용합니다.
 
 ## 먼저 볼 문서
 

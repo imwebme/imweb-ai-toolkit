@@ -9,10 +9,31 @@
 3. 대상 surface가 plugin marketplace를 지원하면 plugin을 등록하거나 설치합니다.
 4. 대상 surface의 plugin README와 metadata를 읽고 사용을 시작합니다.
 
-AI coding agent에게 설치를 맡길 때는 public repo를 clone하기보다 `npx` installer를 우선 사용합니다.
+표준 설치 우선순위는 plugin, Agent Skills, package/provisioning 순서입니다.
+
+Claude Code:
+
+```bash
+claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user
+claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user
+```
+
+Codex marketplace:
+
+```bash
+codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
+```
+
+Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Codex CLI에서 바로 skill discovery까지 확인하거나 AI coding agent에게 설치를 맡길 때는 public repo를 clone하기보다 `npx` installer를 사용합니다.
 
 ```bash
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```
+
+표준 Agent Skills fallback만 필요하면 아래 경로를 사용합니다.
+
+```bash
+npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
 이 installer는 `npx` 임시 package 경로를 marketplace source로 등록하지 않고, public Git repository를 durable source로 등록합니다. 자세한 agent용 checklist는 [ai-agent-installation.md](./ai-agent-installation.md)를 봅니다.
@@ -110,6 +131,12 @@ PowerShell:
 
 bootstrap도 같은 계약을 그대로 따릅니다. 따라서 `bootstrap-imweb.*`를 `-SkillMode symlink`로 다시 실행했을 때 대상에 같은 source를 가리키는 symlink가 이미 있으면 skill 단계는 성공적으로 건너뜁니다.
 
+표준 Agent Skills CLI를 쓰는 환경에서는 `install-skills.*` 대신 다음 fallback을 사용할 수 있습니다.
+
+```bash
+npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
+```
+
 ## Plugin 설치
 
 plugin 설치기는 이 toolkit repo 자체를 installable plugin으로 노출합니다.
@@ -159,7 +186,7 @@ PowerShell:
 ./install/install-plugins.ps1 -SkillPackage imweb-skill.zip
 ```
 
-생성된 plugin zip은 Claude Desktop의 Cowork > Customize > Browse plugins 흐름에서 custom plugin file로 업로드합니다. 직접 `/imweb`가 acceptance target이면 `imweb-skill.zip`을 Cowork > Customize > Skills에 custom Skill로 설치합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork 자체의 Skill/plugin upload 또는 조직 배포 경로를 기준으로 합니다. Desktop 앱/계정에서 personal custom upload가 보이지 않으면 Team/Enterprise manual marketplace upload나 organization Skill provisioning을 사용합니다. GitHub synced Cowork organization marketplace는 private/internal GitHub repo만 허용하므로 public repo는 npx/package source로 사용하고, 조직 배포에는 private/internal mirror를 둡니다. Claude에게 설치를 맡기는 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
+생성된 plugin zip은 지원되는 plugin 또는 조직 marketplace 흐름에서 provisioning합니다. 직접 `/imweb`가 acceptance target이면 `imweb-skill.zip`을 Cowork Skill로 provisioning합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork 자체의 Skill/plugin provisioning 또는 조직 배포 경로를 기준으로 합니다. Desktop 앱/계정에서 personal custom package action이 보이지 않으면 Team/Enterprise manual marketplace provisioning이나 organization Skill provisioning을 사용합니다. GitHub synced Cowork organization marketplace는 private/internal GitHub repo만 허용하므로 public repo는 npx/package source로 사용하고, 조직 배포에는 private/internal mirror를 둡니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성과 검증까지만 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
 
 ## 표면별 시작점
 

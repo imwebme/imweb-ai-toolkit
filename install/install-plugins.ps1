@@ -47,8 +47,8 @@ Options:
   -Scope    Claude 설치 범위. user, project, local. 기본값: user
             Codex는 현재 marketplace 등록까지만 자동화합니다.
   -Source   marketplace source. 기본값: 이 toolkit repo root
-  -Package  Claude Desktop Cowork custom upload용 plugin zip 생성 경로
-  -SkillPackage Claude Cowork /imweb 직접 호출용 custom skill zip 생성 경로
+  -Package  Claude Desktop Cowork plugin/조직 provisioning용 zip 생성 경로
+  -SkillPackage Claude Cowork /imweb 직접 호출용 custom skill provisioning zip 생성 경로
   -DryRun   실행할 명령만 출력
   -Help     도움말 출력
 "@
