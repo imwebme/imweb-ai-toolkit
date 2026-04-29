@@ -18,6 +18,7 @@ flowchart LR
 ## 包含内容
 
 - 用于 Codex、Claude、Cursor 和 MCP reference wiring 的 `plugin.json`、marketplace metadata 与 surface metadata
+- `bin/imweb-mcp.mjs` local MCP bridge，让 Claude Desktop Cowork 复用用户电脑上的 host `imweb` CLI 和 auth state
 - `skills/imweb/`: `imweb` skill bundle 及其 bundle-local docs
 - `commands/imweb.md`: 用于 imweb workflow 的 Claude plugin command entrypoint
 - `install/`: 用于 CLI、skill 和 plugin setup 的 bootstrap/installer script
@@ -53,7 +54,7 @@ Present imweb-ai-toolkit.plugin so I can save it.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 fallback `imweb-skill.zip`。保存展示出的 plugin card 后，从 `/imweb` 开始；zip 只作为 fallback package 使用。
+Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 fallback `imweb-skill.zip`。保存展示出的 plugin card 后，从 `/imweb-ai-toolkit:imweb` 或自然语言 imweb 请求开始。Plugin 包含使用 host CLI 和 auth 的 local MCP bridge；zip 只作为 fallback package 使用。
 
 ## 其他安装方式
 

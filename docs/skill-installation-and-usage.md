@@ -192,7 +192,7 @@ PowerShell:
 ./install/install-plugins.ps1 -SkillPackage imweb-skill.zip
 ```
 
-생성된 `.plugin` package는 Cowork host가 설치/활성화할 수 있도록 제시하는 기본 artifact입니다. `imweb-skill.zip`은 fallback package로만 유지합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성, 검증, `.plugin` artifact 제시까지 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
+생성된 `.plugin` package는 Cowork host가 설치/활성화할 수 있도록 제시하는 기본 artifact입니다. Package 안에는 host `imweb` CLI/auth를 쓰는 local MCP bridge가 포함됩니다. `imweb-skill.zip`은 fallback package로만 유지합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성, 검증, `.plugin` artifact 제시까지 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
 
 ## 표면별 시작점
 

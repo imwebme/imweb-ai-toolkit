@@ -31,13 +31,13 @@ printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫
 ### Claude Desktop Cowork
 
 1. `./install/install-plugins.sh --package imweb-ai-toolkit.plugin`
-2. package 안에 `.claude-plugin/plugin.json`와 `skills/imweb/SKILL.md`가 있는지 검증
+2. package 안에 `.claude-plugin/plugin.json`, `.mcp.json`, `bin/imweb-mcp.mjs`, `skills/imweb/SKILL.md`가 있는지 검증
 3. Cowork task가 `.plugin` artifact를 host에 제시해 install card가 뜨도록 처리
-4. plugin 설치/활성화가 완료된 Cowork surface에서 `/imweb`로 시작
+4. plugin 설치/활성화가 완료된 Cowork surface에서 `/imweb-ai-toolkit:imweb` 또는 자연어 imweb 요청으로 시작
 
 Fallback Skill package가 필요하면 `./install/install-plugins.sh --skill-package imweb-skill.zip`로 `imweb-skill.zip`을 별도 생성합니다.
 
-Claude Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않습니다. local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Claude Code namespace인 `/imweb-ai-toolkit:imweb`는 Cowork에서 쓰지 않고, Cowork plugin 설치 후 slash menu에 뜨는 `/imweb`만 사용합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않습니다. package 생성, 검증, `.plugin` artifact 제시 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md)를 봅니다.
+Claude Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않습니다. local Desktop 검증은 Cowork plugin install card 또는 조직 배포 경로를 기준으로 합니다. Cowork shell은 VM일 수 있으므로 plugin 안의 local MCP bridge가 host `imweb` CLI와 auth/profile을 재사용합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않습니다. package 생성, 검증, `.plugin` artifact 제시 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md)를 봅니다.
 
 ## 공개 안내 범위
 

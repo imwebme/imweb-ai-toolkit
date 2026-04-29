@@ -10,7 +10,7 @@
 | Codex App | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` | `install-plugins`로 marketplace 등록 후 Plugins UI 설치 | 지원 |
 | Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | `install-plugins`로 marketplace 등록 및 plugin 설치, `/imweb-ai-toolkit:imweb`로 plugin skill 확인 | 지원 |
 | Agent Skills CLI | `skills/imweb/SKILL.md` | 해당 없음 | `npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex`로 표준 Skill 설치 | 지원 |
-| Claude Desktop Cowork | `imweb-ai-toolkit.plugin`, `.claude-plugin/plugin.json` package | `.claude-plugin/marketplace.json` | Cowork task가 `.plugin` package를 생성/검증하고 host에 install artifact로 제시. `imweb-skill.zip`은 fallback. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
+| Claude Desktop Cowork | `imweb-ai-toolkit.plugin`, `.claude-plugin/plugin.json`, `.mcp.json`, `bin/imweb-mcp.mjs` package | `.claude-plugin/marketplace.json` | Cowork task가 `.plugin` package를 생성/검증하고 host에 install artifact로 제시. 설치 후 `/imweb-ai-toolkit:imweb` 또는 자연어 요청이 local MCP bridge를 통해 host `imweb` CLI/auth를 사용. `imweb-skill.zip`은 fallback. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
 | Cursor workspace | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | `.mcp.json` 기준 수동 연결 | 제한적 지원 |
 
 ## 해석 원칙
@@ -23,6 +23,7 @@
 - Claude는 `plugin.json`을 canonical entrypoint로 보고, `manifest.json`은 이전 참조와의 호환성을 위한 compatibility entrypoint로만 유지합니다.
 - Agent Skills CLI는 plugin auto-update 경로가 아니라 skill 파일 fallback입니다.
 - Claude Desktop Cowork는 Claude Code CLI registry나 `~/.claude/skills`를 직접 읽는 surface로 취급하지 않습니다. Cowork task 안에서 computer-use로 Claude Desktop UI를 조작해 설치하는 흐름도 지원 경로가 아닙니다.
+- Cowork의 shell은 VM일 수 있으므로 plugin에 포함된 local MCP bridge가 host `imweb` CLI와 auth/profile을 재사용하는 경로를 우선합니다.
 - Cursor는 marketplace 메타를 제공하지만 실제 연결은 여전히 `.mcp.json`을 기준으로 수동 설정합니다.
 
 ## 권장 확인 순서
