@@ -8,7 +8,13 @@ AI coding agent가 public repo에서 직접 설치해야 할 때는 `imweb-ai-to
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
+Claude Desktop Cowork용 upload package만 만들 때는 아래처럼 실행합니다.
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
+```
+
+이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. Cowork package는 agent가 명령을 실행한 디렉터리에 `imweb-ai-toolkit-plugin.zip`로 생성합니다. 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
 
 Codex 기준 skill 기본 설치 경로는 `$CODEX_HOME/skills`이며, `CODEX_HOME`이 없으면 `~/.codex/skills`를 사용합니다.
 
@@ -28,7 +34,7 @@ authenticated GitHub Release URL override를 직접 주는 경우에는 `gh` fal
 
 - Codex: `codex plugin marketplace add`로 이 repo의 `.agents/plugins/marketplace.json`를 등록합니다. Codex App 또는 Codex CLI의 Plugins 화면에서 `imweb-ai-toolkit`을 설치합니다.
 - Claude Code: `claude plugin marketplace add` 후 `claude plugin install imweb-ai-toolkit@imweb-ai-toolkit`을 실행합니다.
-- Claude Desktop Cowork: `--package` 또는 `-Package`로 custom plugin upload용 zip을 생성합니다. Desktop UI에서 Cowork > Customize > Browse plugins > custom upload 흐름으로 올립니다.
+- Claude Desktop Cowork: `--package` 또는 `-Package`로 custom plugin upload용 zip을 생성합니다. Desktop UI에서 Cowork > Customize > Browse plugins > custom upload 흐름으로 올린 뒤 `/imweb-ai-toolkit:imweb`로 시작합니다. Claude Code CLI registry와 `~/.claude/skills`는 Desktop Cowork 설치를 대체하지 않습니다.
 
 예시:
 

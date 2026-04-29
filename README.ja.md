@@ -31,7 +31,7 @@ AI coding agent にインストールを任せる場合は、public `npx` instal
 npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
 ```
 
-このコマンドは public GitHub repository を永続的な marketplace source として登録し、Claude Code plugin をインストールし、Codex がすぐに discovery できるように `imweb` skill をコピーします。agent 向けのインストールと検証 checklist は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。
+このコマンドは public GitHub repository を永続的な marketplace source として登録し、Claude Code plugin をインストールし、Codex がすぐに discovery できるように `imweb` skill をコピーします。Claude Desktop Cowork 向けには、agent に `--tool claude-desktop` で `imweb-ai-toolkit-plugin.zip` を作成させ、Cowork Plugins UI でアップロードします。agent 向けのインストールと検証 checklist は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。
 
 対応 surface には bootstrap script を使用します。
 
@@ -65,7 +65,7 @@ PowerShell:
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
 ```
 
-Codex は marketplace 登録後に Plugins UI でインストールします。Claude Code は登録済み marketplace から直接インストールできます。Claude Desktop Cowork は生成した plugin zip をアップロードするか、組織 marketplace を使用できます。
+Codex は marketplace 登録後に Plugins UI でインストールします。Claude Code は登録済み marketplace から直接インストールし、`/imweb-ai-toolkit:imweb` で plugin skill を検証できます。Claude Desktop Cowork は別の Desktop plugin install path を使うため、生成した plugin zip をアップロードするか、組織 marketplace を使用します。
 
 ## 最初に読むもの
 
