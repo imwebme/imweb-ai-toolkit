@@ -148,6 +148,8 @@ The exact prompt to give Claude is in [cowork-ask-claude-install.md](./cowork-as
 
 The prompt explicitly tells Claude not to use computer-use or UI automation. If the current Cowork task cannot load new Skills from task files, Claude should leave the verified zip files in the task folder and report the provisioning requirement.
 
+Local dogfood on 2026-04-29 observed Claude Desktop Cowork mounting `/mnt/.claude/skills/` read-only. For that runtime state, package creation and zip verification are the complete no-UI install result; current-session bare `/imweb` activation must wait for supported Cowork Skill provisioning.
+
 For Claude Desktop Cowork plugin package provisioning, ask the agent to create the zip:
 
 ```bash
