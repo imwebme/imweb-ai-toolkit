@@ -9,6 +9,14 @@
 3. 대상 surface가 plugin marketplace를 지원하면 plugin을 등록하거나 설치합니다.
 4. 대상 surface의 plugin README와 metadata를 읽고 사용을 시작합니다.
 
+AI coding agent에게 설치를 맡길 때는 public repo를 clone하기보다 `npx` installer를 우선 사용합니다.
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```
+
+이 installer는 `npx` 임시 package 경로를 marketplace source로 등록하지 않고, public Git repository를 durable source로 등록합니다. 자세한 agent용 checklist는 [ai-agent-installation.md](./ai-agent-installation.md)를 봅니다.
+
 지원 surface에서 한 번에 처리하려면 bootstrap을 사용합니다.
 
 ```bash

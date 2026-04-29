@@ -113,6 +113,7 @@ function New-PluginPackage([string]$OutputPath) {
         '.claude-plugin',
         '.cursor-plugin',
         'assets',
+        'docs/ai-agent-installation.md',
         'docs/cli-toolkit-integration.md',
         'docs/imweb-ai-toolkit.md',
         'docs/skill-installation-and-usage.md',

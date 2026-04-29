@@ -3,8 +3,39 @@
   "version": "0.2.0",
   "private": true,
   "description": "AI surface manifests, public skill assets, and install metadata for connecting imweb-cli to Codex, Claude, and Cursor.",
+  "bin": {
+    "imweb-ai-toolkit": "./install/imweb-ai-toolkit-install.mjs",
+    "imweb-ai-toolkit-install": "./install/imweb-ai-toolkit-install.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "author": "imweb",
   "license": "Apache-2.0",
+  "files": [
+    "README.md",
+    "README.ko.md",
+    "README.ja.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "TRADEMARKS.md",
+    "package.json",
+    "plugin.json",
+    ".mcp.json",
+    ".agents/plugins/marketplace.json",
+    ".codex-plugin/**",
+    ".claude-plugin/**",
+    ".cursor-plugin/**",
+    "assets/**",
+    "docs/ai-agent-installation.md",
+    "docs/cli-toolkit-integration.md",
+    "docs/imweb-ai-toolkit.md",
+    "docs/skill-installation-and-usage.md",
+    "docs/surface-support-matrix.md",
+    "examples/**",
+    "install/**",
+    "skills/imweb/**"
+  ],
   "keywords": [
     "imweb",
     "imweb-cli",

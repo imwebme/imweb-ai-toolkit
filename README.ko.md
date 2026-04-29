@@ -25,6 +25,14 @@ flowchart LR
 
 ## 설치
 
+AI coding agent에게 설치를 맡기는 경우 public `npx` installer를 사용합니다.
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```
+
+이 명령은 public GitHub 저장소를 지속 가능한 marketplace source로 등록하고, Claude Code plugin을 설치하며, Codex가 바로 탐색할 수 있도록 `imweb` skill을 복사합니다. agent용 설치와 검증 checklist는 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)를 봅니다.
+
 지원 surface에는 bootstrap script를 사용합니다.
 
 ```bash
@@ -61,10 +69,11 @@ Codex는 marketplace 등록 후 Plugins UI에서 설치합니다. Claude Code는
 
 ## 먼저 볼 문서
 
-1. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
-2. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
-3. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
-4. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
+1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)
+2. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
+3. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
+4. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
+5. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
 
 ## 지원 범위
 

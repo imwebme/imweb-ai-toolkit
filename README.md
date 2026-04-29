@@ -25,6 +25,14 @@ flowchart LR
 
 ## Install
 
+If an AI coding agent is doing the setup for you, use the public `npx` installer:
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user
+```
+
+This registers the public GitHub repository as the durable marketplace source, installs the Claude Code plugin, and copies the Codex `imweb` skill for immediate discovery. See [docs/ai-agent-installation.md](docs/ai-agent-installation.md) for the full agent-oriented install and verification checklist.
+
 Use the bootstrap script for supported surfaces:
 
 ```bash
@@ -61,10 +69,11 @@ Codex uses the Plugins UI after marketplace registration. Claude Code can instal
 
 ## Start Here
 
-1. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
-2. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
-3. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
-4. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
+1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)
+2. [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)
+3. [docs/cli-toolkit-integration.md](docs/cli-toolkit-integration.md)
+4. [docs/surface-support-matrix.md](docs/surface-support-matrix.md)
+5. [skills/imweb/SKILL.md](skills/imweb/SKILL.md)
 
 ## Support Scope
 
