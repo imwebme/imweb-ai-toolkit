@@ -82,7 +82,7 @@ plugin marketplace를 지원하는 표면은 toolkit repo 자체를 installable 
 
 - Codex: `.agents/plugins/marketplace.json`를 등록한 뒤 Codex App 또는 CLI의 Plugins UI에서 설치합니다.
 - Claude Code: `.claude-plugin/marketplace.json`를 등록하고 `imweb-ai-toolkit@imweb-ai-toolkit`을 설치한 뒤 `/imweb-ai-toolkit:imweb`로 plugin skill을 확인합니다.
-- Claude Desktop Cowork: `install-plugins`가 만든 zip을 custom plugin file로 업로드하거나 조직 marketplace를 사용합니다. Claude Code CLI registry와 `~/.claude/skills`는 Desktop Cowork 설치를 대체하지 않습니다.
+- Claude Desktop Cowork: 직접 `/imweb`는 `install-plugins --skill-package imweb-skill.zip`으로 만든 custom Skill zip을 사용합니다. plugin/조직 배포는 `install-plugins --package imweb-ai-toolkit-plugin.zip`으로 만든 plugin zip 또는 조직 marketplace를 사용합니다. Claude Code CLI registry와 `~/.claude/skills`는 Desktop Cowork 설치를 대체하지 않습니다.
 
 ### 5. 수동 연결 흐름
 

@@ -30,6 +30,12 @@ Claude Desktop Cowork package:
 npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
+Claude Cowork direct `/imweb` skill package plus plugin package:
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+```
+
 Equivalent `npm exec` form:
 
 ```bash
@@ -48,7 +54,8 @@ npx --yes github:imwebme/imweb-ai-toolkit --tool both --scope user --install-cli
 - Registers `https://github.com/imwebme/imweb-ai-toolkit.git` as the marketplace source.
 - For Codex, registers the marketplace and copies `skills/imweb` into the user skill discovery path so CLI discovery works without waiting for a Plugins UI install.
 - For Claude Code, installs `imweb-ai-toolkit@imweb-ai-toolkit` in user scope.
-- For Claude Desktop Cowork, creates `imweb-ai-toolkit-plugin.zip` in the directory where the agent ran the command. The Desktop plugin still has to be uploaded in the Cowork Plugins UI.
+- For Claude Desktop Cowork plugin workflows, creates `imweb-ai-toolkit-plugin.zip` in the directory where the agent ran the command.
+- For Claude Cowork direct `/imweb`, creates `imweb-skill.zip`, a custom Skill package whose root folder is `imweb/` and whose entrypoint is `SKILL.md`.
 - Replaces existing `imweb-ai-toolkit` marketplace/plugin entries by default while preserving Claude plugin data.
 
 Use `--no-replace` to avoid replacing existing entries. Use `--no-backup` only in disposable automation environments.
@@ -90,11 +97,25 @@ Expected high-level result:
 - Codex has an `imweb` skill at `~/.codex/skills/imweb/SKILL.md`.
 - Claude Code lists `imweb-ai-toolkit@imweb-ai-toolkit` as installed and enabled.
 - The Claude Code file-read smoke returns `capability registry`.
+- Claude Cowork direct Skill upload exposes `/imweb`.
 - The two `imweb --output json config ...` commands return valid JSON.
 
 ## Claude Desktop Cowork
 
-Claude Desktop Cowork does not read the Claude Code CLI plugin registry or `~/.claude/skills` directly. It needs its own plugin install through the Cowork UI.
+Claude Desktop Cowork does not read the Claude Code CLI plugin registry or `~/.claude/skills` directly. It needs its own Cowork install path.
+
+For the direct `/imweb` slash entrypoint, ask Claude to create and install the Cowork Skill package:
+
+```bash
+npx --yes github:imwebme/imweb-ai-toolkit --tool claude-cowork
+```
+
+This creates:
+
+- `imweb-skill.zip`: upload through Customize > Skills for direct `/imweb`.
+- `imweb-ai-toolkit-plugin.zip`: optional plugin package for Customize > Plugins or organization marketplaces.
+
+The exact prompt to give Claude is in [cowork-ask-claude-install.md](./cowork-ask-claude-install.md).
 
 For Claude Desktop Cowork custom upload, ask the agent to create the zip:
 
@@ -102,7 +123,7 @@ For Claude Desktop Cowork custom upload, ask the agent to create the zip:
 npx --yes github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
 
-Then upload `imweb-ai-toolkit-plugin.zip` in Claude Desktop Cowork using the custom plugin upload flow: Cowork > Customize > Browse plugins > custom plugin file upload. After it is enabled, invoke the skill as `/imweb-ai-toolkit:imweb`.
+Then upload `imweb-ai-toolkit-plugin.zip` in Claude Desktop Cowork using the custom plugin upload flow: Cowork > Customize > Browse plugins > custom plugin file upload. Plugin skills may appear with plugin namespacing, so use `imweb-skill.zip` when the acceptance target is the bare `/imweb` command.
 
 Observed caveat: Claude Desktop 1.5354.0 may show the plugin directory without a personal custom upload action, depending on account or workspace settings. In that case, the zip is still the correct artifact for Team/Enterprise manual marketplace upload. GitHub-synced Cowork organization marketplaces require a private or internal GitHub repository, so the public repo is used for the npx/package path, not as a direct organization marketplace source.
 

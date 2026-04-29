@@ -1,6 +1,6 @@
 ---
 name: imweb
-description: Use when the user needs command discovery or execution guidance for imweb-cli across site, product, order, payment, member, promotion, community, and script domains. Triggers on requests to inspect current config, find the right imweb CLI path, or safely execute a documented imweb-cli flow.
+description: Use for imweb CLI command discovery and safe execution guidance across site, product, order, payment, member, promotion, community, and script domains.
 ---
 
 # imweb

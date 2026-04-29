@@ -149,15 +149,17 @@ Claude Desktop Cowork:
 
 ```bash
 ./install/install-plugins.sh --package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.sh --skill-package imweb-skill.zip
 ```
 
 PowerShell:
 
 ```powershell
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit-plugin.zip
+./install/install-plugins.ps1 -SkillPackage imweb-skill.zip
 ```
 
-생성된 zip은 Claude Desktop의 Cowork > Customize > Browse plugins 흐름에서 custom plugin file로 업로드합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 이 zip upload 또는 조직 배포 경로를 기준으로 합니다. 설치/활성화 후에는 `/imweb-ai-toolkit:imweb`로 시작합니다. Desktop 앱/계정에서 personal custom upload가 보이지 않으면 Team/Enterprise manual marketplace upload를 사용합니다. GitHub synced Cowork organization marketplace는 private/internal GitHub repo만 허용하므로 public repo는 npx/package source로 사용하고, 조직 배포에는 private/internal mirror를 둡니다.
+생성된 plugin zip은 Claude Desktop의 Cowork > Customize > Browse plugins 흐름에서 custom plugin file로 업로드합니다. 직접 `/imweb`가 acceptance target이면 `imweb-skill.zip`을 Cowork > Customize > Skills에 custom Skill로 설치합니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork 자체의 Skill/plugin upload 또는 조직 배포 경로를 기준으로 합니다. Desktop 앱/계정에서 personal custom upload가 보이지 않으면 Team/Enterprise manual marketplace upload나 organization Skill provisioning을 사용합니다. GitHub synced Cowork organization marketplace는 private/internal GitHub repo만 허용하므로 public repo는 npx/package source로 사용하고, 조직 배포에는 private/internal mirror를 둡니다. Claude에게 설치를 맡기는 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
 
 ## 표면별 시작점
 

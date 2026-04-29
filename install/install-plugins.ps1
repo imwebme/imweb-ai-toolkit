@@ -15,6 +15,9 @@ param(
     [string]$Package,
 
     [Parameter()]
+    [string]$SkillPackage,
+
+    [Parameter()]
     [switch]$DryRun,
 
     [Parameter()]
@@ -36,6 +39,7 @@ imweb plugin install helper
 Usage:
   ./install/install-plugins.ps1 -Tool codex|claude [-Scope user|project|local] [-Source PATH] [-DryRun]
   ./install/install-plugins.ps1 -Package PATH [-DryRun]
+  ./install/install-plugins.ps1 -SkillPackage PATH [-DryRun]
   ./install/install-plugins.ps1 -Help
 
 Options:
@@ -44,6 +48,7 @@ Options:
             Codex는 현재 marketplace 등록까지만 자동화합니다.
   -Source   marketplace source. 기본값: 이 toolkit repo root
   -Package  Claude Desktop Cowork custom upload용 plugin zip 생성 경로
+  -SkillPackage Claude Cowork /imweb 직접 호출용 custom skill zip 생성 경로
   -DryRun   실행할 명령만 출력
   -Help     도움말 출력
 "@
@@ -113,8 +118,10 @@ function New-PluginPackage([string]$OutputPath) {
         '.claude-plugin',
         '.cursor-plugin',
         'assets',
+        'commands',
         'docs/ai-agent-installation.md',
         'docs/cli-toolkit-integration.md',
+        'docs/cowork-ask-claude-install.md',
         'docs/imweb-ai-toolkit.md',
         'docs/skill-installation-and-usage.md',
         'docs/surface-support-matrix.md',
@@ -167,6 +174,60 @@ function New-PluginPackage([string]$OutputPath) {
     }
 }
 
+function New-SkillPackage([string]$OutputPath) {
+    if (-not $OutputPath) {
+        Fail '-SkillPackage 경로가 필요합니다.'
+    }
+    if ($DryRun) {
+        Write-Host "+ package imweb skill $OutputPath"
+        return
+    }
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    if ($OutputPath.StartsWith('~')) {
+        $ResolvedOutput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
+    }
+    else {
+        $ResolvedOutput = [System.IO.Path]::GetFullPath($OutputPath, (Get-Location).ProviderPath)
+    }
+    $OutputDir = Split-Path -Parent $ResolvedOutput
+    if (-not (Test-Path -LiteralPath $OutputDir -PathType Container)) {
+        New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
+    }
+    if (Test-Path -LiteralPath $ResolvedOutput) {
+        Remove-Item -LiteralPath $ResolvedOutput -Force
+    }
+
+    $SkillRoot = Join-Path $RepoRoot 'skills/imweb'
+    $SkillEntry = Join-Path $SkillRoot 'SKILL.md'
+    if (-not (Test-Path -LiteralPath $SkillEntry -PathType Leaf)) {
+        Fail 'skill source missing: skills/imweb/SKILL.md'
+    }
+
+    $Archive = [System.IO.Compression.ZipFile]::Open($ResolvedOutput, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        $Seen = New-Object 'System.Collections.Generic.HashSet[string]'
+        $Items = @(Get-ChildItem -LiteralPath $SkillRoot -Force -Recurse -File)
+        foreach ($Item in $Items) {
+            if ($Item.FullName -match '(__pycache__|\.DS_Store)$') {
+                continue
+            }
+            $Rel = [System.IO.Path]::GetRelativePath($SkillRoot, $Item.FullName).Replace('\', '/')
+            $EntryName = "imweb/$Rel"
+            if (-not $Seen.Add($EntryName)) {
+                continue
+            }
+            [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($Archive, $Item.FullName, $EntryName) | Out-Null
+        }
+        Write-Host 'skill package created'
+        Write-Host "  path: $ResolvedOutput"
+        Write-Host "  files: $($Seen.Count)"
+    }
+    finally {
+        $Archive.Dispose()
+    }
+}
+
 if ($Help) {
     Show-Usage
     exit 0
@@ -176,11 +237,15 @@ if ($Package) {
     New-PluginPackage -OutputPath $Package
 }
 
+if ($SkillPackage) {
+    New-SkillPackage -OutputPath $SkillPackage
+}
+
 if (-not $Tool) {
-    if ($Package) {
+    if ($Package -or $SkillPackage) {
         exit 0
     }
-    Fail '-Tool 또는 -Package 중 하나는 필요합니다.'
+    Fail '-Tool, -Package, -SkillPackage 중 하나는 필요합니다.'
 }
 
 switch ($Tool) {

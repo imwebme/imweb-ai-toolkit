@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "description": "AI surface manifests, public skill assets, and install metadata for connecting imweb-cli to Codex, Claude, and Cursor.",
   "bin": {
@@ -27,8 +27,10 @@
     ".claude-plugin/**",
     ".cursor-plugin/**",
     "assets/**",
+    "commands/**",
     "docs/ai-agent-installation.md",
     "docs/cli-toolkit-integration.md",
+    "docs/cowork-ask-claude-install.md",
     "docs/imweb-ai-toolkit.md",
     "docs/skill-installation-and-usage.md",
     "docs/surface-support-matrix.md",
