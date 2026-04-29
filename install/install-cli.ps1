@@ -170,6 +170,7 @@ function Get-PlatformKey {
         'x64' {
             $arch = 'x86_64'
         }
+        'x86' { $arch = 'i686' }
         'arm64' { $arch = 'arm64' }
         default { Fail '지원하지 않는 아키텍처입니다.' }
     }
@@ -360,7 +361,9 @@ if (-not $Manifest.assets -and $Manifest.PSObject.Properties.Name -contains 'rel
 $Asset = $Manifest.assets | Where-Object { $_.platform -eq $Platform } | Select-Object -First 1
 
 if (-not $Asset) {
-    Fail "manifest에 현재 플랫폼 자산이 없습니다: $Platform"
+    $AvailablePlatforms = @($Manifest.assets | ForEach-Object { $_.platform } | Where-Object { $_ })
+    $AvailableMessage = if ($AvailablePlatforms.Count -gt 0) { $AvailablePlatforms -join ', ' } else { 'none' }
+    Fail "manifest에 현재 플랫폼 자산이 없습니다: $Platform (available: $AvailableMessage)"
 }
 
 $ManifestBase = Get-ManifestBaseFromSource -Source $ManifestSource

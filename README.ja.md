@@ -57,6 +57,12 @@ Cowork コマンドは `imweb-ai-toolkit.plugin` と fallback `imweb-skill.zip` 
 
 ## その他のインストール方法
 
+`imweb` CLI binary だけがない場合は、次を実行します。
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool cli
+```
+
 対象ツールが plugin をサポートしない場合は、標準 Agent Skill を直接インストールします。
 
 ```bash

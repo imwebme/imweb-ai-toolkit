@@ -79,10 +79,17 @@ If the `imweb` CLI itself also needs to be installed or updated, add `--install-
 npx -y github:imwebme/imweb-ai-toolkit --tool both --install-cli
 ```
 
+CLI only:
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool cli
+```
+
 ## What The Installer Does
 
 - Creates a timestamped backup under `~/.imweb-ai-toolkit-local-install-backups/` when it changes Codex or Claude Code local config. Package-only Claude Desktop Cowork runs do not create a backup.
 - Registers `https://github.com/imwebme/imweb-ai-toolkit.git` as the marketplace source.
+- For CLI-only setup, installs or updates the official `imweb` CLI from the public release channel.
 - For Codex, registers the marketplace and copies `skills/imweb` into the user skill discovery path so CLI discovery works without waiting for a Plugins UI install.
 - For Claude Code, installs `imweb-ai-toolkit@imweb-ai-toolkit` in user scope.
 - For Claude Desktop Cowork plugin workflows, creates `imweb-ai-toolkit.plugin` in the directory where the agent ran the command.
@@ -96,6 +103,8 @@ Use `--no-replace` to avoid replacing existing entries. Use `--no-backup` only i
 After installing, run:
 
 ```bash
+command -v imweb
+imweb --version
 imweb --output json config context
 imweb --output json config command-capabilities
 ```

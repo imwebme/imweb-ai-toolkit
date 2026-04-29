@@ -32,13 +32,14 @@ function usage() {
   console.log(`imweb-ai-toolkit installer
 
 Usage:
-  npx -y github:imwebme/imweb-ai-toolkit --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
-  npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
-  node install/imweb-ai-toolkit-install.mjs --tool codex|claude-code|claude-desktop|claude-cowork|both|all [options]
+  npx -y github:imwebme/imweb-ai-toolkit --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
+  npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
+  node install/imweb-ai-toolkit-install.mjs --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
 
 Options:
-  --tool codex|claude|claude-code|claude-desktop|claude-cowork|both|all
+  --tool cli|codex|claude|claude-code|claude-desktop|claude-cowork|both|all
                               Target AI surface. "claude" is an alias for Claude Code.
+                              "cli" only installs or updates the imweb CLI.
                               "both" installs Codex + Claude Code. "claude-cowork" creates
                               the installable Cowork .plugin file and skill fallback zip.
                               "all" also creates both.
@@ -61,7 +62,8 @@ Options:
   --help                      Show this help.
 
 Notes:
-  - The default npx path registers the public Git repository as the marketplace source.
+  - Use --tool cli when only the imweb CLI binary is missing.
+  - The default npx plugin path registers the public Git repository as the marketplace source.
   - Codex CLI currently supports marketplace registration; the installer also copies the
     imweb skill by default so command discovery works immediately.
   - Claude Code installs imweb-ai-toolkit from the registered marketplace.
@@ -142,8 +144,8 @@ function parseArgs(argv) {
   if (!opts.tool && !opts.packagePath && !opts.skillPackagePath) {
     fail('--tool, --package, or --skill-package is required');
   }
-  if (opts.tool && !['codex', 'claude', 'claude-desktop', 'claude-cowork', 'both', 'all'].includes(opts.tool)) {
-    fail('--tool must be codex, claude-code, claude-desktop, claude-cowork, both, or all');
+  if (opts.tool && !['cli', 'codex', 'claude', 'claude-desktop', 'claude-cowork', 'both', 'all'].includes(opts.tool)) {
+    fail('--tool must be cli, codex, claude-code, claude-desktop, claude-cowork, both, or all');
   }
   if (!['user', 'project', 'local'].includes(opts.scope)) {
     fail('--scope must be user, project, or local');
@@ -158,6 +160,7 @@ function normalizeTool(value) {
   const normalized = String(value || '').trim().toLowerCase();
   const aliases = {
     codex: 'codex',
+    cli: 'cli',
     claude: 'claude',
     'claude-code': 'claude',
     'claude_cli': 'claude',
@@ -414,7 +417,7 @@ function main() {
     createSkillPackage(opts);
   }
 
-  if (opts.installCli) {
+  if (opts.tool === 'cli' || opts.installCli) {
     installCli(opts);
   }
 

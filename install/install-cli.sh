@@ -155,7 +155,9 @@ detect_platform() {
 
   case "$arch" in
     x86_64|amd64) arch="x86_64" ;;
+    i386|i486|i586|i686) arch="i686" ;;
     arm64|aarch64) arch="arm64" ;;
+    armv7l|armv7*) arch="armv7" ;;
     *)
       fail "지원하지 않는 아키텍처입니다: $arch"
       ;;
@@ -408,10 +410,8 @@ fi
 MANIFEST_BASE="$(manifest_base_from_source "$MANIFEST_SOURCE")"
 
 manifest_values=()
-while IFS= read -r line; do
-  manifest_values+=("$line")
-done < <(
-  MANIFEST_JSON="$MANIFEST_JSON" python3 - "$PLATFORM" <<'PY'
+if ! manifest_output=$(
+  MANIFEST_JSON="$MANIFEST_JSON" python3 - "$PLATFORM" 2>&1 <<'PY'
 import json
 import os
 import sys
@@ -419,6 +419,7 @@ import sys
 platform = sys.argv[1]
 data = json.loads(os.environ["MANIFEST_JSON"])
 assets = data.get("assets") or []
+available = [asset.get("platform") for asset in assets if asset.get("platform")]
 match = None
 for asset in assets:
     if asset.get("platform") == platform:
@@ -426,7 +427,8 @@ for asset in assets:
         break
 
 if not match:
-    raise SystemExit(f"manifest에 현재 플랫폼 자산이 없습니다: {platform}")
+    supported = ", ".join(available) or "none"
+    raise SystemExit(f"manifest에 현재 플랫폼 자산이 없습니다: {platform} (available: {supported})")
 
 values = [
     data.get("version", ""),
@@ -438,7 +440,12 @@ values = [
 for item in values:
     print(item)
 PY
-)
+); then
+  fail "$manifest_output"
+fi
+while IFS= read -r line; do
+  manifest_values+=("$line")
+done <<< "$manifest_output"
 
 VERSION="${manifest_values[0]:-}"
 TAG="${manifest_values[1]:-}"
