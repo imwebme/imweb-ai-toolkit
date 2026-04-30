@@ -19,7 +19,7 @@
 
 ## CLI availability
 
-Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list` 같은 MCP tools가 보이면 먼저 사용합니다. 이 tools는 plugin에 포함된 local MCP bridge이며 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. `imweb_cli_install`은 사용자가 로컬 CLI 설치를 허용했을 때만 호출합니다.
+Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list`, `imweb_order_get`, `imweb_product_list`, `imweb_product_get`, `imweb_member_list` 같은 MCP tools가 보이면 먼저 사용합니다. 이 tools는 plugin에 포함된 local MCP bridge이며 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. `imweb_cli_install`은 사용자가 로컬 CLI 설치를 허용했을 때만 호출합니다.
 
 MCP tool이 없을 때는 아래 순서로 확인합니다.
 

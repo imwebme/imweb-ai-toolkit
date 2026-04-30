@@ -54,7 +54,7 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 `imweb.skill`。接受展示出的 plugin/skill card 后，用 `/imweb 주문목록을 확인해줘` 直接测试。Plugin 包含简短的 `/imweb` slash 入口以及使用 host CLI/auth 的 local MCP bridge。如果 Claude Desktop 请求 imweb tool 权限，请点击 `Allow for this task`。若 host CLI 需要登录，Claude 可以启动浏览器登录流程；用户只需在浏览器中完成登录，Claude 会重新检查 auth 并继续原始请求。Skill package 则把相同的 imweb 指南作为 custom Skill fallback 提供。
+Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 `imweb.skill`。接受展示出的 plugin/skill card 后，用 `/imweb 최근 주문중 이상 거래 조사` 或 `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` 这样的业务句子测试。Plugin 包含简短的 `/imweb` slash 入口以及使用 host CLI/auth 的 local MCP bridge。如果 Claude Desktop 请求 imweb tool 权限，请点击 `Allow for this task`。若 host CLI 需要登录，Claude 可以启动浏览器登录流程；用户只需在浏览器中完成登录，Claude 会重新检查 auth 并继续原始请求。如果请求的指标不在 CLI 支持范围内，Claude 会说明限制并继续执行可用的 read-only 检查。Skill package 则把相同的 imweb 指南作为 custom Skill fallback 提供。
 
 ## 其他安装方式
 

@@ -73,7 +73,7 @@ Notes:
     imweb.skill. Present both files to Cowork so the host can install/enable
     the /imweb plugin command and imweb Skill fallback; do not ask Cowork to use computer-use or
     Claude Desktop UI automation to install itself. After install, start with
-    /imweb 주문목록을 확인해줘 or another natural-language imweb request in Cowork.
+    /imweb 최근 주문중 이상 거래 조사 or another natural-language imweb request in Cowork.
   - Standard Agent Skills fallback is: npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex.`);
 }
 
