@@ -18,6 +18,9 @@ param(
     [string]$SkillPackage,
 
     [Parameter()]
+    [switch]$NoInstallCli,
+
+    [Parameter()]
     [switch]$DryRun,
 
     [Parameter()]
@@ -50,6 +53,7 @@ Options:
   -Package  Claude Desktop Cowork installable plugin package 생성 경로
             Cowork 파일 카드 설치를 위해 .plugin 확장자를 권장합니다.
   -SkillPackage Claude Cowork imweb custom Skill fallback package 생성 경로
+  -NoInstallCli --tool codex|claude 경로에서 기본 CLI 설치/업데이트를 건너뜁니다.
   -DryRun   실행할 명령만 출력
   -Help     도움말 출력
 "@
@@ -78,6 +82,21 @@ function Assert-Command([string]$Name) {
     }
     if (-not (Get-Command $Name -ErrorAction SilentlyContinue)) {
         Fail "필수 명령을 찾지 못했습니다: $Name"
+    }
+}
+
+function Install-CliIfNeeded {
+    if ($NoInstallCli) {
+        return
+    }
+    $Installer = Join-Path $ScriptDir 'install-cli.ps1'
+    Write-Host "+ $Installer"
+    if ($DryRun) {
+        return
+    }
+    & $Installer
+    if ($LASTEXITCODE -ne 0) {
+        Fail "명령 실행에 실패했습니다: $Installer"
     }
 }
 
@@ -261,6 +280,7 @@ if (-not $Tool) {
 switch ($Tool) {
     'codex' {
         Assert-Command 'codex'
+        Install-CliIfNeeded
         Invoke-CommandChecked @('codex', 'plugin', 'marketplace', 'add', $Source)
         if ($DryRun) {
             Write-Host 'Codex marketplace 등록 dry-run 완료'
@@ -274,6 +294,7 @@ switch ($Tool) {
     }
     'claude' {
         Assert-Command 'claude'
+        Install-CliIfNeeded
         Invoke-CommandChecked @('claude', 'plugin', 'marketplace', 'add', $Source)
         Invoke-CommandChecked @('claude', 'plugin', 'install', "$PluginName@$MarketplaceName", '--scope', $Scope)
         if ($DryRun) {

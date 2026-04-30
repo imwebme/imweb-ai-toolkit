@@ -11,6 +11,7 @@ const SERVER_VERSION = '0.1.0';
 const PROTOCOL_VERSION = '2024-11-05';
 
 let inputBuffer = Buffer.alloc(0);
+let cliEnsureCache = null;
 
 const tools = [
   {
@@ -24,7 +25,7 @@ const tools = [
   },
   {
     name: 'imweb_cli_install',
-    description: 'Install or update the official imweb CLI from the public release channel after the user confirms local installation.',
+    description: 'Install or update the official imweb CLI from the public release channel on the host. Use automatically when the plugin needs the CLI; a Claude Desktop tool permission prompt is the user approval point.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
@@ -474,6 +475,7 @@ function cliCheck() {
       available: false,
       message: 'imweb CLI was not found on this computer.',
       searched: candidateBinaries(),
+      autoUpdateManaged: true,
     };
   }
 
@@ -484,10 +486,12 @@ function cliCheck() {
     path: bin,
     version: version.stdout.trim() || version.stderr.trim() || null,
     status: version.status,
+    autoUpdateManaged: true,
   };
 }
 
 function cliInstall(args) {
+  cliEnsureCache = null;
   const script = platform() === 'win32'
     ? join(PLUGIN_ROOT, 'install', 'install-cli.ps1')
     : join(PLUGIN_ROOT, 'install', 'install-cli.sh');
@@ -529,15 +533,17 @@ function authStatus() {
 }
 
 function authLogin() {
-  const bin = findImwebBinary();
+  const ensured = ensureCliReady();
+  const bin = ensured.bin;
   if (!bin) {
     return {
       ok: false,
       available: false,
-      message: 'imweb CLI was not found on this computer. Install the CLI first with imweb_cli_install.',
+      message: 'imweb CLI was not found on this computer, and automatic plugin-managed CLI install/update did not make it available.',
       searched: candidateBinaries(),
+      cliEnsure: ensured.summary,
       nextSteps: [
-        'Call imweb_cli_install after the user allows local CLI installation.',
+        'If Claude Desktop shows a tool permission prompt, ask the user to click Allow for this task.',
         'Then call imweb_auth_login again.',
       ],
     };
@@ -554,6 +560,7 @@ function authLogin() {
     status: result.status,
     stdout: redactLoginOutput(result.stdout.trim()),
     stderr: redactLoginOutput(result.stderr.trim()),
+    cliEnsure: ensured.summary,
     nextSteps: result.status === 0
       ? [
           'If Claude Desktop asks for another imweb tool permission, ask the user to click Allow for this task.',
@@ -670,13 +677,15 @@ function communityReviewList(args) {
 }
 
 function runJson(args) {
-  const bin = findImwebBinary();
+  const ensured = ensureCliReady();
+  const bin = ensured.bin;
   if (!bin) {
     return {
       ok: false,
       available: false,
-      message: 'imweb CLI was not found on this computer. Ask before running imweb_cli_install.',
+      message: 'imweb CLI was not found on this computer, and automatic plugin-managed CLI install/update did not make it available.',
       searched: candidateBinaries(),
+      cliEnsure: ensured.summary,
     };
   }
 
@@ -688,6 +697,7 @@ function runJson(args) {
       status: result.status,
       stdout: result.stdout.trim(),
       stderr: result.stderr.trim(),
+      cliEnsure: ensured.summary,
     };
   }
 
@@ -696,6 +706,7 @@ function runJson(args) {
       ok: true,
       path: bin,
       data: JSON.parse(result.stdout),
+      cliEnsure: ensured.summary,
     };
   } catch (error) {
     return {
@@ -705,8 +716,58 @@ function runJson(args) {
       message: `imweb returned non-JSON output: ${error.message}`,
       stdout: result.stdout.trim(),
       stderr: result.stderr.trim(),
+      cliEnsure: ensured.summary,
     };
   }
+}
+
+function ensureCliReady() {
+  if (cliEnsureCache) return cliEnsureCache;
+
+  const before = findImwebBinary();
+  if (process.env.IMWEB_AI_TOOLKIT_DISABLE_AUTO_CLI_UPDATE === '1') {
+    cliEnsureCache = {
+      ok: Boolean(before),
+      bin: before,
+      summary: {
+        attempted: false,
+        skipped: true,
+        reason: 'IMWEB_AI_TOOLKIT_DISABLE_AUTO_CLI_UPDATE=1',
+        before,
+        after: before,
+      },
+    };
+    return cliEnsureCache;
+  }
+
+  const install = cliInstall({});
+  const after = findImwebBinary() || before;
+  cliEnsureCache = {
+    ok: Boolean(after),
+    bin: after,
+    summary: {
+      attempted: true,
+      before,
+      after,
+      install: summarizeInstallResult(install),
+    },
+  };
+  return cliEnsureCache;
+}
+
+function summarizeInstallResult(result) {
+  return {
+    ok: result.ok,
+    status: result.status,
+    stdout: truncate(result.stdout || '', 4000),
+    stderr: truncate(result.stderr || '', 2000),
+  };
+}
+
+function truncate(value, limit) {
+  const text = String(value || '');
+  if (text.length <= limit) return text;
+  return `${text.slice(0, limit)}\n...[truncated ${text.length - limit} chars]`;
 }
 
 function run(command, args, options = {}) {

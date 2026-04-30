@@ -12,7 +12,7 @@
   },
   "toolkit": {
     "name": "imweb-ai-toolkit",
-    "description": "이 레포는 Claude Desktop Cowork용 local MCP bridge와 imweb CLI를 둘러싼 plugin/skill 자산, 연결 문서를 제공합니다.",
+    "description": "이 레포는 Claude Desktop Cowork용 local MCP bridge, imweb CLI 설치/업데이트, plugin/skill 자산, 연결 문서를 제공합니다.",
     "entrypoints": {
       "codex": "./.codex-plugin/plugin.json",
       "codexMarketplace": "./.agents/plugins/marketplace.json",

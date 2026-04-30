@@ -18,6 +18,7 @@ const DEFAULTS = {
   skillMode: 'copy',
   skill: 'auto',
   installCli: false,
+  skipCli: false,
   backup: true,
   replace: true,
   source: PUBLIC_GIT_SOURCE,
@@ -48,6 +49,7 @@ Options:
   --with-skill                Also install the imweb skill discovery bundle.
   --no-skill                  Skip skill discovery install.
   --install-cli               Install or update the imweb CLI before tool wiring.
+  --no-install-cli            Skip the default CLI install/update for local plugin installs.
   --source SOURCE             Marketplace source. Default: ${PUBLIC_GIT_SOURCE}
   --ref REF                   Git ref for Codex marketplace add. Default: ${PUBLIC_GIT_REF}
   --package PATH              Create Claude Desktop Cowork plugin package. Use a .plugin
@@ -63,7 +65,8 @@ Options:
   --help                      Show this help.
 
 Notes:
-  - Use --tool cli when only the imweb CLI binary is missing.
+  - Local plugin installs for Codex and Claude Code install/update the imweb CLI by default.
+    Use --no-install-cli only for disposable metadata-only validation.
   - The default npx plugin path registers the public Git repository as the marketplace source.
   - Codex CLI currently supports marketplace registration; the installer also copies the
     imweb skill by default so command discovery works immediately.
@@ -109,6 +112,9 @@ function parseArgs(argv) {
         break;
       case '--install-cli':
         opts.installCli = true;
+        break;
+      case '--no-install-cli':
+        opts.skipCli = true;
         break;
       case '--source':
         opts.source = readValue(arg);
@@ -363,6 +369,12 @@ function installCli(opts) {
   runScript('install-cli', [], [], opts);
 }
 
+function shouldInstallCli(opts) {
+  if (opts.skipCli) return false;
+  if (opts.installCli || opts.tool === 'cli') return true;
+  return ['codex', 'claude', 'both', 'all'].includes(opts.tool);
+}
+
 function createPackage(opts) {
   const output = opts.packagePath;
   if (!output) return;
@@ -414,16 +426,16 @@ function main() {
     createBackup(opts);
   }
 
+  if (shouldInstallCli(opts)) {
+    installCli(opts);
+  }
+
   if (opts.packagePath) {
     createPackage(opts);
   }
 
   if (opts.skillPackagePath) {
     createSkillPackage(opts);
-  }
-
-  if (opts.tool === 'cli' || opts.installCli) {
-    installCli(opts);
   }
 
   const tools = (opts.tool === 'both' || opts.tool === 'all') ? ['codex', 'claude'] : (['codex', 'claude'].includes(opts.tool) ? [opts.tool] : []);
