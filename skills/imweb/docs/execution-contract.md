@@ -21,13 +21,13 @@
 
 Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_cli_install`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list`, `imweb_order_get`, `imweb_product_list`, `imweb_product_get`, `imweb_member_list` 같은 MCP tools가 보이면 먼저 사용합니다. 이 tools는 plugin에 포함된 local MCP bridge이며 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. host CLI가 없거나 오래되면 사용자에게 설치 명령을 쓰게 하지 말고 `imweb_cli_install`을 호출합니다. Claude Desktop이 tool permission을 물으면 그 prompt가 사용자의 설치 승인 지점입니다.
 
-Claude Desktop Cowork에서 MCP tool이 없으면 VM 안에 CLI를 먼저 설치하지 않습니다. 그 CLI는 host 인증을 재사용하지 못하므로 실제 사용자가 기대하는 `/imweb` 경험을 검증하지 못합니다. 대신 Cowork task 안에서 plugin package를 만들고 제시합니다.
+Claude Desktop Cowork에서 MCP tool이 없으면 VM 안에 CLI를 먼저 설치하지 않습니다. Shell/Bash 도구는 imweb MCP tool이 아닙니다. VM CLI는 host 인증을 재사용하지 못하므로 실제 사용자가 기대하는 imweb 경험을 검증하지 못합니다. 대신 Cowork task 안에서 plugin package를 만들고 제시합니다.
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
-`imweb-ai-toolkit.plugin`과 `imweb.skill`을 검증한 뒤 Cowork host가 install card로 받을 수 있게 제시합니다. 사용자는 표시된 설치/수락 버튼만 누릅니다. 설치 뒤에는 원래 요청을 `/imweb 최근 주문중 이상 거래 조사`처럼 다시 이어갑니다.
+`imweb-ai-toolkit.plugin`과 `imweb.skill`을 검증한 뒤 Cowork host가 install card로 받을 수 있게 제시합니다. 사용자는 표시된 설치/수락 버튼만 누릅니다. 설치 뒤에는 원래 요청을 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`처럼 자연어로 다시 이어갑니다. 현재 Claude Desktop Cowork는 slash-form text를 task 시작 전에 거절할 수 있으므로, `/imweb`가 실패하면 앱 라우팅 제한으로 보고 자연어 요청을 사용합니다.
 
 Claude Code, Codex, 또는 일반 sandbox처럼 Cowork plugin install card가 없는 환경에서 MCP tool이 없을 때만 아래 순서로 확인합니다.
 
@@ -50,7 +50,7 @@ npx -y github:imwebme/imweb-ai-toolkit --tool cli
 
 npm registry의 `imweb` package는 공식 아임웹 CLI가 아닙니다.
 
-Claude Desktop Cowork에서는 작업 shell이 사용자 Mac이 아닌 별도 Linux 런타임일 수 있습니다. MCP tool이 있는데 auth가 없거나 만료되어 있으면 사용자에게 Mac 터미널 실행을 떠넘기지 말고 `imweb_auth_login`으로 브라우저 로그인을 시작합니다. MCP tool이 없으면 runtime CLI 설치보다 plugin package 생성/제시를 우선합니다.
+Claude Desktop Cowork에서는 작업 shell이 사용자 Mac이 아닌 별도 Linux 런타임일 수 있습니다. MCP tool이 있는데 auth가 없거나 만료되어 있으면 사용자에게 Mac 터미널 실행을 떠넘기지 말고 `imweb_auth_login`으로 브라우저 로그인을 시작합니다. MCP tool이 없으면 runtime CLI 설치보다 plugin package 생성/제시를 우선합니다. 실제 사용자 데이터 조회는 host imweb MCP tool이 보일 때만 진행합니다.
 
 ## 로그인 온보딩
 

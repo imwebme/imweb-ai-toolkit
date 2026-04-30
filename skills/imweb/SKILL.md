@@ -29,7 +29,7 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 1. Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list`, `imweb_order_get`, `imweb_site_info`, `imweb_product_list`, `imweb_product_get`, `imweb_member_list` 같은 MCP tools가 보이면 이것을 먼저 사용합니다.
 2. MCP tool이 있으면 VM shell에 CLI를 설치하거나 VM 안에서 auth를 만들지 않습니다. host CLI/auth를 쓰는 MCP tool로만 진행합니다.
 3. MCP tool이 있고 host `imweb` CLI가 없으면 사용자에게 설치 명령을 쓰게 하지 말고 `imweb_cli_install`을 호출합니다. Claude Desktop이 권한을 물으면 사용자는 `이 작업에 허용` / `Allow for this task`만 누르면 됩니다.
-4. Claude Desktop Cowork에서 MCP tool이 보이지 않으면 VM 안에 CLI를 먼저 설치하지 않습니다. 대신 `npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork`로 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 만들고, Cowork host가 설치 카드로 받을 수 있게 두 artifact를 제시합니다. 사용자는 표시된 설치/수락 버튼만 누르면 됩니다.
+4. Claude Desktop Cowork에서 MCP tool이 보이지 않으면 VM 안에 CLI를 먼저 설치하지 않습니다. Shell/Bash 도구는 imweb MCP tool이 아닙니다. 대신 `npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork`로 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 만들고, Cowork host가 설치 카드로 받을 수 있게 두 artifact를 제시합니다. 실제 사용자 데이터 조회는 host imweb MCP tool이 보일 때만 진행합니다.
 5. Claude Code, Codex, 또는 일반 sandbox처럼 Cowork host plugin 설치 카드가 없는 환경에서만 현재 런타임의 `command -v imweb`와 `imweb --version`을 확인합니다.
 6. 현재 런타임 안에 CLI가 없고 MCP bridge도 없으면 공식 공개 설치 경로로 CLI를 설치합니다: `npx -y github:imwebme/imweb-ai-toolkit --tool cli`. 설치가 끝나면 바로 auth/context 확인으로 이어갑니다.
 7. `imweb_context` 또는 `imweb --output json config context`
@@ -39,7 +39,7 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 
 `/imweb`만 호출되고 업무 문장이 없을 때:
 - MCP tool 또는 CLI 준비 상태를 확인합니다.
-- Claude Desktop Cowork에서 MCP tool이 없으면 plugin/skill package를 생성해 설치 카드로 제시합니다.
+- Claude Desktop Cowork에서 MCP tool이 없으면 plugin/skill package를 생성해 설치 카드로 제시합니다. Cowork 시작 입력에서 `/imweb`가 거절되면 앱 라우팅 제한이므로, 설치 뒤에는 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`처럼 자연어로 다시 시작합니다.
 - MCP tool이 있고 host CLI가 없으면 `imweb_cli_install`을 호출합니다.
 - 일반 sandbox에서 CLI가 없으면 공식 CLI 설치를 먼저 시도합니다.
 - 준비가 끝나면 "주문 조회, 상품 점검, 회원 조회처럼 요청을 말해 주세요" 정도로만 짧게 말합니다.
@@ -59,8 +59,8 @@ CLI/런타임 게이트:
 - Claude Desktop Cowork에서는 plugin이 제공하는 local MCP bridge가 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. MCP tool이 있으면 VM shell에 CLI를 새로 설치하려고 하지 않습니다.
 - `imweb_cli_install` MCP tool은 host CLI가 없거나 오래된 경우의 기본 설치/업데이트 경로입니다. Claude Desktop의 tool permission prompt가 사용자의 설치 승인 지점입니다.
 - Claude Desktop Cowork의 작업 shell은 사용자 Mac이 아니라 별도 Linux 런타임일 수 있습니다. `uname -s && uname -m`으로 현재 실행 환경을 확인합니다.
-- Cowork에서 MCP tool이 없으면 runtime CLI 설치로 우회하지 말고 plugin package 생성/제시 흐름을 먼저 수행합니다.
-- MCP tool과 CLI가 모두 없다는 사실만으로 "직접 작업이 어렵다"고 결론내리지 않습니다. Cowork에서는 plugin package를 제시하고, 일반 sandbox에서는 공식 CLI 설치를 시도한 뒤 실패한 경우에만 실패 원인을 근거로 보고합니다.
+- Cowork에서 MCP tool이 없으면 runtime CLI 설치로 우회하지 말고 plugin package 생성/제시 흐름을 먼저 수행합니다. host 연결 없이 VM CLI를 설치해도 사용자의 Mac 인증 상태를 검증한 것이 아닙니다.
+- MCP tool과 CLI가 모두 없다는 사실만으로 "직접 작업이 어렵다"고 결론내리지 않습니다. Cowork에서는 plugin package를 제시하고 host imweb tool이 아직 연결되지 않았다고 말합니다. 일반 sandbox에서는 공식 CLI 설치를 시도한 뒤 실패한 경우에만 실패 원인을 근거로 보고합니다.
 - auth/profile이 없으면 먼저 MCP 기반 로그인 도구 또는 CLI `auth login`을 사용하고, 컴퓨터유즈나 사용자 터미널 실행으로 우회하지 않습니다.
 - 사용자가 명시적으로 로컬 앱 조작을 요청하지 않았다면 Terminal, Customize, Settings, computer-use를 요청하지 않습니다.
 

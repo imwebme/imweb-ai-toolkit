@@ -13,14 +13,16 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 After the cards are installed, use a normal business request. Examples:
 
 ```text
-/imweb 최근 주문중 이상 거래 조사
+최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.
 ```
 
 ```text
-/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검
+방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
 ```
 
 The second request intentionally checks graceful limitation handling. If visitor-ranked product analytics are not available through the CLI, Claude should say so plainly and continue with supported product/site/review/order checks instead of inventing traffic data.
+
+Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before a task starts, even when the imweb skill is enabled. That is not a user setup mistake. Use the natural-language request above unless the Cowork slash picker explicitly exposes the imweb command.
 
 Use the longer request below when you need Claude to explicitly report every verification step.
 
@@ -46,16 +48,16 @@ Expected result:
 - `imweb.skill` is created and verified as a Claude Skill package named `imweb`.
 - Claude does not use computer-use or UI automation.
 - Claude presents the `.plugin` and `.skill` artifacts so the Cowork host can install and enable them.
-- After the presented cards are accepted, start with `/imweb 최근 주문중 이상 거래 조사`, `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검`, or another natural-language imweb request.
-- The plugin exposes the `/imweb` slash command and a local `imweb-cli` MCP bridge so Cowork can install/update the host CLI when needed, then reuse the host auth state instead of asking the user for Terminal commands.
+- After the presented cards are accepted, start with a natural-language imweb request such as `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`
+- The plugin includes the `/imweb` slash command for hosts that route plugin slash commands, plus a local `imweb-cli` MCP bridge for hosts that expose plugin MCP tools. If the Cowork start box rejects slash-form text, retry with natural language and do not ask the user to use Terminal.
 - If Claude Desktop asks for permission to use an imweb tool, click `Allow for this task` / `이 작업에 허용`.
 - If the host CLI is missing or outdated, Claude should let the MCP bridge run its official CLI install/update path, then continue the original imweb request.
 - If the host CLI is not logged in, Claude should use the plugin's auth MCP tools to start the browser login flow. The user only needs to finish login in the browser; Claude should then re-check auth and continue the original imweb request.
-- If the task runtime has no host MCP bridge and no way to present/install the plugin package, Claude may install the CLI inside that sandbox using `npx -y github:imwebme/imweb-ai-toolkit --tool cli`, then run the same auth/context checks. The user should only need to approve visible prompts and complete browser login.
+- If the task runtime has no host MCP bridge and no way to present/install the plugin package, Claude may install the CLI inside that sandbox only for sandbox-local validation. For real user data, Claude should say that the host imweb plugin tools are not connected yet and present the package artifacts or route the user to Claude Desktop chat MCPB.
 
 Important limitation:
 
 - A Cowork task can create and verify the plugin and skill packages itself.
 - If the task reports a read-only skills mount such as `/mnt/.claude/skills/`, treat that as the expected stop condition for a no-UI install request.
-- If the runtime cannot install the presented artifacts during the current session, the `/imweb` skill entrypoint and MCP tools will not appear until the generated plugin and skill are installed by the Cowork host or workspace admin.
+- If the runtime cannot install the presented artifacts during the current session, the imweb skill entrypoint and MCP tools will not appear until the generated plugin and skill are installed by the Cowork host or workspace admin.
 - Claude Code plugin install and local `~/.claude/skills` discovery are separate from Claude Desktop Cowork.
