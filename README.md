@@ -20,7 +20,6 @@ flowchart LR
 - `plugin.json`, marketplace metadata, and surface metadata for Codex, Claude, Cursor, and MCP reference wiring.
 - `bin/imweb-mcp.mjs`, a local MCP bridge for Claude Desktop Cowork that reuses the user's host `imweb` CLI and auth state.
 - `skills/imweb/`, the `imweb` skill bundle and its local docs.
-- `commands/imweb.md`, a Claude plugin command entrypoint for imweb workflows.
 - `install/`, bootstrap and installer scripts for CLI, skill, and plugin setup.
 - `docs/`, public usage, integration, and support matrix documentation.
 - `examples/`, sample workflows and fixtures.
@@ -43,9 +42,9 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 - For Claude Desktop Cowork, ask Claude in the Cowork task:
 
 ```text
-Set up imweb AI toolkit for this Cowork task:
+Install imweb AI toolkit:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
-Present imweb-ai-toolkit.plugin so I can save it.
+Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 ```
 
 - For an AI coding agent installing Codex and Claude Code locally:
@@ -54,7 +53,7 @@ Present imweb-ai-toolkit.plugin so I can save it.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-The Cowork command creates `imweb-ai-toolkit.plugin` and fallback `imweb-skill.zip`. Save the presented plugin card, then start with `/imweb-ai-toolkit:imweb` or a natural-language imweb request. The plugin includes a local `imweb-cli` MCP bridge so Cowork can call the host CLI without asking for Terminal or computer-use. The zip is only a fallback package.
+The Cowork command creates `imweb-ai-toolkit.plugin` and `imweb.skill`. Accept the presented plugin and skill cards, then try `/imweb 주문목록을 확인해줘`. The plugin includes a local `imweb-cli` MCP bridge so Cowork can call the host CLI without asking for Terminal or computer-use. The skill package activates the short `/imweb` entrypoint.
 
 ## Other Install Methods
 

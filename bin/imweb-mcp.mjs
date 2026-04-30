@@ -123,34 +123,52 @@ process.stdin.on('end', () => {
 
 function readMessages() {
   while (inputBuffer.length > 0) {
-    const headerEnd = inputBuffer.indexOf('\r\n\r\n');
-    if (headerEnd === -1) return;
+    if (startsWithContentLength(inputBuffer)) {
+      const headerEnd = inputBuffer.indexOf('\r\n\r\n');
+      if (headerEnd === -1) return;
 
-    const header = inputBuffer.slice(0, headerEnd).toString('utf8');
-    const match = header.match(/content-length:\s*(\d+)/i);
-    if (!match) {
-      inputBuffer = inputBuffer.slice(headerEnd + 4);
+      const header = inputBuffer.slice(0, headerEnd).toString('utf8');
+      const match = header.match(/content-length:\s*(\d+)/i);
+      if (!match) {
+        inputBuffer = inputBuffer.slice(headerEnd + 4);
+        continue;
+      }
+
+      const length = Number(match[1]);
+      const bodyStart = headerEnd + 4;
+      const bodyEnd = bodyStart + length;
+      if (inputBuffer.length < bodyEnd) return;
+
+      const body = inputBuffer.slice(bodyStart, bodyEnd).toString('utf8');
+      inputBuffer = inputBuffer.slice(bodyEnd);
+      handleRawMessage(body);
       continue;
     }
 
-    const length = Number(match[1]);
-    const bodyStart = headerEnd + 4;
-    const bodyEnd = bodyStart + length;
-    if (inputBuffer.length < bodyEnd) return;
+    const lineEnd = inputBuffer.indexOf('\n');
+    if (lineEnd === -1) return;
 
-    const body = inputBuffer.slice(bodyStart, bodyEnd).toString('utf8');
-    inputBuffer = inputBuffer.slice(bodyEnd);
-
-    let message;
-    try {
-      message = JSON.parse(body);
-    } catch (error) {
-      sendError(null, -32700, `Parse error: ${error.message}`);
-      continue;
-    }
-
-    handleMessage(message);
+    const line = inputBuffer.slice(0, lineEnd).toString('utf8').trim();
+    inputBuffer = inputBuffer.slice(lineEnd + 1);
+    if (!line) continue;
+    handleRawMessage(line);
   }
+}
+
+function startsWithContentLength(buffer) {
+  return /^content-length:/i.test(buffer.slice(0, 32).toString('utf8'));
+}
+
+function handleRawMessage(raw) {
+  let message;
+  try {
+    message = JSON.parse(raw);
+  } catch (error) {
+    sendError(null, -32700, `Parse error: ${error.message}`);
+    return;
+  }
+
+  handleMessage(message);
 }
 
 function handleMessage(message) {
@@ -236,9 +254,7 @@ function sendError(id, code, message) {
 }
 
 function send(payload) {
-  const body = Buffer.from(JSON.stringify(payload), 'utf8');
-  process.stdout.write(`Content-Length: ${body.length}\r\n\r\n`);
-  process.stdout.write(body);
+  process.stdout.write(`${JSON.stringify(payload)}\n`);
 }
 
 function cliCheck() {
