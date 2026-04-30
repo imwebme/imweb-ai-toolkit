@@ -47,10 +47,11 @@ Expected result:
 - Claude does not use computer-use or UI automation.
 - Claude presents the `.plugin` and `.skill` artifacts so the Cowork host can install and enable them.
 - After the presented cards are accepted, start with `/imweb 최근 주문중 이상 거래 조사`, `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검`, or another natural-language imweb request.
-- The plugin exposes the `/imweb` slash command and a local `imweb-cli` MCP bridge so Cowork can reuse the host CLI and auth state instead of installing the CLI inside the task VM when the bridge is available.
+- The plugin exposes the `/imweb` slash command and a local `imweb-cli` MCP bridge so Cowork can install/update the host CLI when needed, then reuse the host auth state instead of asking the user for Terminal commands.
 - If Claude Desktop asks for permission to use an imweb tool, click `Allow for this task` / `이 작업에 허용`.
+- If the host CLI is missing or outdated, Claude should let the MCP bridge run its official CLI install/update path, then continue the original imweb request.
 - If the host CLI is not logged in, Claude should use the plugin's auth MCP tools to start the browser login flow. The user only needs to finish login in the browser; Claude should then re-check auth and continue the original imweb request.
-- If the task runtime has no host MCP bridge and no `imweb` CLI, Claude may install the CLI inside the sandbox using `npx -y github:imwebme/imweb-ai-toolkit --tool cli`, then run the same auth/context checks. The user should only need to approve visible prompts and complete browser login.
+- If the task runtime has no host MCP bridge and no way to present/install the plugin package, Claude may install the CLI inside that sandbox using `npx -y github:imwebme/imweb-ai-toolkit --tool cli`, then run the same auth/context checks. The user should only need to approve visible prompts and complete browser login.
 
 Important limitation:
 

@@ -12,6 +12,7 @@ PLUGIN_NAME="imweb-ai-toolkit"
 PACKAGE_PATH=""
 SKILL_PACKAGE_PATH=""
 DRY_RUN=0
+INSTALL_CLI=1
 
 usage() {
   cat <<'USAGE'
@@ -32,6 +33,8 @@ Options:
              Cowork 파일 카드 설치를 위해 .plugin 확장자를 권장합니다.
   --skill-package
              Claude Cowork imweb custom Skill fallback package 생성 경로
+  --no-install-cli
+             --tool codex|claude 경로에서 기본 CLI 설치/업데이트를 건너뜁니다.
   --dry-run  실행할 명령만 출력
   --help     도움말 출력
 
@@ -39,6 +42,7 @@ Options:
   - codex: repo/personal marketplace를 Codex에 등록합니다.
            이후 Codex App 또는 CLI의 Plugins 화면에서 imweb-ai-toolkit을 설치합니다.
   - claude: marketplace를 Claude Code에 등록하고 imweb-ai-toolkit plugin을 설치합니다.
+  - tool 설치 경로는 공식 imweb CLI도 먼저 설치/업데이트합니다.
   - package: Claude Desktop Cowork에서 설치할 수 있는 plugin package를 생성합니다.
   - skill-package: Claude Cowork에서 imweb 지침을 custom Skill fallback으로 제공할 package를 생성합니다.
 USAGE
@@ -60,6 +64,13 @@ run_cmd() {
   if [[ "$DRY_RUN" -eq 0 ]]; then
     "$@"
   fi
+}
+
+install_cli() {
+  if [[ "$INSTALL_CLI" -eq 0 ]]; then
+    return
+  fi
+  run_cmd "$SCRIPT_DIR/install-cli.sh"
 }
 
 create_package() {
@@ -234,6 +245,10 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=1
       shift
       ;;
+    --no-install-cli)
+      INSTALL_CLI=0
+      shift
+      ;;
     --help|-h)
       usage
       exit 0
@@ -262,6 +277,7 @@ fi
 case "$TOOL" in
   codex)
     [[ "$DRY_RUN" -eq 1 ]] || need_cmd codex
+    install_cli
     run_cmd codex plugin marketplace add "$SOURCE"
     if [[ "$DRY_RUN" -eq 1 ]]; then
       printf 'Codex marketplace 등록 dry-run 완료\n'
@@ -274,6 +290,7 @@ case "$TOOL" in
     ;;
   claude)
     [[ "$DRY_RUN" -eq 1 ]] || need_cmd claude
+    install_cli
     run_cmd claude plugin marketplace add "$SOURCE"
     run_cmd claude plugin install "$PLUGIN_NAME@$MARKETPLACE_NAME" --scope "$SCOPE"
     if [[ "$DRY_RUN" -eq 1 ]]; then

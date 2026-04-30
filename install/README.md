@@ -8,6 +8,8 @@ AI coding agent가 public repo에서 직접 설치해야 할 때는 `imweb-ai-to
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
+Codex/Claude Code 같은 로컬 plugin 설치 경로는 공식 `imweb` CLI도 기본으로 설치 또는 업데이트합니다. 사용자가 CLI 설치 명령을 따로 알 필요가 없게 유지합니다.
+
 CLI만 설치하거나 업데이트할 때는 아래처럼 실행합니다.
 
 ```bash
@@ -40,7 +42,7 @@ Claude Cowork에서 bare `/imweb` 경로를 안정적으로 열려면 plugin pac
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
-이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. Cowork plugin package는 agent가 명령을 실행한 디렉터리에 `imweb-ai-toolkit.plugin`으로 생성하고, Skill package는 `imweb.skill`로 생성합니다. Package에는 짧은 `/imweb` slash entrypoint와 host `imweb` CLI/auth를 쓰는 local MCP bridge가 포함됩니다. Cowork task 안에서는 computer-use나 Claude Desktop UI 조작으로 설치를 시도하지 않습니다. Claude에게 package 생성, 검증, `.plugin`/`.skill` artifact 제시를 맡기는 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md), 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
+이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. Cowork plugin package는 agent가 명령을 실행한 디렉터리에 `imweb-ai-toolkit.plugin`으로 생성하고, Skill package는 `imweb.skill`로 생성합니다. Package에는 짧은 `/imweb` slash entrypoint와 host `imweb` CLI/auth를 쓰는 local MCP bridge가 포함됩니다. MCP bridge는 host CLI가 없거나 오래되면 공식 CLI installer/update 경로를 직접 실행한 뒤 원래 요청을 계속합니다. Cowork task 안에서는 computer-use나 Claude Desktop UI 조작으로 설치를 시도하지 않습니다. Claude에게 package 생성, 검증, `.plugin`/`.skill` artifact 제시를 맡기는 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md), 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
 
 Codex 기준 skill 기본 설치 경로는 `$CODEX_HOME/skills`이며, `CODEX_HOME`이 없으면 `~/.codex/skills`를 사용합니다.
 
@@ -56,7 +58,7 @@ authenticated GitHub Release URL override를 직접 주는 경우에는 `gh` fal
 
 `install-skills.*` 재실행 계약은 shell/PowerShell 공통입니다. `copy`는 기존 skill 경로가 있으면 실패하고, `symlink`는 같은 source를 가리키는 기존 symlink만 성공으로 건너뜁니다.
 
-`install-plugins.*`는 plugin-first 설치 표면을 연결합니다.
+`install-plugins.*`는 plugin-first 설치 표면을 연결합니다. `--tool codex|claude` 경로는 plugin 연결 전에 `install-cli.*`를 실행해 CLI를 설치 또는 업데이트합니다.
 
 - Codex: `codex plugin marketplace add`로 이 repo의 `.agents/plugins/marketplace.json`를 등록합니다. Codex App 또는 Codex CLI의 Plugins 화면에서 `imweb-ai-toolkit`을 설치합니다.
 - Claude Code: `claude plugin marketplace add` 후 `claude plugin install imweb-ai-toolkit@imweb-ai-toolkit`을 실행합니다.
