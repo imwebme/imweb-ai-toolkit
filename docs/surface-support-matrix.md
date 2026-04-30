@@ -10,7 +10,7 @@
 | Codex App | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` | `install-plugins`로 marketplace 등록 후 Plugins UI 설치 | 지원 |
 | Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | `install-plugins`로 marketplace 등록 및 plugin 설치, `/imweb-ai-toolkit:imweb`로 plugin skill 확인 | 지원 |
 | Agent Skills CLI | `skills/imweb/SKILL.md` | 해당 없음 | `npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex`로 표준 Skill 설치 | 지원 |
-| Claude Desktop Cowork | `imweb-ai-toolkit.plugin`, `imweb.skill`, `.claude-plugin/plugin.json`, `commands/imweb.md`, `.mcp.json`, `bin/imweb-mcp.mjs` package | `.claude-plugin/marketplace.json` | Cowork task가 `.plugin`/`.skill` package를 생성/검증하고 host에 install artifact로 제시. 설치 후 `/imweb 주문목록을 확인해줘` 또는 자연어 요청이 local MCP bridge를 통해 host `imweb` CLI/auth를 사용. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
+| Claude Desktop Cowork | `imweb-ai-toolkit.plugin`, `imweb.skill`, `.claude-plugin/plugin.json`, `commands/imweb.md`, `.mcp.json`, `bin/imweb-mcp.mjs` package | `.claude-plugin/marketplace.json` | Cowork task가 `.plugin`/`.skill` package를 생성/검증하고 host에 install artifact로 제시. 설치 후 `/imweb 최근 주문중 이상 거래 조사`, `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` 같은 자연어 요청이 local MCP bridge를 통해 host `imweb` CLI/auth를 사용. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
 | Cursor workspace | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | `.mcp.json` 기준 수동 연결 | 제한적 지원 |
 
 ## 해석 원칙

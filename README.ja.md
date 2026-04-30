@@ -54,7 +54,7 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 주문목록을 확인해줘` でテストします。Plugin には短い `/imweb` slash entrypoint と host CLI/auth を使う local MCP bridge が含まれます。Claude Desktop が imweb tool の権限を求めた場合は `Allow for this task` をクリックします。Host CLI のログインが必要な場合は Claude がブラウザログインフローを開始でき、ユーザーはブラウザでログインを完了するだけで、Claude が auth を再確認して元の依頼を続行します。Skill package は同じ imweb 手順を custom Skill fallback として提供します。
+Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 최근 주문중 이상 거래 조사` や `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` のような業務文でテストします。Plugin には短い `/imweb` slash entrypoint と host CLI/auth を使う local MCP bridge が含まれます。Claude Desktop が imweb tool の権限を求めた場合は `Allow for this task` をクリックします。Host CLI のログインが必要な場合は Claude がブラウザログインフローを開始でき、ユーザーはブラウザでログインを完了するだけで、Claude が auth を再確認して元の依頼を続行します。要求された指標が CLI にない場合、Claude は制限を説明し、可能な read-only 確認に進みます。Skill package は同じ imweb 手順を custom Skill fallback として提供します。
 
 ## その他のインストール方法
 

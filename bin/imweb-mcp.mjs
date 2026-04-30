@@ -128,6 +128,185 @@ const tools = [
       },
     },
   },
+  {
+    name: 'imweb_order_get',
+    description: 'Read one imweb order by order number through the local official imweb CLI. Redacts customer fields by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['orderNo'],
+      properties: {
+        orderNo: {
+          type: 'string',
+          description: 'Order number to inspect.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact customer contact, address, bank, token, and member fields before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_order_parcel_companies',
+    description: 'Read available parcel companies through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {},
+    },
+  },
+  {
+    name: 'imweb_site_info',
+    description: 'Read the current imweb site information through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {},
+    },
+  },
+  {
+    name: 'imweb_product_list',
+    description: 'Read imweb product list data through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Page number to read.',
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          description: 'Maximum products to read.',
+          default: 5,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_product_get',
+    description: 'Read one imweb product by product number through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['prodNo'],
+      properties: {
+        prodNo: {
+          type: 'string',
+          description: 'Product number to inspect.',
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_product_categories',
+    description: 'Read imweb product categories through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_member_list',
+    description: 'Read imweb member list data through the local official imweb CLI. Redacts member fields by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          description: 'Maximum members to read.',
+          default: 5,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact member/customer contact fields before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_promotion_coupon_list',
+    description: 'Read imweb coupon list data through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Page number to read.',
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          description: 'Maximum coupons to read.',
+          default: 10,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_community_review_list',
+    description: 'Read imweb product review list data through the local official imweb CLI. Redacts reviewer fields by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          description: 'Page number to read.',
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          description: 'Maximum reviews to read.',
+          default: 10,
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact reviewer/member/contact fields before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
 ];
 
 process.stdin.on('data', (chunk) => {
@@ -236,6 +415,15 @@ function callTool(id, params) {
     imweb_context: context,
     imweb_command_capabilities: commandCapabilities,
     imweb_order_list: orderList,
+    imweb_order_get: orderGet,
+    imweb_order_parcel_companies: orderParcelCompanies,
+    imweb_site_info: siteInfo,
+    imweb_product_list: productList,
+    imweb_product_get: productGet,
+    imweb_product_categories: productCategories,
+    imweb_member_list: memberList,
+    imweb_promotion_coupon_list: promotionCouponList,
+    imweb_community_review_list: communityReviewList,
   }[name];
 
   if (!handler) {
@@ -400,6 +588,79 @@ function orderList(args) {
   }
   if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
 
+  const result = runJson(cliArgs);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redact(result.data);
+    result.redacted = true;
+  }
+  return result;
+}
+
+function orderGet(args) {
+  if (!args.orderNo) {
+    return { ok: false, message: 'orderNo is required.' };
+  }
+  const result = runJson(['--output', 'json', 'order', 'get', String(args.orderNo)]);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redact(result.data);
+    result.redacted = true;
+  }
+  return result;
+}
+
+function orderParcelCompanies() {
+  return runJson(['--output', 'json', 'order', 'parcel-companies']);
+}
+
+function siteInfo() {
+  return runJson(['--output', 'json', 'site', 'info']);
+}
+
+function productList(args) {
+  const cliArgs = ['--output', 'json', 'product', 'list'];
+  cliArgs.push('--page', String(clampInteger(args.page, 1, 1, 100000)), '--limit', String(clampInteger(args.limit, 5, 1, 100)));
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runJson(cliArgs);
+}
+
+function productGet(args) {
+  if (!args.prodNo) {
+    return { ok: false, message: 'prodNo is required.' };
+  }
+  const cliArgs = ['--output', 'json', 'product', 'get'];
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  cliArgs.push(String(args.prodNo));
+  return runJson(cliArgs);
+}
+
+function productCategories(args) {
+  const cliArgs = ['--output', 'json', 'product', 'categories'];
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runJson(cliArgs);
+}
+
+function memberList(args) {
+  const cliArgs = ['--output', 'json', 'member', 'list'];
+  cliArgs.push('--limit', String(clampInteger(args.limit, 5, 1, 100)));
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  const result = runJson(cliArgs);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redact(result.data);
+    result.redacted = true;
+  }
+  return result;
+}
+
+function promotionCouponList(args) {
+  const cliArgs = ['--output', 'json', 'promotion', 'coupon', 'list'];
+  cliArgs.push('--page', String(clampInteger(args.page, 1, 1, 100000)), '--limit', String(clampInteger(args.limit, 10, 1, 100)));
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runJson(cliArgs);
+}
+
+function communityReviewList(args) {
+  const cliArgs = ['--output', 'json', 'community', 'review', 'list'];
+  cliArgs.push('--page', String(clampInteger(args.page, 1, 1, 100000)), '--limit', String(clampInteger(args.limit, 10, 1, 100)));
   const result = runJson(cliArgs);
   if (result.ok && args.redactSensitive !== false) {
     result.data = redact(result.data);

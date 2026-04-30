@@ -18,11 +18,17 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 - 요청을 정확한 도메인으로 라우팅하고, 상세 절차는 내부 reference에서만 이어서 확인합니다.
 - 공개 호출 표면은 이 `imweb` 하나만 사용합니다.
 
+사용자 경험 기준:
+- 사용자는 비개발자일 수 있습니다. 먼저 사용자의 업무 문장을 그대로 받아서 가능한 작업, 필요한 승인, 로그인 필요 여부를 짧게 설명하고 직접 진행합니다.
+- 정상 흐름에서 사용자에게 터미널 명령, 설정 파일, 경로, 환경 변수, package manager를 설명하지 않습니다. 그런 정보는 실패 원인을 보고할 때만 짧게 씁니다.
+- 사용자가 직접 해야 하는 일은 버튼 클릭, 브라우저 로그인 완료, 권한 허용처럼 실제로 대신 할 수 없는 행동만 남깁니다.
+- 요청한 지표나 분석 축이 CLI에 없으면 꾸며내지 않습니다. "현재 CLI에는 방문자/트래픽별 상품 순위가 없습니다"처럼 한계를 말하고, 가능한 대체 조회(예: 상품 목록/상품 상세/주문 기반 점검)를 제안하거나 수행합니다.
+
 기본 시작점:
-1. Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list` 같은 MCP tools가 보이면 이것을 먼저 사용합니다.
+1. Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list`, `imweb_order_get`, `imweb_site_info`, `imweb_product_list`, `imweb_product_get`, `imweb_member_list` 같은 MCP tools가 보이면 이것을 먼저 사용합니다.
 2. MCP tool이 있으면 VM shell에 CLI를 설치하거나 VM 안에서 auth를 만들지 않습니다. host CLI/auth를 쓰는 MCP tool로만 진행합니다.
-3. MCP tool이 없을 때만 `command -v imweb`와 `imweb --version`으로 공식 CLI가 있는지 확인합니다.
-4. CLI가 없으면 `npx -y github:imwebme/imweb-ai-toolkit --tool cli`로 설치를 시도합니다.
+3. MCP tool이 없을 때만 현재 런타임에서 `command -v imweb`와 `imweb --version`으로 공식 CLI가 있는지 확인합니다.
+4. 현재 sandbox/VM 런타임 안에 CLI가 없고 MCP bridge도 없으면, 사용자를 개발 절차로 보내지 말고 공식 공개 설치 경로로 CLI를 설치합니다: `npx -y github:imwebme/imweb-ai-toolkit --tool cli`. 설치가 끝나면 바로 auth/context 확인으로 이어갑니다.
 5. `imweb_context` 또는 `imweb --output json config context`
 6. `imweb_command_capabilities` 또는 `imweb --output json config command-capabilities`
 7. 필요한 경우 domain/path 범위로 command-capability를 좁힙니다.
@@ -32,6 +38,7 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 - auth/token이 없거나 만료되어 있으면 먼저 `imweb_auth_status`와 `imweb_auth_doctor`로 상태를 확인합니다.
 - Claude Desktop이 imweb MCP tool 권한을 묻는 화면을 보여주면, 사용자는 `이 작업에 허용` / `Allow for this task` 버튼만 누르면 된다고 짧게 안내합니다.
 - 로그인이 필요하면 사용자를 터미널로 보내지 말고 `imweb_auth_login` MCP tool을 호출합니다. 브라우저가 열리면 사용자가 로그인 버튼과 계정 확인만 누르면 된다고 짧게 안내합니다.
+- MCP tool이 없고 sandbox/VM 안 CLI를 직접 쓰는 경우에는 `imweb --output json auth status`, `imweb --output json auth doctor`, `imweb --output json auth login` 순서로 처리합니다. 브라우저가 열리면 사용자는 브라우저 로그인만 완료하면 된다고 말합니다.
 - `imweb_auth_login`이 끝나면 `imweb_auth_status` 또는 `imweb_context`를 다시 호출한 뒤 원래 요청을 이어서 실행합니다.
 - 로그인 뒤에도 profile, `site_code`, scope가 비어 있으면 무엇이 부족한지만 구체적으로 말하고, 추정으로 API를 호출하지 않습니다.
 
@@ -40,7 +47,8 @@ CLI/런타임 게이트:
 - Claude Desktop Cowork에서는 plugin이 제공하는 local MCP bridge가 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. MCP tool이 있으면 VM shell에 CLI를 새로 설치하려고 하지 않습니다.
 - `imweb_cli_install` MCP tool은 사용자가 로컬 CLI 설치를 허용했을 때만 호출합니다.
 - Claude Desktop Cowork의 작업 shell은 사용자 Mac이 아니라 별도 Linux 런타임일 수 있습니다. `uname -s && uname -m`으로 현재 실행 환경을 확인합니다.
-- 현재 런타임에 CLI를 설치할 수 없거나 auth/profile이 없으면, 컴퓨터유즈나 사용자 터미널 실행으로 우회하지 말고 먼저 MCP 기반 설치/로그인 도구로 해결합니다.
+- 현재 런타임에 CLI가 없으면 MCP 기반 설치 도구를 먼저 쓰고, MCP가 없을 때만 공식 `npx -y github:imwebme/imweb-ai-toolkit --tool cli` 설치 경로를 사용합니다.
+- auth/profile이 없으면 먼저 MCP 기반 로그인 도구 또는 CLI `auth login`을 사용하고, 컴퓨터유즈나 사용자 터미널 실행으로 우회하지 않습니다.
 - 사용자가 명시적으로 로컬 앱 조작을 요청하지 않았다면 Terminal, Customize, Settings, computer-use를 요청하지 않습니다.
 
 도메인 라우팅:
