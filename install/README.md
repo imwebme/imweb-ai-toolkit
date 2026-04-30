@@ -38,13 +38,13 @@ npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
 
 이 명령은 현재 디렉터리에 `imweb-ai-toolkit.mcpb`를 만듭니다. Claude Desktop에서 이 파일을 열어 설치하면, bundle 안의 local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth 재사용을 맡습니다.
 
-Claude Cowork에서 bare `/imweb` 경로를 안정적으로 열려면 plugin package와 custom Skill package를 함께 생성합니다.
+Claude Cowork에서는 plugin package와 custom Skill package를 함께 생성합니다.
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
-이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. Cowork plugin package는 agent가 명령을 실행한 디렉터리에 `imweb-ai-toolkit.plugin`으로 생성하고, Skill package는 `imweb.skill`로 생성합니다. Package에는 짧은 `/imweb` slash entrypoint와 host `imweb` CLI/auth를 쓰는 local MCP bridge가 포함됩니다. MCP bridge는 host CLI가 없거나 오래되면 공식 CLI installer/update 경로를 직접 실행한 뒤 원래 요청을 계속합니다. Cowork task 안에서는 computer-use나 Claude Desktop UI 조작으로 설치를 시도하지 않습니다. Claude에게 package 생성, 검증, `.plugin`/`.skill` artifact 제시를 맡기는 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md), 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
+이 경로는 `npx` 임시 package 디렉터리가 아니라 public Git repository를 marketplace source로 등록합니다. Cowork plugin package는 agent가 명령을 실행한 디렉터리에 `imweb-ai-toolkit.plugin`으로 생성하고, Skill package는 `imweb.skill`로 생성합니다. Package에는 `/imweb` slash entrypoint와 host `imweb` CLI/auth를 쓰는 local MCP bridge가 포함됩니다. 현재 Desktop Cowork build는 slash-form text를 task 시작 전에 거절할 수 있으므로, 설치 뒤 사용자 시작점은 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` 같은 자연어 요청입니다. Cowork task 안에서는 computer-use나 Claude Desktop UI 조작으로 설치를 시도하지 않습니다. Claude에게 package 생성, 검증, `.plugin`/`.skill` artifact 제시를 맡기는 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md), 자세한 agent용 절차는 [../docs/ai-agent-installation.md](../docs/ai-agent-installation.md)를 봅니다.
 
 Codex 기준 skill 기본 설치 경로는 `$CODEX_HOME/skills`이며, `CODEX_HOME`이 없으면 `~/.codex/skills`를 사용합니다.
 

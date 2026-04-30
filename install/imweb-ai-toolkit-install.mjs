@@ -81,9 +81,10 @@ Notes:
   - Claude Desktop Cowork does not read Claude Code's CLI registry.
   - For Cowork, the default command creates imweb-ai-toolkit.plugin plus
     imweb.skill. Present both files to Cowork so the host can install/enable
-    the /imweb plugin command and imweb Skill fallback; do not ask Cowork to use computer-use or
-    Claude Desktop UI automation to install itself. After install, start with
-    /imweb 최근 주문중 이상 거래 조사 or another natural-language imweb request in Cowork.
+    the plugin command and imweb Skill fallback; do not ask Cowork to use computer-use or
+    Claude Desktop UI automation to install itself. Current Claude Desktop Cowork builds may
+    reject slash text before the task starts, so after install use a natural-language request
+    such as "최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘."
   - Standard Agent Skills fallback is: npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex.`);
 }
 
@@ -435,7 +436,7 @@ function installClaude(opts) {
 function shouldInstallSkill(tool, opts) {
   if (opts.skill === 'yes') return true;
   if (opts.skill === 'no') return false;
-  return tool === 'codex';
+  return tool === 'codex' || tool === 'claude';
 }
 
 function main() {

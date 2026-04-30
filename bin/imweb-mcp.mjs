@@ -94,7 +94,7 @@ const tools = [
   },
   {
     name: 'imweb_order_list',
-    description: 'Read imweb order list data through the local official imweb CLI.',
+    description: 'Read imweb order list data through the local official imweb CLI. Returns a compact analysis-friendly payload by default to avoid oversized Desktop tool output.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
@@ -124,6 +124,11 @@ const tools = [
         redactSensitive: {
           type: 'boolean',
           description: 'Redact customer contact, address, and bank fields before returning data.',
+          default: true,
+        },
+        compact: {
+          type: 'boolean',
+          description: 'Return an analysis-friendly compact order list by default. Set false only when raw order-list fields are required.',
           default: true,
         },
       },
@@ -600,6 +605,11 @@ function orderList(args) {
     result.data = redact(result.data);
     result.redacted = true;
   }
+  if (result.ok && args.compact !== false) {
+    result.data = compactOrderListData(result.data);
+    result.compact = true;
+    result.compactGuidance = 'Use imweb_order_get for exact order detail. Call imweb_order_list with compact=false only when raw list fields are required.';
+  }
   return result;
 }
 
@@ -841,6 +851,126 @@ function clampInteger(value, fallback, min, max) {
   const parsed = Number.parseInt(String(value ?? ''), 10);
   if (!Number.isFinite(parsed)) return fallback;
   return Math.max(min, Math.min(max, parsed));
+}
+
+function compactOrderListData(data) {
+  if (Array.isArray(data)) return data.map(compactOrderRecord);
+  if (!data || typeof data !== 'object') return data;
+  if (data.data && typeof data.data === 'object' && Array.isArray(data.data.list)) {
+    return {
+      ...pickObject(data, ['statusCode']),
+      data: compactOrderListData(data.data),
+    };
+  }
+  if (!Array.isArray(data.list)) return data;
+
+  return pickObject(
+    {
+      ...data,
+      list: data.list.map(compactOrderRecord),
+    },
+    ['currentPage', 'pageSize', 'totalCount', 'totalPage', 'list'],
+  );
+}
+
+function compactOrderRecord(order) {
+  if (!order || typeof order !== 'object') return order;
+  return pickObject(
+    {
+      ...order,
+      payments: Array.isArray(order.payments) ? order.payments.map(compactPayment) : order.payments,
+      sections: Array.isArray(order.sections) ? order.sections.map(compactSection) : order.sections,
+    },
+    [
+      'orderNo',
+      'wtime',
+      'orderStatus',
+      'isCancelReq',
+      'isRequestPayment',
+      'device',
+      'orderType',
+      'saleChannel',
+      'currency',
+      'totalPaymentPrice',
+      'totalPrice',
+      'totalDeliveryPrice',
+      'totalDiscountPrice',
+      'totalRefundPendingPrice',
+      'totalRefundedPrice',
+      'payments',
+      'sections',
+    ],
+  );
+}
+
+function compactPayment(payment) {
+  if (!payment || typeof payment !== 'object') return payment;
+  return pickObject(payment, [
+    'method',
+    'paymentStatus',
+    'paidPrice',
+    'paymentCompleteTime',
+    'isCancel',
+    'pgName',
+  ]);
+}
+
+function compactSection(section) {
+  if (!section || typeof section !== 'object') return section;
+  return pickObject(
+    {
+      ...section,
+      sectionItems: Array.isArray(section.sectionItems)
+        ? section.sectionItems.map(compactSectionItem)
+        : section.sectionItems,
+    },
+    [
+      'orderSectionNo',
+      'orderSectionStatus',
+      'deliveryType',
+      'deliveryPayType',
+      'isDeliveryHold',
+      'deliveryPrice',
+      'deliverySendTime',
+      'deliveryCompleteTime',
+      'sectionItems',
+    ],
+  );
+}
+
+function compactSectionItem(item) {
+  if (!item || typeof item !== 'object') return item;
+  return pickObject(
+    {
+      ...item,
+      productInfo: compactProductInfo(item.productInfo),
+    },
+    ['orderItemCode', 'orderSectionItemNo', 'qty', 'productInfo'],
+  );
+}
+
+function compactProductInfo(productInfo) {
+  if (!productInfo || typeof productInfo !== 'object') return productInfo;
+  return pickObject(productInfo, [
+    'prodNo',
+    'prodName',
+    'itemPrice',
+    'baseItemPrice',
+    'optionInfo',
+    'optionInfoList',
+    'isTaxFree',
+  ]);
+}
+
+function pickObject(source, keys) {
+  if (!source || typeof source !== 'object') return source;
+  const picked = {};
+  for (const key of keys) {
+    if (Object.prototype.hasOwnProperty.call(source, key) && source[key] !== undefined) {
+      picked[key] = source[key];
+    }
+  }
+  return picked;
 }
 
 function redact(value) {

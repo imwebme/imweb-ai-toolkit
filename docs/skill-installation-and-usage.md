@@ -206,7 +206,7 @@ PowerShell:
 ./install/install-plugins.ps1 -SkillPackage imweb.skill
 ```
 
-생성된 `.plugin` package는 `commands/imweb.md` slash entrypoint와 local MCP bridge를 Cowork host가 설치/활성화하도록 제시하는 artifact이고, `imweb.skill`은 같은 imweb 지침을 custom Skill fallback으로 함께 제시하는 artifact입니다. MCP bridge는 host CLI가 없거나 오래된 경우 공식 installer/update 경로를 실행한 뒤 auth/context 확인으로 이어갑니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork install card 또는 조직 배포 경로를 기준으로 합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성, 검증, `.plugin`/`.skill` artifact 제시까지 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
+생성된 `.plugin` package는 `commands/imweb.md` slash entrypoint와 local MCP bridge를 Cowork host가 설치/활성화하도록 제시하는 artifact이고, `imweb.skill`은 같은 imweb 지침을 custom Skill fallback으로 함께 제시하는 artifact입니다. MCP bridge는 host CLI가 없거나 오래된 경우 공식 installer/update 경로를 실행한 뒤 auth/context 확인으로 이어갑니다. Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않으므로, local Desktop 검증은 Cowork install card 또는 조직 배포 경로를 기준으로 합니다. 현재 Desktop Cowork build는 slash-form text를 task 시작 전에 거절할 수 있으므로, 설치 뒤에는 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` 같은 자연어 요청을 기준으로 검증합니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않고 package 생성, 검증, `.plugin`/`.skill` artifact 제시까지 요청합니다. 요청문은 [cowork-ask-claude-install.md](./cowork-ask-claude-install.md)를 봅니다.
 
 ## 표면별 시작점
 
