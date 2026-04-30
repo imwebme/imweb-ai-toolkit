@@ -21,7 +21,7 @@ Run:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 
 Then verify the generated artifacts:
-1. imweb-ai-toolkit.plugin must contain .claude-plugin/plugin.json, .mcp.json, bin/imweb-mcp.mjs, and skills/imweb/SKILL.md.
+1. imweb-ai-toolkit.plugin must contain .claude-plugin/plugin.json, .mcp.json, bin/imweb-mcp.mjs, commands/imweb.md, and skills/imweb/SKILL.md.
 2. skills/imweb/SKILL.md must declare name: imweb.
 3. imweb.skill should also exist as an installable Skill package and must contain imweb/SKILL.md.
 
@@ -35,7 +35,7 @@ Expected result:
 - Claude does not use computer-use or UI automation.
 - Claude presents the `.plugin` and `.skill` artifacts so the Cowork host can install and enable them.
 - After the presented cards are accepted, start with `/imweb 주문목록을 확인해줘` or a natural-language imweb request.
-- The plugin exposes a local `imweb-cli` MCP bridge so Cowork can reuse the host CLI and auth state instead of installing the CLI inside the task VM.
+- The plugin exposes the `/imweb` slash command and a local `imweb-cli` MCP bridge so Cowork can reuse the host CLI and auth state instead of installing the CLI inside the task VM.
 
 Important limitation:
 

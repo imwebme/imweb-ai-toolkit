@@ -28,6 +28,7 @@
     ".cursor-plugin/**",
     "assets/**",
     "bin/**",
+    "commands/**",
     "docs/ai-agent-installation.md",
     "docs/cli-toolkit-integration.md",
     "docs/cowork-ask-claude-install.md",

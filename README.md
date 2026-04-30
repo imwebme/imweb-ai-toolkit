@@ -19,6 +19,7 @@ flowchart LR
 
 - `plugin.json`, marketplace metadata, and surface metadata for Codex, Claude, Cursor, and MCP reference wiring.
 - `bin/imweb-mcp.mjs`, a local MCP bridge for Claude Desktop Cowork that reuses the user's host `imweb` CLI and auth state.
+- `commands/imweb.md`, the short `/imweb` slash-command entrypoint for Claude plugin surfaces.
 - `skills/imweb/`, the `imweb` skill bundle and its local docs.
 - `install/`, bootstrap and installer scripts for CLI, skill, and plugin setup.
 - `docs/`, public usage, integration, and support matrix documentation.
@@ -53,7 +54,7 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-The Cowork command creates `imweb-ai-toolkit.plugin` and `imweb.skill`. Accept the presented plugin and skill cards, then try `/imweb 주문목록을 확인해줘`. The plugin includes a local `imweb-cli` MCP bridge so Cowork can call the host CLI without asking for Terminal or computer-use. The skill package activates the short `/imweb` entrypoint.
+The Cowork command creates `imweb-ai-toolkit.plugin` and `imweb.skill`. Accept the presented plugin and skill cards, then try `/imweb 주문목록을 확인해줘`. The plugin includes the `/imweb` slash entrypoint and a local `imweb-cli` MCP bridge so Cowork can call the host CLI without asking for Terminal or computer-use. The skill package keeps the same imweb instructions available as a custom Skill fallback.
 
 ## Other Install Methods
 

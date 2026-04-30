@@ -31,7 +31,7 @@ Options:
   --package  Claude Desktop Cowork installable plugin package 생성 경로
              Cowork 파일 카드 설치를 위해 .plugin 확장자를 권장합니다.
   --skill-package
-             Claude Cowork bare /imweb custom skill package 생성 경로
+             Claude Cowork imweb custom Skill fallback package 생성 경로
   --dry-run  실행할 명령만 출력
   --help     도움말 출력
 
@@ -40,7 +40,7 @@ Options:
            이후 Codex App 또는 CLI의 Plugins 화면에서 imweb-ai-toolkit을 설치합니다.
   - claude: marketplace를 Claude Code에 등록하고 imweb-ai-toolkit plugin을 설치합니다.
   - package: Claude Desktop Cowork에서 설치할 수 있는 plugin package를 생성합니다.
-  - skill-package: Claude Cowork에서 bare /imweb로 시작할 imweb skill package를 생성합니다.
+  - skill-package: Claude Cowork에서 imweb 지침을 custom Skill fallback으로 제공할 package를 생성합니다.
 USAGE
 }
 
@@ -96,6 +96,7 @@ include = [
     ".cursor-plugin",
     "assets",
     "bin",
+    "commands",
     "docs/ai-agent-installation.md",
     "docs/cli-toolkit-integration.md",
     "docs/cowork-ask-claude-install.md",

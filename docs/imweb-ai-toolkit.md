@@ -6,7 +6,7 @@
 
 - `imweb-cli`는 실행기입니다.
 - `imweb-ai-toolkit`는 실행기를 여러 AI 표면에 연결하는 toolkit 자산을 제공합니다.
-- 공개 skill bundle entrypoint는 `skills/imweb/SKILL.md` 하나입니다.
+- 공개 skill bundle entrypoint는 `skills/imweb/SKILL.md`이고, Claude plugin slash entrypoint는 `commands/imweb.md`입니다.
 - 표면 차이는 루트 `plugin.json`, 각 surface metadata, marketplace metadata에서 흡수합니다.
 - 설치 후 standalone으로 읽힐 최소 문서는 `skills/imweb/docs/`에 둡니다.
 

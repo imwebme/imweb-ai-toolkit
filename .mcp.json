@@ -23,6 +23,7 @@
       "cursorMarketplace": "./.cursor-plugin/marketplace.json"
     },
     "skills": "./skills",
+    "commands": "./commands",
     "install": "./install",
     "supportMatrix": "./docs/surface-support-matrix.md"
   }

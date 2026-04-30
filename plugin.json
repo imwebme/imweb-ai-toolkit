@@ -10,6 +10,7 @@
   "repository": "https://github.com/imwebme/imweb-ai-toolkit.git",
   "license": "Apache-2.0",
   "skills": "./skills",
+  "commands": "./commands",
   "docs": "./docs",
   "assets": "./assets",
   "install": "./install",
