@@ -19,6 +19,5 @@
     "agent-toolkit"
   ],
   "skills": "./skills/",
-  "commands": "./commands/",
   "mcpServers": "./.mcp.json"
 }

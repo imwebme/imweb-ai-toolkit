@@ -49,7 +49,7 @@ Options:
   -Source   marketplace source. 기본값: 이 toolkit repo root
   -Package  Claude Desktop Cowork installable plugin package 생성 경로
             Cowork 파일 카드 설치를 위해 .plugin 확장자를 권장합니다.
-  -SkillPackage Claude Cowork fallback custom skill zip 생성 경로
+  -SkillPackage Claude Cowork bare /imweb custom skill package 생성 경로
   -DryRun   실행할 명령만 출력
   -Help     도움말 출력
 "@
@@ -120,7 +120,6 @@ function New-PluginPackage([string]$OutputPath) {
         '.cursor-plugin',
         'assets',
         'bin',
-        'commands',
         'docs/ai-agent-installation.md',
         'docs/cli-toolkit-integration.md',
         'docs/cowork-ask-claude-install.md',
@@ -224,6 +223,10 @@ function New-SkillPackage([string]$OutputPath) {
                 continue
             }
             [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($Archive, $Item.FullName, $EntryName) | Out-Null
+        }
+        $Suffix = [System.IO.Path]::GetExtension($ResolvedOutput).ToLowerInvariant()
+        if ($Suffix -and $Suffix -ne '.skill') {
+            Write-Warning "Claude skill install cards expect a .skill extension; got $Suffix"
         }
         Write-Host 'skill package created'
         Write-Host "  path: $ResolvedOutput"
