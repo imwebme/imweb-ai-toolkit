@@ -47,6 +47,24 @@ const tools = [
     },
   },
   {
+    name: 'imweb_auth_status',
+    description: 'Read the current host imweb CLI login status without opening a browser.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {},
+    },
+  },
+  {
+    name: 'imweb_auth_login',
+    description: 'Start the host imweb CLI browser login flow. Use this when auth is missing or expired and the user wants Claude to help complete login.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {},
+    },
+  },
+  {
     name: 'imweb_context',
     description: 'Read the current imweb CLI profile, site, unit, auth, and capability context.',
     inputSchema: {
@@ -173,7 +191,8 @@ function handleRawMessage(raw) {
 
 function handleMessage(message) {
   const { id, method, params } = message;
-  if (!id && String(method || '').startsWith('notifications/')) {
+  const isNotification = id === undefined || id === null;
+  if (isNotification && String(method || '').startsWith('notifications/')) {
     return;
   }
 
@@ -212,6 +231,8 @@ function callTool(id, params) {
     imweb_cli_check: cliCheck,
     imweb_cli_install: cliInstall,
     imweb_auth_doctor: authDoctor,
+    imweb_auth_status: authStatus,
+    imweb_auth_login: authLogin,
     imweb_context: context,
     imweb_command_capabilities: commandCapabilities,
     imweb_order_list: orderList,
@@ -313,6 +334,48 @@ function cliInstall(args) {
 
 function authDoctor() {
   return runJson(['--output', 'json', 'auth', 'doctor']);
+}
+
+function authStatus() {
+  return runJson(['--output', 'json', 'auth', 'status']);
+}
+
+function authLogin() {
+  const bin = findImwebBinary();
+  if (!bin) {
+    return {
+      ok: false,
+      available: false,
+      message: 'imweb CLI was not found on this computer. Install the CLI first with imweb_cli_install.',
+      searched: candidateBinaries(),
+      nextSteps: [
+        'Call imweb_cli_install after the user allows local CLI installation.',
+        'Then call imweb_auth_login again.',
+      ],
+    };
+  }
+
+  const result = run(bin, ['--output', 'json', 'auth', 'login'], {
+    allowFailure: true,
+    timeout: 300000,
+  });
+
+  return {
+    ok: result.status === 0,
+    path: bin,
+    status: result.status,
+    stdout: redactLoginOutput(result.stdout.trim()),
+    stderr: redactLoginOutput(result.stderr.trim()),
+    nextSteps: result.status === 0
+      ? [
+          'Call imweb_auth_status or imweb_context to confirm authentication.',
+          'Retry the original imweb task.',
+        ]
+      : [
+          'If a browser window is open, ask the user to finish the imweb login there.',
+          'Then call imweb_auth_status or imweb_context.',
+        ],
+  };
 }
 
 function context() {
@@ -473,4 +536,10 @@ function redact(value) {
 
 function isSensitiveKey(key) {
   return /name|email|phone|mobile|cell|tel|call|contact|address|addr|zip|postal|postcode|bank|account|depositor|receiver|recipient|customer|buyer|member|memo|message|password|token|secret/i.test(key);
+}
+
+function redactLoginOutput(text) {
+  return String(text || '')
+    .replace(/https?:\/\/\S+/g, '[REDACTED_URL]')
+    .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[REDACTED_EMAIL]');
 }

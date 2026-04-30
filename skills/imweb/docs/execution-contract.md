@@ -19,7 +19,7 @@
 
 ## CLI availability
 
-Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list` 같은 MCP tools가 보이면 먼저 사용합니다. 이 tools는 plugin에 포함된 local MCP bridge이며 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. `imweb_cli_install`은 사용자가 로컬 CLI 설치를 허용했을 때만 호출합니다.
+Claude Desktop Cowork 또는 Claude plugin에서 `imweb_cli_check`, `imweb_auth_status`, `imweb_auth_login`, `imweb_context`, `imweb_command_capabilities`, `imweb_order_list` 같은 MCP tools가 보이면 먼저 사용합니다. 이 tools는 plugin에 포함된 local MCP bridge이며 사용자 컴퓨터의 공식 CLI와 인증 상태를 재사용합니다. `imweb_cli_install`은 사용자가 로컬 CLI 설치를 허용했을 때만 호출합니다.
 
 MCP tool이 없을 때는 아래 순서로 확인합니다.
 
@@ -42,7 +42,18 @@ npx -y github:imwebme/imweb-ai-toolkit --tool cli
 
 npm registry의 `imweb` package는 공식 아임웹 CLI가 아닙니다.
 
-Claude Desktop Cowork에서는 작업 shell이 사용자 Mac이 아닌 별도 Linux 런타임일 수 있습니다. MCP tool이 없고 shell 실행이 필요한 경우에만 `uname -s && uname -m`을 확인합니다. 현재 런타임에 CLI 또는 auth/profile이 없으면 사용자에게 Mac 터미널 실행을 떠넘기지 말고, 이 세션에서 막힌 조건을 명확히 보고합니다.
+Claude Desktop Cowork에서는 작업 shell이 사용자 Mac이 아닌 별도 Linux 런타임일 수 있습니다. MCP tool이 없고 shell 실행이 필요한 경우에만 `uname -s && uname -m`을 확인합니다. MCP tool이 있는데 auth가 없거나 만료되어 있으면 사용자에게 Mac 터미널 실행을 떠넘기지 말고 `imweb_auth_login`으로 브라우저 로그인을 시작합니다.
+
+## 로그인 온보딩
+
+Auth 문제는 Claude가 절차를 이끌어야 합니다.
+
+1. `imweb_auth_status` 또는 `imweb_auth_doctor`로 host auth 상태를 확인합니다.
+2. 토큰이 없거나 refresh가 실패하면 `imweb_auth_login`을 호출합니다.
+3. 사용자에게는 "브라우저가 열리면 아임웹 로그인을 완료하세요. 완료되면 제가 이어서 확인합니다." 정도로만 안내합니다.
+4. tool이 끝나면 `imweb_auth_status` 또는 `imweb_context`를 다시 호출합니다.
+5. auth가 healthy가 되면 원래 요청을 이어서 실행합니다.
+6. profile, `site_code`, scope가 여전히 비어 있으면 부족한 항목만 짧게 보고하고 API 호출은 보류합니다.
 
 ## write 안전 규약
 

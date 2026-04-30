@@ -36,6 +36,7 @@ Expected result:
 - Claude presents the `.plugin` and `.skill` artifacts so the Cowork host can install and enable them.
 - After the presented cards are accepted, start with `/imweb 주문목록을 확인해줘` or a natural-language imweb request.
 - The plugin exposes the `/imweb` slash command and a local `imweb-cli` MCP bridge so Cowork can reuse the host CLI and auth state instead of installing the CLI inside the task VM.
+- If the host CLI is not logged in, Claude should use the plugin's auth MCP tools to start the browser login flow. The user only needs to finish login in the browser; Claude should then re-check auth and continue the original imweb request.
 
 Important limitation:
 
