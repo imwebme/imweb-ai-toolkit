@@ -10,6 +10,7 @@
 | Codex App | `.codex-plugin/plugin.json` | `.agents/plugins/marketplace.json` | `install-plugins`로 marketplace 등록 후 Plugins UI 설치 | 지원 |
 | Claude Code | `.claude-plugin/plugin.json` | `.claude-plugin/marketplace.json` | `install-plugins`로 marketplace 등록 및 plugin 설치, `/imweb-ai-toolkit:imweb`로 plugin skill 확인 | 지원 |
 | Agent Skills CLI | `skills/imweb/SKILL.md` | 해당 없음 | `npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex`로 표준 Skill 설치 | 지원 |
+| Claude Desktop local MCP | `imweb-ai-toolkit.mcpb`, generated `manifest.json`, `bin/imweb-mcp.mjs` package | 해당 없음 | `npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop`로 `.mcpb` bundle 생성 후 Claude Desktop Extension으로 설치. local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth 재사용을 맡음 | 지원 |
 | Claude Desktop Cowork | `imweb-ai-toolkit.plugin`, `imweb.skill`, `.claude-plugin/plugin.json`, `commands/imweb.md`, `.mcp.json`, `bin/imweb-mcp.mjs` package | `.claude-plugin/marketplace.json` | Cowork task가 `.plugin`/`.skill` package를 생성/검증하고 host에 install artifact로 제시. 설치 후 `/imweb 최근 주문중 이상 거래 조사`, `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` 같은 자연어 요청이 local MCP bridge를 통해 host `imweb` CLI를 설치/업데이트하고 auth를 사용. Claude Code registry/`~/.claude/skills`와 별개 | 지원 |
 | Cursor workspace | `.cursor-plugin/plugin.json` | `.cursor-plugin/marketplace.json` | `.mcp.json` 기준 수동 연결 | 제한적 지원 |
 
@@ -21,6 +22,7 @@
 - `지원`이어도 실제 로드 확인과 host 앱 내부 동작은 각 surface 버전과 사용자 환경에 따라 달라질 수 있습니다.
 - Codex는 repo marketplace `.agents/plugins/marketplace.json`와 plugin manifest `.codex-plugin/plugin.json`을 기준으로 설치 가능한 plugin surface를 제공합니다.
 - Claude는 `plugin.json`을 canonical entrypoint로 보고, `manifest.json`은 이전 참조와의 호환성을 위한 compatibility entrypoint로만 유지합니다.
+- Claude Desktop local MCP는 `.mcpb` bundle의 generated `manifest.json`을 기준으로 설치합니다. private distribution의 extension package 자체는 수동 업데이트 대상이지만, bundle 안의 MCP bridge는 host `imweb` CLI를 첫 사용 시 설치/업데이트합니다.
 - Agent Skills CLI는 plugin auto-update 경로가 아니라 skill 파일 fallback입니다.
 - Claude Desktop Cowork는 Claude Code CLI registry나 `~/.claude/skills`를 직접 읽는 surface로 취급하지 않습니다. Cowork task 안에서 computer-use로 Claude Desktop UI를 조작해 설치하는 흐름도 지원 경로가 아닙니다.
 - Cowork의 shell은 VM일 수 있으므로 plugin에 포함된 local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth/profile 재사용을 맡는 경로를 우선합니다.

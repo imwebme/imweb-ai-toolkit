@@ -11,6 +11,7 @@ MARKETPLACE_NAME="imweb-ai-toolkit"
 PLUGIN_NAME="imweb-ai-toolkit"
 PACKAGE_PATH=""
 SKILL_PACKAGE_PATH=""
+MCPB_PATH=""
 DRY_RUN=0
 INSTALL_CLI=1
 
@@ -22,6 +23,7 @@ Usage:
   ./install/install-plugins.sh --tool codex|claude [--scope user|project|local] [--source PATH] [--dry-run]
   ./install/install-plugins.sh --package PATH [--dry-run]
   ./install/install-plugins.sh --skill-package PATH [--dry-run]
+  ./install/install-plugins.sh --mcpb PATH [--dry-run]
   ./install/install-plugins.sh --help
 
 Options:
@@ -33,6 +35,7 @@ Options:
              Cowork 파일 카드 설치를 위해 .plugin 확장자를 권장합니다.
   --skill-package
              Claude Cowork imweb custom Skill fallback package 생성 경로
+  --mcpb     Claude Desktop MCPB bundle 생성 경로. .mcpb 확장자를 권장합니다.
   --no-install-cli
              --tool codex|claude 경로에서 기본 CLI 설치/업데이트를 건너뜁니다.
   --dry-run  실행할 명령만 출력
@@ -45,6 +48,8 @@ Options:
   - tool 설치 경로는 공식 imweb CLI도 먼저 설치/업데이트합니다.
   - package: Claude Desktop Cowork에서 설치할 수 있는 plugin package를 생성합니다.
   - skill-package: Claude Cowork에서 imweb 지침을 custom Skill fallback으로 제공할 package를 생성합니다.
+  - mcpb: Claude Desktop에서 설치할 수 있는 MCPB bundle을 생성합니다. bundle 안의
+          local MCP bridge가 host imweb CLI 설치/업데이트와 auth 재사용을 맡습니다.
 USAGE
 }
 
@@ -214,6 +219,158 @@ print(f"  files: {len(seen)}")
 PY
 }
 
+create_mcpb_package() {
+  local output_path="$1"
+  [[ -n "$output_path" ]] || fail '--mcpb 경로가 필요합니다.'
+  if [[ "$DRY_RUN" -eq 1 ]]; then
+    printf '+ python3 <package imweb MCPB> %q\n' "$output_path"
+    return
+  fi
+
+  need_cmd python3
+  mkdir -p "$(dirname -- "$output_path")"
+  REPO_ROOT="$REPO_ROOT" OUTPUT_PATH="$output_path" python3 - <<'PY'
+import json
+import os
+import stat
+import time
+import zipfile
+from pathlib import Path
+
+repo_root = Path(os.environ["REPO_ROOT"]).resolve()
+output_path = Path(os.environ["OUTPUT_PATH"]).expanduser().resolve()
+package_json = json.loads((repo_root / "package.json").read_text())
+version = package_json.get("version", "0.0.0")
+include = [
+    "README.ko.md",
+    "README.ja.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    "TRADEMARKS.md",
+    "package.json",
+    "plugin.json",
+    ".mcp.json",
+    ".agents/plugins/marketplace.json",
+    ".codex-plugin",
+    ".claude-plugin",
+    ".cursor-plugin",
+    "assets",
+    "bin",
+    "commands",
+    "docs/ai-agent-installation.md",
+    "docs/cli-toolkit-integration.md",
+    "docs/cowork-ask-claude-install.md",
+    "docs/imweb-ai-toolkit.md",
+    "docs/skill-installation-and-usage.md",
+    "docs/surface-support-matrix.md",
+    "examples",
+    "install",
+    "skills/imweb",
+]
+
+manifest = {
+    "manifest_version": "0.3",
+    "name": "imweb-ai-toolkit",
+    "display_name": "imweb AI Toolkit",
+    "version": version,
+    "description": "Connects Claude Desktop to the local imweb CLI through a local MCP bridge. The bridge installs or updates the CLI when needed and reuses local auth.",
+    "long_description": "Use imweb orders, products, members, site, promotion, community, and script tools from Claude Desktop through the official imweb CLI. The extension runs locally through stdio and keeps CLI installation, updates, and browser login onboarding inside the guided tool flow.",
+    "author": {
+        "name": "imweb",
+        "url": "https://github.com/imwebme",
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/imwebme/imweb-ai-toolkit.git",
+    },
+    "homepage": "https://github.com/imwebme/imweb-ai-toolkit",
+    "documentation": "https://github.com/imwebme/imweb-ai-toolkit#readme",
+    "support": "https://github.com/imwebme/imweb-ai-toolkit/issues",
+    "server": {
+        "type": "node",
+        "entry_point": "bin/imweb-mcp.mjs",
+        "mcp_config": {
+            "command": "node",
+            "args": ["${__dirname}/bin/imweb-mcp.mjs"],
+            "env": {
+                "NO_COLOR": "1",
+            },
+        },
+    },
+    "tools": [
+        {"name": "imweb_cli_check", "description": "Check the local imweb CLI installation."},
+        {"name": "imweb_cli_install", "description": "Install or update the local imweb CLI."},
+        {"name": "imweb_auth_status", "description": "Check local imweb CLI login status."},
+        {"name": "imweb_auth_login", "description": "Start browser login for the local imweb CLI."},
+        {"name": "imweb_context", "description": "Read the active imweb site context."},
+        {"name": "imweb_command_capabilities", "description": "List supported imweb CLI capabilities."},
+        {"name": "imweb_order_list", "description": "List imweb orders."},
+        {"name": "imweb_order_get", "description": "Read a specific imweb order."},
+        {"name": "imweb_product_list", "description": "List imweb products."},
+        {"name": "imweb_product_get", "description": "Read a specific imweb product."},
+        {"name": "imweb_member_list", "description": "List imweb members."},
+    ],
+    "tools_generated": True,
+    "keywords": ["imweb", "commerce", "orders", "products", "mcp"],
+    "license": "Apache-2.0",
+    "privacy_policies": ["https://imweb.me/privacy"],
+    "compatibility": {
+        "claude_desktop": ">=1.0.0",
+        "platforms": ["darwin", "win32"],
+        "runtimes": {
+            "node": ">=18.0.0",
+        },
+    },
+}
+
+skip_names = {"__pycache__", ".DS_Store"}
+files = []
+readme_source = repo_root / "docs/public-root-readme.md"
+if not readme_source.exists():
+    readme_source = repo_root / "README.md"
+if not readme_source.exists():
+    raise SystemExit("package source missing: README.md")
+files.append((readme_source, "README.md"))
+for raw in include:
+    src = (repo_root / raw).resolve()
+    if not src.exists():
+        raise SystemExit(f"package source missing: {raw}")
+    if src.is_file():
+        files.append((src, src.relative_to(repo_root).as_posix()))
+    else:
+        files.extend((path, path.relative_to(repo_root).as_posix()) for path in sorted(src.rglob("*")) if path.is_file())
+
+with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    seen = {"manifest.json"}
+    manifest_info = zipfile.ZipInfo("manifest.json", date_time=time.localtime()[:6])
+    manifest_info.external_attr = (stat.S_IFREG | 0o644) << 16
+    archive.writestr(manifest_info, json.dumps(manifest, ensure_ascii=False, indent=2).encode("utf-8"), compress_type=zipfile.ZIP_DEFLATED)
+    for path, rel in files:
+        try:
+            path.relative_to(repo_root)
+        except ValueError:
+            raise SystemExit(f"package source escapes repo: {path}")
+        if any(part in skip_names for part in path.parts):
+            continue
+        if rel in seen or rel == "manifest.json":
+            continue
+        seen.add(rel)
+        info = zipfile.ZipInfo(rel, date_time=time.localtime(path.stat().st_mtime)[:6])
+        executable = rel.startswith("install/") and os.access(path, os.X_OK)
+        mode = 0o755 if executable else 0o644
+        info.external_attr = (stat.S_IFREG | mode) << 16
+        with path.open("rb") as handle:
+            archive.writestr(info, handle.read(), compress_type=zipfile.ZIP_DEFLATED)
+
+suffix = output_path.suffix.lower()
+if suffix and suffix != ".mcpb":
+    print(f"warning: Claude Desktop bundles expect a .mcpb extension; got {suffix}")
+print("mcpb package created")
+print(f"  path: {output_path}")
+print(f"  files: {len(seen)}")
+PY
+}
+
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --tool)
@@ -239,6 +396,11 @@ while [[ $# -gt 0 ]]; do
     --skill-package)
       [[ $# -ge 2 ]] || fail '--skill-package 값이 필요합니다.'
       SKILL_PACKAGE_PATH="$2"
+      shift 2
+      ;;
+    --mcpb)
+      [[ $# -ge 2 ]] || fail '--mcpb 값이 필요합니다.'
+      MCPB_PATH="$2"
       shift 2
       ;;
     --dry-run)
@@ -269,8 +431,12 @@ if [[ -n "${SKILL_PACKAGE_PATH:-}" ]]; then
   create_skill_package "$SKILL_PACKAGE_PATH"
 fi
 
+if [[ -n "${MCPB_PATH:-}" ]]; then
+  create_mcpb_package "$MCPB_PATH"
+fi
+
 if [[ -z "$TOOL" ]]; then
-  [[ -n "$PACKAGE_PATH" || -n "${SKILL_PACKAGE_PATH:-}" ]] || fail '--tool, --package, --skill-package 중 하나는 필요합니다.'
+  [[ -n "$PACKAGE_PATH" || -n "${SKILL_PACKAGE_PATH:-}" || -n "${MCPB_PATH:-}" ]] || fail '--tool, --package, --skill-package, --mcpb 중 하나는 필요합니다.'
   exit 0
 fi
 

@@ -30,11 +30,13 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex
 ```
 
-Claude Desktop Cowork용 plugin package만 만들 때는 아래처럼 실행합니다.
+Claude Desktop chat용 local MCP bundle을 만들 때는 아래처럼 실행합니다.
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
 ```
+
+이 명령은 현재 디렉터리에 `imweb-ai-toolkit.mcpb`를 만듭니다. Claude Desktop에서 이 파일을 열어 설치하면, bundle 안의 local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth 재사용을 맡습니다.
 
 Claude Cowork에서 bare `/imweb` 경로를 안정적으로 열려면 plugin package와 custom Skill package를 함께 생성합니다.
 
@@ -62,6 +64,7 @@ authenticated GitHub Release URL override를 직접 주는 경우에는 `gh` fal
 
 - Codex: `codex plugin marketplace add`로 이 repo의 `.agents/plugins/marketplace.json`를 등록합니다. Codex App 또는 Codex CLI의 Plugins 화면에서 `imweb-ai-toolkit`을 설치합니다.
 - Claude Code: `claude plugin marketplace add` 후 `claude plugin install imweb-ai-toolkit@imweb-ai-toolkit`을 실행합니다.
+- Claude Desktop local MCP: `--mcpb` 또는 `-Mcpb`로 설치 가능한 `.mcpb` bundle을 생성합니다. 이 bundle에는 local MCP bridge와 CLI installer/update 경로가 들어갑니다.
 - Claude Desktop Cowork plugin: `--package` 또는 `-Package`로 설치 가능한 `.plugin` package를 생성합니다. 이 package에는 local MCP bridge와 skill bundle이 들어갑니다.
 - Claude Cowork Skill: `--skill-package` 또는 `-SkillPackage`로 custom `.skill` package를 생성합니다. 기본 경로는 `.plugin`과 `.skill` artifact를 Cowork에 함께 제시해 host가 설치/활성화하도록 하는 것입니다. Claude Code CLI registry와 `~/.claude/skills`는 Desktop Cowork 설치를 대체하지 않습니다.
 
@@ -70,6 +73,7 @@ authenticated GitHub Release URL override를 직접 주는 경우에는 `gh` fal
 ```bash
 ./install/install-plugins.sh --tool codex
 ./install/install-plugins.sh --tool claude --scope user
+./install/install-plugins.sh --mcpb imweb-ai-toolkit.mcpb
 ./install/install-plugins.sh --package imweb-ai-toolkit.plugin
 ./install/install-plugins.sh --skill-package imweb.skill
 ```
@@ -79,6 +83,7 @@ PowerShell:
 ```powershell
 ./install/install-plugins.ps1 -Tool codex
 ./install/install-plugins.ps1 -Tool claude -Scope user
+./install/install-plugins.ps1 -Mcpb imweb-ai-toolkit.mcpb
 ./install/install-plugins.ps1 -Package imweb-ai-toolkit.plugin
 ./install/install-plugins.ps1 -SkillPackage imweb.skill
 ```

@@ -178,6 +178,20 @@ printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫
   | claude -p --no-session-persistence --tools Read --allowedTools Read --add-dir "$PLUGIN_DIR"
 ```
 
+Claude Desktop local MCP:
+
+```bash
+./install/install-plugins.sh --mcpb imweb-ai-toolkit.mcpb
+```
+
+PowerShell:
+
+```powershell
+./install/install-plugins.ps1 -Mcpb imweb-ai-toolkit.mcpb
+```
+
+생성된 `.mcpb` bundle은 Claude Desktop Extension으로 설치하는 local MCP package입니다. Bundle 안의 `manifest.json`은 `bin/imweb-mcp.mjs`를 가리키고, MCP bridge는 host CLI가 없거나 오래된 경우 공식 installer/update 경로를 실행한 뒤 auth/context 확인으로 이어갑니다.
+
 Claude Desktop Cowork:
 
 ```bash

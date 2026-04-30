@@ -25,6 +25,7 @@ const DEFAULTS = {
   ref: PUBLIC_GIT_REF,
   packagePath: '',
   skillPackagePath: '',
+  mcpbPath: '',
   dryRun: false,
   json: false,
 };
@@ -41,9 +42,10 @@ Options:
   --tool cli|codex|claude|claude-code|claude-desktop|claude-cowork|both|all
                               Target AI surface. "claude" is an alias for Claude Code.
                               "cli" only installs or updates the imweb CLI.
-                              "both" installs Codex + Claude Code. "claude-cowork" creates
-                              the installable Cowork .plugin file and imweb .skill fallback file.
-                              "all" also creates both.
+                              "both" installs Codex + Claude Code. "claude-desktop" creates
+                              the installable Claude Desktop .mcpb bundle. "claude-cowork"
+                              creates the installable Cowork .plugin file and imweb .skill
+                              fallback file. "all" also creates these packages.
   --scope user|project|local  Install scope for plugin tools. Default: user.
   --skill-mode copy|symlink   Skill install mode. Default: copy. Use copy for npx installs.
   --with-skill                Also install the imweb skill discovery bundle.
@@ -58,6 +60,9 @@ Options:
   --skill-package PATH        Create Claude Cowork imweb custom Skill fallback package. Use a .skill extension
                               for installable imweb skill cards. Relative paths are
                               resolved from the directory where you run this command.
+  --mcpb PATH                 Create Claude Desktop MCPB bundle. Use a .mcpb extension.
+                              Relative paths are resolved from the directory where you run
+                              this command.
   --no-backup                 Skip timestamped backup of local Codex/Claude config paths.
   --no-replace                Do not replace existing imweb marketplace/plugin/skill entries.
   --dry-run                   Print actions without changing the machine.
@@ -71,6 +76,8 @@ Notes:
   - Codex CLI currently supports marketplace registration; the installer also copies the
     imweb skill by default so command discovery works immediately.
   - Claude Code installs imweb-ai-toolkit from the registered marketplace.
+  - Claude Desktop chat installs local MCP servers through a .mcpb bundle.
+    The bundle bridge installs/updates the official imweb CLI automatically on first use.
   - Claude Desktop Cowork does not read Claude Code's CLI registry.
   - For Cowork, the default command creates imweb-ai-toolkit.plugin plus
     imweb.skill. Present both files to Cowork so the host can install/enable
@@ -128,6 +135,9 @@ function parseArgs(argv) {
       case '--skill-package':
         opts.skillPackagePath = readValue(arg);
         break;
+      case '--mcpb':
+        opts.mcpbPath = readValue(arg);
+        break;
       case '--no-backup':
         opts.backup = false;
         break;
@@ -149,8 +159,8 @@ function parseArgs(argv) {
         fail(`unknown option: ${arg}`);
     }
   }
-  if (!opts.tool && !opts.packagePath && !opts.skillPackagePath) {
-    fail('--tool, --package, or --skill-package is required');
+  if (!opts.tool && !opts.packagePath && !opts.skillPackagePath && !opts.mcpbPath) {
+    fail('--tool, --package, --skill-package, or --mcpb is required');
   }
   if (opts.tool && !['cli', 'codex', 'claude', 'claude-desktop', 'claude-cowork', 'both', 'all'].includes(opts.tool)) {
     fail('--tool must be cli, codex, claude-code, claude-desktop, claude-cowork, both, or all');
@@ -231,7 +241,10 @@ function resolveUserPath(path) {
 }
 
 function normalizeOptions(opts) {
-  if ((opts.tool === 'claude-desktop' || opts.tool === 'claude-cowork' || opts.tool === 'all') && !opts.packagePath) {
+  if ((opts.tool === 'claude-desktop' || opts.tool === 'all') && !opts.mcpbPath) {
+    opts.mcpbPath = 'imweb-ai-toolkit.mcpb';
+  }
+  if ((opts.tool === 'claude-cowork' || opts.tool === 'all') && !opts.packagePath) {
     opts.packagePath = 'imweb-ai-toolkit.plugin';
   }
   if ((opts.tool === 'claude-cowork' || opts.tool === 'all') && !opts.skillPackagePath) {
@@ -242,6 +255,9 @@ function normalizeOptions(opts) {
   }
   if (opts.skillPackagePath) {
     opts.skillPackagePath = resolveUserPath(opts.skillPackagePath);
+  }
+  if (opts.mcpbPath) {
+    opts.mcpbPath = resolveUserPath(opts.mcpbPath);
   }
   return opts;
 }
@@ -387,6 +403,12 @@ function createSkillPackage(opts) {
   runScript('install-plugins', ['--skill-package', output], ['-SkillPackage', output], opts);
 }
 
+function createMcpbPackage(opts) {
+  const output = opts.mcpbPath;
+  if (!output) return;
+  runScript('install-plugins', ['--mcpb', output], ['-Mcpb', output], opts);
+}
+
 function installCodex(opts) {
   requireCommand('codex', opts);
   if (opts.replace) {
@@ -438,6 +460,10 @@ function main() {
     createSkillPackage(opts);
   }
 
+  if (opts.mcpbPath) {
+    createMcpbPackage(opts);
+  }
+
   const tools = (opts.tool === 'both' || opts.tool === 'all') ? ['codex', 'claude'] : (['codex', 'claude'].includes(opts.tool) ? [opts.tool] : []);
   for (const tool of tools) {
     if (tool === 'codex') installCodex(opts);
@@ -456,6 +482,7 @@ function main() {
     backupRoot: opts.backupRoot,
     packagePath: opts.packagePath || null,
     skillPackagePath: opts.skillPackagePath || null,
+    mcpbPath: opts.mcpbPath || null,
     steps: opts.steps,
   };
 
@@ -468,6 +495,7 @@ function main() {
     if (opts.tool) console.log(`  tool: ${opts.tool}`);
     if (opts.packagePath) console.log(`  package: ${opts.packagePath}`);
     if (opts.skillPackagePath) console.log(`  skill_package: ${opts.skillPackagePath}`);
+    if (opts.mcpbPath) console.log(`  mcpb: ${opts.mcpbPath}`);
   }
 }
 
