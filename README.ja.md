@@ -19,6 +19,7 @@ flowchart LR
 
 - Codex、Claude、Cursor、MCP reference wiring のための `plugin.json`、marketplace metadata、surface metadata
 - Claude Desktop Cowork がユーザーの host `imweb` CLI と auth state を再利用するための `bin/imweb-mcp.mjs` local MCP bridge
+- `commands/imweb.md`: Claude plugin surface 向けの短い `/imweb` slash-command entrypoint
 - `skills/imweb/`: `imweb` skill bundle と bundle-local docs
 - `install/`: CLI、skill、plugin setup のための bootstrap/installer script
 - `docs/`: 公開利用、統合、support matrix のドキュメント
@@ -53,7 +54,7 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 주문목록을 확인해줘` でテストします。Plugin には host CLI と auth を使う local MCP bridge が含まれ、skill package が短い `/imweb` entrypoint を有効にします。
+Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 주문목록을 확인해줘` でテストします。Plugin には短い `/imweb` slash entrypoint と host CLI/auth を使う local MCP bridge が含まれ、skill package は同じ imweb 手順を custom Skill fallback として提供します。
 
 ## その他のインストール方法
 
