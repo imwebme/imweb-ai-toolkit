@@ -54,7 +54,7 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 주문목록을 확인해줘` でテストします。Plugin には短い `/imweb` slash entrypoint と host CLI/auth を使う local MCP bridge が含まれ、skill package は同じ imweb 手順を custom Skill fallback として提供します。
+Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 주문목록을 확인해줘` でテストします。Plugin には短い `/imweb` slash entrypoint と host CLI/auth を使う local MCP bridge が含まれます。Host CLI のログインが必要な場合は Claude がブラウザログインフローを開始でき、ユーザーはブラウザでログインを完了するだけで、Claude が auth を再確認して元の依頼を続行します。Skill package は同じ imweb 手順を custom Skill fallback として提供します。
 
 ## その他のインストール方法
 
