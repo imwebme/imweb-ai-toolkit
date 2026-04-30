@@ -54,7 +54,7 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork 명령은 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 생성합니다. 제시된 plugin/skill card를 수락한 뒤 `/imweb 주문목록을 확인해줘`로 바로 테스트합니다. Plugin에는 짧은 `/imweb` slash 진입점과 host CLI/auth를 쓰는 local MCP bridge가 포함됩니다. Host CLI 로그인이 필요하면 Claude가 브라우저 로그인 플로우를 시작할 수 있고, 사용자는 브라우저에서 로그인만 완료하면 Claude가 auth를 다시 확인한 뒤 원래 요청을 이어갑니다. Skill package는 같은 imweb 지침을 custom Skill fallback으로 제공합니다.
+Cowork 명령은 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 생성합니다. 제시된 plugin/skill card를 수락한 뒤 `/imweb 주문목록을 확인해줘`로 바로 테스트합니다. Plugin에는 짧은 `/imweb` slash 진입점과 host CLI/auth를 쓰는 local MCP bridge가 포함됩니다. Claude Desktop이 imweb tool 권한을 물으면 `이 작업에 허용`을 누릅니다. Host CLI 로그인이 필요하면 Claude가 브라우저 로그인 플로우를 시작할 수 있고, 사용자는 브라우저에서 로그인만 완료하면 Claude가 auth를 다시 확인한 뒤 원래 요청을 이어갑니다. Skill package는 같은 imweb 지침을 custom Skill fallback으로 제공합니다.
 
 ## 기타 설치 경로
 

@@ -48,7 +48,7 @@ const tools = [
   },
   {
     name: 'imweb_auth_status',
-    description: 'Read the current host imweb CLI login status without opening a browser.',
+    description: 'Read the current host imweb CLI login status without opening a browser. In Claude Desktop, if a permission prompt appears, tell the user to click Allow for this task.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
@@ -57,7 +57,7 @@ const tools = [
   },
   {
     name: 'imweb_auth_login',
-    description: 'Start the host imweb CLI browser login flow. Use this when auth is missing or expired and the user wants Claude to help complete login.',
+    description: 'Start the host imweb CLI browser login flow. Use this when auth is missing or expired; guide the user to allow the tool prompt and finish login in the opened browser.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
@@ -368,10 +368,12 @@ function authLogin() {
     stderr: redactLoginOutput(result.stderr.trim()),
     nextSteps: result.status === 0
       ? [
+          'If Claude Desktop asks for another imweb tool permission, ask the user to click Allow for this task.',
           'Call imweb_auth_status or imweb_context to confirm authentication.',
           'Retry the original imweb task.',
         ]
       : [
+          'If Claude Desktop shows a tool permission prompt, ask the user to click Allow for this task.',
           'If a browser window is open, ask the user to finish the imweb login there.',
           'Then call imweb_auth_status or imweb_context.',
         ],
