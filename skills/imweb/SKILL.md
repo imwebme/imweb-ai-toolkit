@@ -30,6 +30,7 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 
 로그인 온보딩:
 - auth/token이 없거나 만료되어 있으면 먼저 `imweb_auth_status`와 `imweb_auth_doctor`로 상태를 확인합니다.
+- Claude Desktop이 imweb MCP tool 권한을 묻는 화면을 보여주면, 사용자는 `이 작업에 허용` / `Allow for this task` 버튼만 누르면 된다고 짧게 안내합니다.
 - 로그인이 필요하면 사용자를 터미널로 보내지 말고 `imweb_auth_login` MCP tool을 호출합니다. 브라우저가 열리면 사용자가 로그인 버튼과 계정 확인만 누르면 된다고 짧게 안내합니다.
 - `imweb_auth_login`이 끝나면 `imweb_auth_status` 또는 `imweb_context`를 다시 호출한 뒤 원래 요청을 이어서 실행합니다.
 - 로그인 뒤에도 profile, `site_code`, scope가 비어 있으면 무엇이 부족한지만 구체적으로 말하고, 추정으로 API를 호출하지 않습니다.

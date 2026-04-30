@@ -49,11 +49,12 @@ Claude Desktop Cowork에서는 작업 shell이 사용자 Mac이 아닌 별도 Li
 Auth 문제는 Claude가 절차를 이끌어야 합니다.
 
 1. `imweb_auth_status` 또는 `imweb_auth_doctor`로 host auth 상태를 확인합니다.
-2. 토큰이 없거나 refresh가 실패하면 `imweb_auth_login`을 호출합니다.
-3. 사용자에게는 "브라우저가 열리면 아임웹 로그인을 완료하세요. 완료되면 제가 이어서 확인합니다." 정도로만 안내합니다.
-4. tool이 끝나면 `imweb_auth_status` 또는 `imweb_context`를 다시 호출합니다.
-5. auth가 healthy가 되면 원래 요청을 이어서 실행합니다.
-6. profile, `site_code`, scope가 여전히 비어 있으면 부족한 항목만 짧게 보고하고 API 호출은 보류합니다.
+2. Claude Desktop이 imweb MCP tool 권한을 묻는 화면을 보여주면 사용자는 `이 작업에 허용` / `Allow for this task` 버튼만 누르면 된다고 안내합니다.
+3. 토큰이 없거나 refresh가 실패하면 `imweb_auth_login`을 호출합니다.
+4. 사용자에게는 "브라우저가 열리면 아임웹 로그인을 완료하세요. 완료되면 제가 이어서 확인합니다." 정도로만 안내합니다.
+5. tool이 끝나면 `imweb_auth_status` 또는 `imweb_context`를 다시 호출합니다.
+6. auth가 healthy가 되면 원래 요청을 이어서 실행합니다.
+7. profile, `site_code`, scope가 여전히 비어 있으면 부족한 항목만 짧게 보고하고 API 호출은 보류합니다.
 
 ## write 안전 규약
 
