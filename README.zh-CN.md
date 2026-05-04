@@ -74,6 +74,7 @@ npx -y github:imwebme/imweb-ai-toolkit --tool both
 방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
 ```
 
+- 用户不必每次都说完整的 `imweb AI Toolkit` 名称。`아임웹도구`、`아임웹 도구`、`아임웹툴`、`imweb tool`、`imweb tools`、`imweb toolkit` 这样的短名称也应路由到同一个 imweb entrypoint。
 - 当前 Claude Desktop Cowork build 即使 skill 已启用，也可能在 task 开始前拒绝 `/imweb` 这样的 slash-form text；如果发生这种情况，请改用自然语言请求。
 - Plugin 包含 Claude plugin surface 的 `/imweb` slash 入口，以及 host 暴露这些工具时可用的 local `imweb-cli` MCP bridge。
 - 如果 Claude Desktop 请求 imweb tool 权限，请点击 `Allow for this task`。

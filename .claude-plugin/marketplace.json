@@ -10,7 +10,7 @@
     {
       "name": "imweb-ai-toolkit",
       "source": "./",
-      "description": "Connect imweb CLI guidance and the public `imweb` skill for Claude Code and Claude Desktop Cowork",
+      "description": "Connect imweb CLI guidance and the public `imweb` skill for Claude Code and Claude Desktop Cowork. Short aliases include 아임웹도구, 아임웹툴, imweb tool, and imweb tools.",
       "version": "0.2.5",
       "author": {
         "name": "imweb",
@@ -26,6 +26,10 @@
         "claude-code",
         "claude-desktop",
         "claude-cowork",
+        "imweb-tool",
+        "imweb-tools",
+        "아임웹도구",
+        "아임웹툴",
         "agent-toolkit"
       ]
     }

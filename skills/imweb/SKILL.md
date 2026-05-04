@@ -1,6 +1,6 @@
 ---
 name: imweb
-description: Use for imweb CLI command discovery and safe execution guidance across site, product, order, payment, member, promotion, community, and script domains.
+description: Use imweb CLI safely for site, product, order, member, payment, promotion, community, and script tasks. Match aliases 아임웹도구, 아임웹툴, imweb tool, imweb toolkit.
 ---
 
 # imweb
@@ -17,6 +17,7 @@ description: Use for imweb CLI command discovery and safe execution guidance acr
 - 현재 profile, `site_code`, 인증 상태와 지원 커맨드 범위를 먼저 확인합니다.
 - 요청을 정확한 도메인으로 라우팅하고, 상세 절차는 내부 reference에서만 이어서 확인합니다.
 - 공개 호출 표면은 이 `imweb` 하나만 사용합니다.
+- 사용자가 `imweb AI Toolkit` 대신 `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, `imweb toolkit`처럼 짧게 부르면 모두 이 skill 호출 의도로 해석합니다.
 
 사용자 경험 기준:
 - 사용자는 비개발자일 수 있습니다. 먼저 사용자의 업무 문장을 그대로 받아서 가능한 작업, 필요한 승인, 로그인 필요 여부를 짧게 설명하고 직접 진행합니다.
