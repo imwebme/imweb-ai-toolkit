@@ -1,12 +1,14 @@
 ---
 name: imweb
-description: Start imweb CLI command discovery and safe execution guidance.
+description: Start imweb CLI command discovery and safe execution guidance. Match aliases like 아임웹도구, 아임웹 도구, 아임웹툴, imweb tool, imweb tools, imweb toolkit, and imweb AI toolkit.
 argument-hint: "[task]"
 ---
 
 Use the imweb AI toolkit for the user's request:
 
 `$ARGUMENTS`
+
+Treat short natural-language names such as `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, and `imweb toolkit` as the same imweb entrypoint.
 
 Start from the bundled imweb skill instructions when they are available:
 

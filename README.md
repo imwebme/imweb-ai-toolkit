@@ -74,6 +74,7 @@ After installation:
 방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
 ```
 
+- Users do not need to say the full `imweb AI Toolkit` name. Short names such as `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, or `imweb toolkit` should route to the same imweb entrypoint.
 - Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before the task starts, even when the skill is enabled. If that happens, use a natural-language prompt instead.
 - The plugin includes the `/imweb` slash entrypoint for Claude plugin surfaces and a local `imweb-cli` MCP bridge for hosts that expose those tools.
 - If Claude Desktop asks for imweb tool permission, click `Allow for this task`.

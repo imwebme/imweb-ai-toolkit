@@ -10,7 +10,7 @@
     {
       "name": "imweb-ai-toolkit",
       "source": "./",
-      "description": "Connect imweb CLI guidance, the public `imweb` skill, and manual MCP setup for Cursor workspaces",
+      "description": "Connect imweb CLI guidance, the public `imweb` skill, and manual MCP setup for Cursor workspaces. Short aliases include 아임웹도구, 아임웹툴, imweb tool, and imweb tools.",
       "version": "0.2.5",
       "author": {
         "name": "imweb",
@@ -21,6 +21,10 @@
       "keywords": [
         "imweb",
         "imweb-cli",
+        "imweb-tool",
+        "imweb-tools",
+        "아임웹도구",
+        "아임웹툴",
         "cursor",
         "mcp",
         "agent-toolkit"

@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "version": "0.2.5",
-  "description": "Rust 기반 imweb-cli를 LLM과 에이전트가 일관되게 호출하도록 설명하는 Codex plugin 메타데이터입니다.",
+  "description": "Rust 기반 imweb-cli를 LLM과 에이전트가 일관되게 호출하도록 설명하는 Codex plugin 메타데이터입니다. 아임웹도구, 아임웹툴, imweb tool, imweb tools 같은 짧은 자연어 alias도 같은 imweb 진입점으로 안내합니다.",
   "author": {
     "name": "imweb",
     "url": "https://github.com/imwebme"
@@ -12,6 +12,10 @@
   "keywords": [
     "imweb",
     "imweb-cli",
+    "imweb-tool",
+    "imweb-tools",
+    "아임웹도구",
+    "아임웹툴",
     "codex-plugin",
     "agent-toolkit",
     "llm",
@@ -22,7 +26,7 @@
   "interface": {
     "displayName": "imweb AI toolkit",
     "shortDescription": "아임웹 OpenAPI용 Rust CLI를 공개 skill `imweb`으로 안전하게 호출하도록 돕는 Codex 표면 메타입니다.",
-    "longDescription": "imweb AI toolkit은 imweb-cli 자체에 AI 기능을 넣지 않고, 이미 있는 Rust 기반 CLI를 LLM과 에이전트가 예측 가능하게 호출하도록 돕는 plugin-first 보조 계층입니다. Codex 표면은 root plugin과 공개 skill `imweb`, 설치 스크립트, 구조화 출력 계약 문서를 함께 기준으로 삼습니다.",
+    "longDescription": "imweb AI toolkit은 imweb-cli 자체에 AI 기능을 넣지 않고, 이미 있는 Rust 기반 CLI를 LLM과 에이전트가 예측 가능하게 호출하도록 돕는 plugin-first 보조 계층입니다. 사용자가 아임웹도구, 아임웹툴, imweb tool처럼 짧게 불러도 같은 imweb 진입점으로 해석합니다. Codex 표면은 root plugin과 공개 skill `imweb`, 설치 스크립트, 구조화 출력 계약 문서를 함께 기준으로 삼습니다.",
     "developerName": "imweb",
     "category": "developer-tools",
     "capabilities": [

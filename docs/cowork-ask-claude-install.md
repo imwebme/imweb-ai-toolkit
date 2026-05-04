@@ -20,6 +20,18 @@ After the cards are installed, use a normal business request. Examples:
 방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
 ```
 
+Users may also call the toolkit with shorter names:
+
+```text
+아임웹툴로 최근 주문중 이상 거래 조사해줘.
+```
+
+```text
+imweb tool로 방문자 많은 상품 top 5 가져와서 가능한 범위까지 점검해줘.
+```
+
+Treat `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, and `imweb toolkit` as aliases for the same imweb entrypoint.
+
 The second request intentionally checks graceful limitation handling. If visitor-ranked product analytics are not available through the CLI, Claude should say so plainly and continue with supported product/site/review/order checks instead of inventing traffic data.
 
 Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before a task starts, even when the imweb skill is enabled. That is not a user setup mistake. Use the natural-language request above unless the Cowork slash picker explicitly exposes the imweb command.
