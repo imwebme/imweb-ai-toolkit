@@ -60,7 +60,26 @@ npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-The local plugin installer installs or updates the official `imweb` CLI by default. The Desktop command creates `imweb-ai-toolkit.mcpb`, a Claude Desktop local MCP bundle. Open it with Claude Desktop and click Install; the bundled MCP bridge manages CLI install/update on first use. The Cowork command creates `imweb-ai-toolkit.plugin` and `imweb.skill`. Accept the presented plugin and skill cards, then use business prompts such as `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` or `방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.` Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before the task starts, even when the skill is enabled; if that happens, use the natural-language prompt instead. The plugin includes the `/imweb` slash entrypoint for Claude plugin surfaces and a local `imweb-cli` MCP bridge for hosts that expose those tools. If Claude Desktop asks for imweb tool permission, click `Allow for this task`. If the host CLI is not logged in, Claude can start the browser login flow for you; finish the imweb login in the browser, then Claude will re-check auth and continue the original request. If a requested metric is not available through the CLI, such as visitor/traffic-ranked products, Claude should say so and continue with supported read-only checks like product lists, product details, reviews, site info, or recent orders. The skill package keeps the same imweb instructions available as a custom Skill fallback.
+After installation:
+
+- The local plugin installer installs or updates the official `imweb` CLI by default.
+- `--tool claude-desktop` creates `imweb-ai-toolkit.mcpb`, a Claude Desktop local MCP bundle. Open it with Claude Desktop and click Install; the bundled MCP bridge manages CLI install/update on first use.
+- `--tool claude-cowork` creates `imweb-ai-toolkit.plugin` and `imweb.skill`. Accept the presented plugin and skill cards, then start with a business prompt such as:
+
+```text
+최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.
+```
+
+```text
+방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
+```
+
+- Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before the task starts, even when the skill is enabled. If that happens, use a natural-language prompt instead.
+- The plugin includes the `/imweb` slash entrypoint for Claude plugin surfaces and a local `imweb-cli` MCP bridge for hosts that expose those tools.
+- If Claude Desktop asks for imweb tool permission, click `Allow for this task`.
+- If the host CLI is not logged in, Claude can start the browser login flow for you. Finish the imweb login in the browser; Claude will re-check auth and continue the original request.
+- If a requested metric is not available through the CLI, such as visitor/traffic-ranked products, Claude should say so and continue with supported read-only checks like product lists, product details, reviews, site info, or recent orders.
+- The skill package keeps the same imweb instructions available as a custom Skill fallback.
 
 ## Other Install Methods
 
