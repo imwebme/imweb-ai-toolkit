@@ -48,13 +48,19 @@ npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 ```
 
+- 在 Claude Desktop chat local MCP 中，创建 one-click MCPB bundle：
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
+```
+
 - 让 AI coding agent 为 Codex 和 Claude Code 执行本地安装时，使用这一行：
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 `imweb.skill`。接受展示出的 plugin/skill card 后，用 `/imweb 최근 주문중 이상 거래 조사` 或 `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` 这样的业务句子测试。Plugin 包含简短的 `/imweb` slash 入口以及使用 host CLI/auth 的 local MCP bridge。如果 Claude Desktop 请求 imweb tool 权限，请点击 `Allow for this task`。若 host CLI 需要登录，Claude 可以启动浏览器登录流程；用户只需在浏览器中完成登录，Claude 会重新检查 auth 并继续原始请求。如果请求的指标不在 CLI 支持范围内，Claude 会说明限制并继续执行可用的 read-only 检查。Skill package 则把相同的 imweb 指南作为 custom Skill fallback 提供。
+Local plugin installer 默认会安装或更新官方 `imweb` CLI。Desktop 命令会创建 Claude Desktop local MCP bundle `imweb-ai-toolkit.mcpb`。用 Claude Desktop 打开并点击 Install 后，bundle 内的 MCP bridge 会在首次使用时管理 CLI 安装/更新。Cowork 命令会生成 `imweb-ai-toolkit.plugin` 和 `imweb.skill`。接受展示出的 plugin/skill card 后，用 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` 或 `방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.` 这样的自然语言业务请求测试。当前 Claude Desktop Cowork build 即使 skill 已启用，也可能在 task 开始前拒绝 `/imweb` 这样的 slash-form text；如果发生这种情况，请改用自然语言请求。Plugin 包含 Claude plugin surface 的 `/imweb` slash 入口，以及 host 暴露这些工具时可用的 local `imweb-cli` MCP bridge。如果 Claude Desktop 请求 imweb tool 权限，请点击 `Allow for this task`。若 host CLI 需要登录，Claude 可以启动浏览器登录流程；用户只需在浏览器中完成 imweb 登录，Claude 会重新检查 auth 并继续原始请求。如果请求的指标不在 CLI 支持范围内，例如按访客/traffic 排名的商品，Claude 会说明限制，并继续执行商品列表、商品详情、评价、站点信息或最近订单等可用的 read-only 检查。Skill package 则把相同的 imweb 指南作为 custom Skill fallback 提供。
 
 ## 其他安装方式
 
