@@ -48,13 +48,19 @@ npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 ```
 
+- Claude Desktop chat local MCP에서는 one-click MCPB bundle을 만듭니다.
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
+```
+
 - AI coding agent에게 Codex와 Claude Code 로컬 설치를 맡길 때는 아래 한 줄을 사용합니다.
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork 명령은 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 생성합니다. 제시된 plugin/skill card를 수락한 뒤 `/imweb 최근 주문중 이상 거래 조사` 또는 `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` 같은 업무 문장으로 바로 테스트합니다. Plugin에는 짧은 `/imweb` slash 진입점과 host CLI/auth를 쓰는 local MCP bridge가 포함됩니다. Claude Desktop이 imweb tool 권한을 물으면 `이 작업에 허용`을 누릅니다. Host CLI 로그인이 필요하면 Claude가 브라우저 로그인 플로우를 시작할 수 있고, 사용자는 브라우저에서 로그인만 완료하면 Claude가 auth를 다시 확인한 뒤 원래 요청을 이어갑니다. 요청한 지표가 CLI에 없으면 Claude가 한계를 설명하고 가능한 read-only 점검으로 이어갑니다. Skill package는 같은 imweb 지침을 custom Skill fallback으로 제공합니다.
+로컬 plugin installer는 기본적으로 공식 `imweb` CLI를 설치하거나 업데이트합니다. Desktop 명령은 Claude Desktop local MCP bundle인 `imweb-ai-toolkit.mcpb`를 만듭니다. Claude Desktop으로 열고 Install을 클릭하면 bundle 안의 MCP bridge가 첫 사용 시 CLI 설치/업데이트를 관리합니다. Cowork 명령은 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 생성합니다. 제시된 plugin/skill card를 수락한 뒤 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` 또는 `방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.` 같은 자연어 업무 문장으로 테스트합니다. 현재 Claude Desktop Cowork build는 skill이 활성화되어 있어도 task 시작 전에 `/imweb` 같은 slash-form text를 거절할 수 있습니다. 이 경우 자연어 요청을 사용합니다. Plugin에는 Claude plugin surface용 `/imweb` slash 진입점과 해당 도구를 노출하는 host용 local `imweb-cli` MCP bridge가 포함됩니다. Claude Desktop이 imweb tool 권한을 물으면 `이 작업에 허용`을 누릅니다. Host CLI 로그인이 필요하면 Claude가 브라우저 로그인 플로우를 시작할 수 있고, 사용자는 브라우저에서 imweb 로그인만 완료하면 Claude가 auth를 다시 확인한 뒤 원래 요청을 이어갑니다. 방문자/트래픽 기준 상품 순위처럼 요청한 지표가 CLI에 없으면 Claude가 한계를 설명하고 상품 목록, 상품 상세, 리뷰, 사이트 정보, 최근 주문 같은 가능한 read-only 점검으로 이어갑니다. Skill package는 같은 imweb 지침을 custom Skill fallback으로 제공합니다.
 
 ## 기타 설치 경로
 

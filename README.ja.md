@@ -48,13 +48,19 @@ npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 ```
 
+- Claude Desktop chat local MCP では、one-click MCPB bundle を作成します。
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop
+```
+
 - AI coding agent に Codex と Claude Code のローカルセットアップを任せる場合は、次の 1 行を使います。
 
 ```bash
 npx -y github:imwebme/imweb-ai-toolkit --tool both
 ```
 
-Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認してから `/imweb 최근 주문중 이상 거래 조사` や `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` のような業務文でテストします。Plugin には短い `/imweb` slash entrypoint と host CLI/auth を使う local MCP bridge が含まれます。Claude Desktop が imweb tool の権限を求めた場合は `Allow for this task` をクリックします。Host CLI のログインが必要な場合は Claude がブラウザログインフローを開始でき、ユーザーはブラウザでログインを完了するだけで、Claude が auth を再確認して元の依頼を続行します。要求された指標が CLI にない場合、Claude は制限を説明し、可能な read-only 確認に進みます。Skill package は同じ imweb 手順を custom Skill fallback として提供します。
+Local plugin installer は、デフォルトで公式 `imweb` CLI をインストールまたは更新します。Desktop コマンドは Claude Desktop local MCP bundle である `imweb-ai-toolkit.mcpb` を作成します。Claude Desktop で開いて Install をクリックすると、bundle 内の MCP bridge が初回利用時に CLI のインストール/更新を管理します。Cowork コマンドは `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認したら、`최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` や `방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.` のような自然言語の業務依頼でテストします。現在の Claude Desktop Cowork build では、skill が有効でも task 開始前に `/imweb` のような slash-form text が拒否されることがあります。その場合は自然言語の依頼を使います。Plugin には Claude plugin surface 向けの `/imweb` slash entrypoint と、対応 host が露出する local `imweb-cli` MCP bridge が含まれます。Claude Desktop が imweb tool の権限を求めた場合は `Allow for this task` をクリックします。Host CLI のログインが必要な場合は Claude がブラウザログインフローを開始でき、ユーザーはブラウザで imweb ログインを完了するだけで、Claude が auth を再確認して元の依頼を続行します。訪問者数/traffic 順の商品ランキングのように要求された指標が CLI にない場合、Claude は制限を説明し、商品一覧、商品詳細、レビュー、サイト情報、最近の注文など利用可能な read-only 確認に進みます。Skill package は同じ imweb 手順を custom Skill fallback として提供します。
 
 ## その他のインストール方法
 
