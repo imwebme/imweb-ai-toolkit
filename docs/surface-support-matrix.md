@@ -26,6 +26,7 @@
 - Agent Skills CLI는 plugin auto-update 경로가 아니라 skill 파일 fallback입니다.
 - Claude Desktop Cowork는 Claude Code CLI registry나 `~/.claude/skills`를 직접 읽는 surface로 취급하지 않습니다. Cowork task 안에서 computer-use로 Claude Desktop UI를 조작해 설치하는 흐름도 지원 경로가 아닙니다.
 - Cowork의 shell은 VM일 수 있으므로 plugin에 포함된 local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth/profile 재사용을 맡는 경로를 우선합니다. host imweb MCP tool이 보이지 않으면 package artifact 제시까지가 안전한 no-UI 경로입니다.
+- `.mcp.json`의 `imweb-cli` server는 repo/plugin root 기준 `bin/imweb-mcp.mjs` 상대 경로를 사용합니다. 그래서 plugin package 내부와 public repo clone을 Claude Code project MCP로 직접 연 경우 모두 같은 bridge를 가리킵니다.
 - Cursor는 marketplace 메타를 제공하지만 실제 연결은 여전히 `.mcp.json`을 기준으로 수동 설정합니다.
 
 ## 권장 확인 순서

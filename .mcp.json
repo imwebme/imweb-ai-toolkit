@@ -3,7 +3,7 @@
     "imweb-cli": {
       "command": "node",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/bin/imweb-mcp.mjs"
+        "bin/imweb-mcp.mjs"
       ],
       "env": {
         "NO_COLOR": "1"
