@@ -1,6 +1,6 @@
 # imweb-ai-toolkit
 
-[English](README.md) | [한국어](README.ko.md) | [中文](README.zh-CN.md)
+[英語](README.md) | [韓国語](README.ko.md) | [中国語](README.zh-CN.md)
 
 `imweb-ai-toolkit` は `imweb` CLI をインストールし、対応する AI coding tool に接続します。このリポジトリは、ユーザーが CLI の配布構造を意識せずに始められるように、skill asset、surface metadata、サンプル、bootstrap script を提供します。
 
@@ -43,9 +43,9 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 - Claude Desktop Cowork では、Cowork task 内で Claude に次の依頼を送ります。
 
 ```text
-Install imweb AI toolkit:
+imwebツールパッケージをインストールして:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
-Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
+imweb-ai-toolkit.plugin と imweb.skill を保存できるように提示して。
 ```
 
 - Claude Desktop chat local MCP では、one-click MCPB bundle を作成します。
@@ -67,14 +67,14 @@ npx -y github:imwebme/imweb-ai-toolkit --tool both
 - `--tool claude-cowork` は `imweb-ai-toolkit.plugin` と `imweb.skill` を作成します。提示された plugin/skill card を承認したら、次のような自然言語の業務依頼で開始します。
 
 ```text
-최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.
+imwebツールで最近の注文に不審な取引がないか調査して。
 ```
 
 ```text
-방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
+imwebツールで訪問者が多い商品トップ5を取得し、可能な範囲で詳細ページを点検して。
 ```
 
-- ユーザーは毎回長い `imweb AI Toolkit` 名を言う必要はありません。`아임웹도구`、`아임웹 도구`、`아임웹툴`、`imweb tool`、`imweb tools`、`imweb toolkit` のような短い呼び方も同じ imweb entrypoint として扱います。
+- `imwebツール`、`imwebツール群`、`imwebツールキット` のような短い呼び方も同じ imweb entrypoint として扱います。
 - 現在の Claude Desktop Cowork build では、skill が有効でも task 開始前に `/imweb` のような slash-form text が拒否されることがあります。その場合は自然言語の依頼を使います。
 - Plugin には Claude plugin surface 向けの `/imweb` slash entrypoint と、対応 host が露出する local `imweb-cli` MCP bridge が含まれます。
 - Claude Desktop が imweb tool の権限を求めた場合は `Allow for this task` をクリックします。

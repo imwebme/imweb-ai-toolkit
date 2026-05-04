@@ -17,7 +17,7 @@ description: Use imweb CLI safely for site, product, order, member, payment, pro
 - 현재 profile, `site_code`, 인증 상태와 지원 커맨드 범위를 먼저 확인합니다.
 - 요청을 정확한 도메인으로 라우팅하고, 상세 절차는 내부 reference에서만 이어서 확인합니다.
 - 공개 호출 표면은 이 `imweb` 하나만 사용합니다.
-- 사용자가 `imweb AI Toolkit` 대신 `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, `imweb toolkit`처럼 짧게 부르면 모두 이 skill 호출 의도로 해석합니다.
+- 사용자가 `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, `imweb toolkit`처럼 짧게 부르면 모두 이 skill 호출 의도로 해석합니다.
 
 사용자 경험 기준:
 - 사용자는 비개발자일 수 있습니다. 먼저 사용자의 업무 문장을 그대로 받아서 가능한 작업, 필요한 승인, 로그인 필요 여부를 짧게 설명하고 직접 진행합니다.
@@ -40,7 +40,7 @@ description: Use imweb CLI safely for site, product, order, member, payment, pro
 
 `/imweb`만 호출되고 업무 문장이 없을 때:
 - MCP tool 또는 CLI 준비 상태를 확인합니다.
-- Claude Desktop Cowork에서 MCP tool이 없으면 plugin/skill package를 생성해 설치 카드로 제시합니다. Cowork 시작 입력에서 `/imweb`가 거절되면 앱 라우팅 제한이므로, 설치 뒤에는 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`처럼 자연어로 다시 시작합니다.
+- Claude Desktop Cowork에서 MCP tool이 없으면 plugin/skill package를 생성해 설치 카드로 제시합니다. Cowork 시작 입력에서 `/imweb`가 거절되면 앱 라우팅 제한이므로, 설치 뒤에는 `아임웹툴로 최근 주문중 이상 거래 조사해줘.`처럼 자연어로 다시 시작합니다.
 - MCP tool이 있고 host CLI가 없으면 `imweb_cli_install`을 호출합니다.
 - 일반 sandbox에서 CLI가 없으면 공식 CLI 설치를 먼저 시도합니다.
 - 준비가 끝나면 "주문 조회, 상품 점검, 회원 조회처럼 요청을 말해 주세요" 정도로만 짧게 말합니다.

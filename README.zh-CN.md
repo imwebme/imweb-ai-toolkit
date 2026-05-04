@@ -1,6 +1,6 @@
 # imweb-ai-toolkit
 
-[English](README.md) | [한국어](README.ko.md) | [日本語](README.ja.md)
+[英语](README.md) | [韩语](README.ko.md) | [日语](README.ja.md)
 
 `imweb-ai-toolkit` 会安装 `imweb` CLI，并将其连接到受支持的 AI coding tool。此仓库提供 skill asset、surface metadata、示例和 bootstrap script，让用户无需了解 CLI 背后的分发结构即可开始使用。
 
@@ -43,9 +43,9 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 - 在 Claude Desktop Cowork 中，在 Cowork task 里让 Claude 执行：
 
 ```text
-Install imweb AI toolkit:
+安装 imweb 工具包：
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
-Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
+请展示 imweb-ai-toolkit.plugin 和 imweb.skill，方便我保存。
 ```
 
 - 在 Claude Desktop chat local MCP 中，创建 one-click MCPB bundle：
@@ -67,14 +67,14 @@ npx -y github:imwebme/imweb-ai-toolkit --tool both
 - `--tool claude-cowork` 会生成 `imweb-ai-toolkit.plugin` 和 `imweb.skill`。接受展示出的 plugin/skill card 后，用下面这样的自然语言业务请求开始：
 
 ```text
-최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.
+用 imweb 工具调查最近订单中的异常交易。
 ```
 
 ```text
-방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
+用 imweb 工具获取访客最多的前 5 个商品，并在可用范围内检查详情页。
 ```
 
-- 用户不必每次都说完整的 `imweb AI Toolkit` 名称。`아임웹도구`、`아임웹 도구`、`아임웹툴`、`imweb tool`、`imweb tools`、`imweb toolkit` 这样的短名称也应路由到同一个 imweb entrypoint。
+- `imweb 工具`、`imweb工具`、`imweb 工具包` 这样的短名称也应路由到同一个 imweb entrypoint。
 - 当前 Claude Desktop Cowork build 即使 skill 已启用，也可能在 task 开始前拒绝 `/imweb` 这样的 slash-form text；如果发生这种情况，请改用自然语言请求。
 - Plugin 包含 Claude plugin surface 的 `/imweb` slash 入口，以及 host 暴露这些工具时可用的 local `imweb-cli` MCP bridge。
 - 如果 Claude Desktop 请求 imweb tool 权限，请点击 `Allow for this task`。

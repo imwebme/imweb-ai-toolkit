@@ -27,7 +27,7 @@ Claude Desktop Cowork에서 MCP tool이 없으면 VM 안에 CLI를 먼저 설치
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 ```
 
-`imweb-ai-toolkit.plugin`과 `imweb.skill`을 검증한 뒤 Cowork host가 install card로 받을 수 있게 제시합니다. 사용자는 표시된 설치/수락 버튼만 누릅니다. 설치 뒤에는 원래 요청을 `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`처럼 자연어로 다시 이어갑니다. 현재 Claude Desktop Cowork는 slash-form text를 task 시작 전에 거절할 수 있으므로, `/imweb`가 실패하면 앱 라우팅 제한으로 보고 자연어 요청을 사용합니다.
+`imweb-ai-toolkit.plugin`과 `imweb.skill`을 검증한 뒤 Cowork host가 install card로 받을 수 있게 제시합니다. 사용자는 표시된 설치/수락 버튼만 누릅니다. 설치 뒤에는 원래 요청을 `아임웹툴로 최근 주문중 이상 거래 조사해줘.`처럼 자연어로 다시 이어갑니다. 현재 Claude Desktop Cowork는 slash-form text를 task 시작 전에 거절할 수 있으므로, `/imweb`가 실패하면 앱 라우팅 제한으로 보고 자연어 요청을 사용합니다.
 
 Claude Code, Codex, 또는 일반 sandbox처럼 Cowork plugin install card가 없는 환경에서 MCP tool이 없을 때만 아래 순서로 확인합니다.
 

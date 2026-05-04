@@ -5,7 +5,7 @@ Use this when the user wants Claude Cowork to set up imweb instead of doing the 
 Copy this request inside a Claude Cowork task. Keep it as one message.
 
 ```text
-Install imweb AI toolkit:
+Install the imweb tool package:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 ```
@@ -13,24 +13,24 @@ Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 After the cards are installed, use a normal business request. Examples:
 
 ```text
-최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.
+Use imweb tool to investigate suspicious recent orders.
 ```
 
 ```text
-방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
+Use imweb tool to get the top 5 products with the most visitors and review their detail pages as far as possible.
 ```
 
-Users may also call the toolkit with shorter names:
+Other accepted call forms:
 
 ```text
-아임웹툴로 최근 주문중 이상 거래 조사해줘.
+Use imweb tools to check recent orders for unusual payment or cancellation signals.
 ```
 
 ```text
-imweb tool로 방문자 많은 상품 top 5 가져와서 가능한 범위까지 점검해줘.
+Use imweb toolkit to inspect high-traffic products within the currently available CLI data.
 ```
 
-Treat `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, and `imweb toolkit` as aliases for the same imweb entrypoint.
+Treat `imweb tool`, `imweb tools`, and `imweb toolkit` as aliases for the same imweb entrypoint.
 
 The second request intentionally checks graceful limitation handling. If visitor-ranked product analytics are not available through the CLI, Claude should say so plainly and continue with supported product/site/review/order checks instead of inventing traffic data.
 
@@ -39,7 +39,7 @@ Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb`
 Use the longer request below when you need Claude to explicitly report every verification step.
 
 ```text
-Set up the imweb AI toolkit for this Cowork task from https://github.com/imwebme/imweb-ai-toolkit.
+Set up the imweb tool package for this Cowork task from https://github.com/imwebme/imweb-ai-toolkit.
 
 Use only terminal and file operations inside this task. Do not use computer-use. Do not open Customize, Settings, Skills, Plugins, or any Claude Desktop UI.
 
@@ -60,9 +60,9 @@ Expected result:
 - `imweb.skill` is created and verified as a Claude Skill package named `imweb`.
 - Claude does not use computer-use or UI automation.
 - Claude presents the `.plugin` and `.skill` artifacts so the Cowork host can install and enable them.
-- After the presented cards are accepted, start with a natural-language imweb request such as `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`
+- After the presented cards are accepted, start with a natural-language imweb request such as `Use imweb tool to investigate suspicious recent orders.`
 - The plugin includes the `/imweb` slash command for hosts that route plugin slash commands, plus a local `imweb-cli` MCP bridge for hosts that expose plugin MCP tools. If the Cowork start box rejects slash-form text, retry with natural language and do not ask the user to use Terminal.
-- If Claude Desktop asks for permission to use an imweb tool, click `Allow for this task` / `이 작업에 허용`.
+- If Claude Desktop asks for permission to use an imweb tool, click `Allow for this task`.
 - If the host CLI is missing or outdated, Claude should let the MCP bridge run its official CLI install/update path, then continue the original imweb request.
 - If the host CLI is not logged in, Claude should use the plugin's auth MCP tools to start the browser login flow. The user only needs to finish login in the browser; Claude should then re-check auth and continue the original imweb request.
 - If the task runtime has no host MCP bridge and no way to present/install the plugin package, Claude may install the CLI inside that sandbox only for sandbox-local validation. For real user data, Claude should say that the host imweb plugin tools are not connected yet and present the package artifacts or route the user to Claude Desktop chat MCPB.

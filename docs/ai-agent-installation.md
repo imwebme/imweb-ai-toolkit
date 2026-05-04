@@ -56,21 +56,21 @@ npx -y github:imwebme/imweb-ai-toolkit --tool both
 Claude Desktop Cowork plugin setup:
 
 ```text
-Install imweb AI toolkit:
+Install the imweb tool package:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
 Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
 ```
 
 This creates `imweb-ai-toolkit.plugin` and `imweb.skill` in the task folder. Claude should verify the package contents, then present both artifacts as installable Cowork cards. Do not ask Claude to open Customize, Settings, Skills, Plugins, or any Claude Desktop UI through computer-use.
 
-After the Cowork host installs and enables the presented plugin and skill, start with a natural-language business request such as `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` or `방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.` Short names such as `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, and `imweb toolkit` should route to the same imweb entrypoint. The plugin package includes `commands/imweb.md` plus a local `imweb-cli` MCP bridge for hosts that expose plugin MCP tools. Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before the task starts, even when the skill is enabled; treat that as a platform routing limitation and retry with the natural-language request. Do not ask the user to run Terminal commands or use computer-use for normal setup. If Claude Desktop asks for imweb tool permission, click `Allow for this task` / `이 작업에 허용`. If auth is missing or expired and MCP tools are visible, Claude should use the bundled auth MCP tools to open the browser login flow, ask the user to complete the browser login, re-check auth, and continue the original task. The skill package keeps the same imweb instructions available as a custom Skill fallback.
+After the Cowork host installs and enables the presented plugin and skill, start with a natural-language business request such as `Use imweb tool to investigate suspicious recent orders.` or `Use imweb tool to get the top 5 products with the most visitors and review their detail pages as far as possible.` Short names such as `imweb tool`, `imweb tools`, and `imweb toolkit` should route to the same imweb entrypoint. The plugin package includes `commands/imweb.md` plus a local `imweb-cli` MCP bridge for hosts that expose plugin MCP tools. Current Claude Desktop Cowork builds may reject slash-form text such as `/imweb` before the task starts, even when the skill is enabled; treat that as a platform routing limitation and retry with the natural-language request. Do not ask the user to run Terminal commands or use computer-use for normal setup. If Claude Desktop asks for imweb tool permission, click `Allow for this task`. If auth is missing or expired and MCP tools are visible, Claude should use the bundled auth MCP tools to open the browser login flow, ask the user to complete the browser login, re-check auth, and continue the original task. The skill package keeps the same imweb instructions available as a custom Skill fallback.
 
 For non-technical users, keep the prompt business-oriented after setup. Good smoke prompts are:
 
-- `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.`
-- `아임웹툴로 최근 주문중 이상 거래 조사해줘.`
-- `방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.`
-- `imweb tool로 방문자 많은 상품 top 5 가져와서 가능한 범위까지 점검해줘.`
+- `Use imweb tool to investigate suspicious recent orders.`
+- `Use imweb tools to check recent orders for unusual payment or cancellation signals.`
+- `Use imweb tool to get the top 5 products with the most visitors and review their detail pages as far as possible.`
+- `Use imweb toolkit to inspect high-traffic products within the currently available CLI data.`
 
 If the request asks for a metric the CLI does not expose, such as visitor-ranked products, Claude should say that the current CLI cannot read visitor/traffic ranking yet and continue with the closest supported read-only check, such as product list, product details, reviews, site info, or recent orders.
 
@@ -132,7 +132,7 @@ Claude Code verification:
 
 ```bash
 claude plugin list --json --available
-claude -p --no-session-persistence '/imweb-ai-toolkit:imweb imweb CLI command discovery entrypoint를 한 문장으로 설명해줘.'
+claude -p --no-session-persistence '/imweb-ai-toolkit:imweb Explain the imweb CLI command discovery entrypoint in one sentence.'
 ```
 
 The namespaced `/imweb-ai-toolkit:imweb` form is the deterministic plugin skill smoke entry for Claude Code. Claude Desktop Cowork should use natural-language business prompts after the `imweb-ai-toolkit.plugin` and `imweb.skill` cards are installed; current Desktop Cowork builds may reject slash-form text before the task starts.
@@ -142,7 +142,7 @@ allow Claude Code's `Read` tool and add the installed plugin cache directory:
 
 ```bash
 PLUGIN_DIR="$(claude plugin list --json --available | jq -r '.installed[] | select(.id == "imweb-ai-toolkit@imweb-ai-toolkit") | .installPath')"
-printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫 번째 H1 제목만 알려줘. 명령 실행은 하지 마.' \
+printf '%s\n' '/imweb-ai-toolkit:imweb Tell me only the first H1 title in docs/capability-registry.md. Do not run commands.' \
   | claude -p --no-session-persistence --tools Read --allowedTools Read --add-dir "$PLUGIN_DIR"
 ```
 
@@ -176,7 +176,7 @@ The prompt explicitly tells Claude not to use computer-use or UI automation. Cla
 
 Local dogfood on 2026-04-29 observed Claude Desktop Cowork mounting `/mnt/.claude/skills/` read-only. The supported no-UI path is therefore presenting installable `.plugin` and `.skill` artifacts, not writing into that mount.
 
-Local dogfood on 2026-04-30 showed that `imweb.skill` alone can be saved and enabled while bare `/imweb` is still rejected by Cowork slash routing. A later Desktop test also rejected `/imweb-ai-toolkit:imweb` in the Cowork start box before the task reached the model. The supported package therefore still includes the explicit plugin slash command `commands/imweb.md` for plugin surfaces, but the Cowork user-facing entry should be natural language: `최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.` The bundled local MCP bridge is the supported path for host CLI install/update and auth access when the Cowork host exposes those plugin MCP tools. If the tools are not visible, Claude should report that the host plugin connection is not active and present the package artifacts instead of installing a VM-only CLI for real user data.
+Local dogfood on 2026-04-30 showed that `imweb.skill` alone can be saved and enabled while bare `/imweb` is still rejected by Cowork slash routing. A later Desktop test also rejected `/imweb-ai-toolkit:imweb` in the Cowork start box before the task reached the model. The supported package therefore still includes the explicit plugin slash command `commands/imweb.md` for plugin surfaces, but the Cowork user-facing entry should be natural language: `Use imweb tool to investigate suspicious recent orders.` The bundled local MCP bridge is the supported path for host CLI install/update and auth access when the Cowork host exposes those plugin MCP tools. If the tools are not visible, Claude should report that the host plugin connection is not active and present the package artifacts instead of installing a VM-only CLI for real user data.
 
 For Claude Desktop local MCP package generation only, run:
 
