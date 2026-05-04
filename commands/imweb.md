@@ -1,10 +1,10 @@
 ---
 name: imweb
-description: Start imweb CLI command discovery and safe execution guidance. Match aliases like 아임웹도구, 아임웹 도구, 아임웹툴, imweb tool, imweb tools, imweb toolkit, and imweb AI toolkit.
+description: Start imweb CLI command discovery and safe execution guidance. Match aliases like 아임웹도구, 아임웹 도구, 아임웹툴, imweb tool, imweb tools, and imweb toolkit.
 argument-hint: "[task]"
 ---
 
-Use the imweb AI toolkit for the user's request:
+Use imweb tools for the user's request:
 
 `$ARGUMENTS`
 
@@ -24,7 +24,7 @@ Default flow:
 3. If this is Claude Desktop Cowork and the MCP tools are not present, do not ask the user to choose a setup path and do not install a VM-only CLI first. Shell/Bash tools are not imweb MCP tools. Run `npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork`, verify `imweb-ai-toolkit.plugin` and `imweb.skill`, and present both installable artifacts so the Cowork host can enable the imweb plugin surface and local MCP bridge. The user only clicks the install/accept card buttons.
 4. Only in a non-Cowork sandbox or generic shell without MCP tools, check `command -v imweb` and install the CLI with `npx -y github:imwebme/imweb-ai-toolkit --tool cli` when missing.
 5. Treat the user as non-technical. Explain only the next visible action they need to take, such as allowing a tool prompt, accepting an install card, or finishing browser login.
-6. If Claude Desktop asks to allow an imweb MCP tool, tell the user to click `Allow for this task` / `이 작업에 허용`. Do not send the user to Terminal or computer-use for normal auth.
+6. If Claude Desktop asks to allow an imweb MCP tool, tell the user to click `Allow for this task`. Do not send the user to Terminal or computer-use for normal auth.
 7. If auth is missing or expired, call `imweb_auth_status` or `imweb_auth_doctor`, then use `imweb_auth_login` to open the browser login flow. Tell the user to finish the browser login; after the tool returns, re-check context and continue the original task.
 8. Inspect current context with `imweb_context` or `imweb --output json config context`.
 9. Inspect supported commands with `imweb_command_capabilities` or `imweb --output json config command-capabilities`.
@@ -32,6 +32,6 @@ Default flow:
 11. For any write-like operation, first gather current state with a read command, then use `--dry-run`.
 12. Use `--yes` only after the target, input JSON, and change intent are explicit.
 
-If the request is simply `/imweb` with no task, perform the same setup checks first. End with a short invitation such as "주문 조회나 상품 점검처럼 원하는 업무를 말해 주세요"; do not end with a menu of setup choices. If Claude Desktop Cowork rejects slash-form text before the task starts, retry with a natural-language request such as "최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘."
+If the request is simply `/imweb` with no task, perform the same setup checks first. End with a short invitation such as "Tell me the imweb task you want, such as checking orders or reviewing products"; do not end with a menu of setup choices. If Claude Desktop Cowork rejects slash-form text before the task starts, retry with a natural-language request such as "Use imweb tool to investigate suspicious recent orders."
 
 If the user asks for analytics that the CLI does not expose, such as visitor-ranked products, say that the current CLI does not provide visitor/traffic ranking. Then continue with the closest supported read-only check, such as product list, product detail, site info, reviews, or recent orders.

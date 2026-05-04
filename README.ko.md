@@ -1,6 +1,6 @@
 # imweb-ai-toolkit
 
-[English](README.md) | [日本語](README.ja.md) | [中文](README.zh-CN.md)
+[영어](README.md) | [일본어](README.ja.md) | [중국어](README.zh-CN.md)
 
 `imweb-ai-toolkit`은 `imweb` CLI를 설치하고 지원되는 AI coding tool에 연결합니다. 이 저장소는 사용자가 CLI 배포 구조를 알 필요 없이 시작할 수 있도록 skill asset, surface metadata, 예시, bootstrap script를 제공합니다.
 
@@ -43,9 +43,9 @@ codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main
 - Claude Desktop Cowork에서는 Cowork task 안에서 Claude에게 아래 요청을 보냅니다.
 
 ```text
-Install imweb AI toolkit:
+아임웹 도구 패키지를 설치해줘:
 npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
-Present imweb-ai-toolkit.plugin and imweb.skill so I can save them.
+imweb-ai-toolkit.plugin과 imweb.skill을 저장할 수 있게 보여줘.
 ```
 
 - Claude Desktop chat local MCP에서는 one-click MCPB bundle을 만듭니다.
@@ -67,14 +67,14 @@ npx -y github:imwebme/imweb-ai-toolkit --tool both
 - `--tool claude-cowork`는 `imweb-ai-toolkit.plugin`과 `imweb.skill`을 생성합니다. 제시된 plugin/skill card를 수락한 뒤 아래처럼 자연어 업무 문장으로 시작합니다.
 
 ```text
-최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘.
+아임웹툴로 최근 주문 중 이상 거래를 조사해줘.
 ```
 
 ```text
-방문자 많은 상품 top 5 가져와서 상세페이지 점검해줘. imweb AI Toolkit으로 가능한 범위까지 확인해줘.
+아임웹도구로 방문자가 많은 상품 상위 5개를 가져와서 가능한 범위까지 상세페이지를 점검해줘.
 ```
 
-- 사용자는 항상 긴 `imweb AI Toolkit` 이름을 말하지 않아도 됩니다. `아임웹도구`, `아임웹 도구`, `아임웹툴`, `imweb tool`, `imweb tools`, `imweb toolkit`처럼 짧게 불러도 같은 imweb 진입점으로 해석해야 합니다.
+- 사용자는 `아임웹도구`, `아임웹 도구`, `아임웹툴`처럼 짧게 불러도 같은 imweb 진입점으로 들어갈 수 있습니다.
 - 현재 Claude Desktop Cowork build는 skill이 활성화되어 있어도 task 시작 전에 `/imweb` 같은 slash-form text를 거절할 수 있습니다. 이 경우 자연어 요청을 사용합니다.
 - Plugin에는 Claude plugin surface용 `/imweb` slash 진입점과 해당 도구를 노출하는 host용 local `imweb-cli` MCP bridge가 포함됩니다.
 - Claude Desktop이 imweb tool 권한을 물으면 `이 작업에 허용`을 누릅니다.
