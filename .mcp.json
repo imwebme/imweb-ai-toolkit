@@ -3,7 +3,8 @@
     "imweb-cli": {
       "command": "node",
       "args": [
-        "bin/imweb-mcp.mjs"
+        "-e",
+        "Promise.all([import('node:path'),import('node:url')]).then(([path,url])=>import(url.pathToFileURL(path.join(process.env.CLAUDE_PLUGIN_ROOT||process.cwd(),'bin','imweb-mcp.mjs')).href))"
       ],
       "env": {
         "NO_COLOR": "1"
