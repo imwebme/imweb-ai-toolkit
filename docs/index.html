@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title data-i18n="meta.title">imweb-ai-toolkit — AI agents for imweb store operations</title>
+<meta name="description" data-i18n-attr="content:meta.description" content="Connect Claude, Codex, and other AI agents to the official imweb CLI." />
+<link rel="icon" type="image/png" href="assets/imweb-logo-orange.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="site.css" />
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar" data-screen-label="Top bar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="#top" aria-label="imweb-ai-toolkit home">
+      <img class="brand-logo" src="assets/imweb-logo-black.png" alt="" />
+      <span class="brand-name">ai-toolkit</span>
+    </a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#install" data-i18n="nav.install">Install</a>
+      <a href="#surfaces" data-i18n="nav.surfaces">Surfaces</a>
+      <a href="#usecases" data-i18n="nav.usecases">Use cases</a>
+      <a href="#trust" data-i18n="nav.trust">Trust</a>
+      <a href="#docs" data-i18n="nav.docs">Docs</a>
+    </nav>
+    <div class="topbar-cta">
+      <!-- Lang switcher -->
+      <div class="lang" role="group" aria-label="Language">
+        <button class="lang-btn" id="lang-toggle" aria-haspopup="listbox" aria-expanded="false">
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <circle cx="8" cy="8" r="6.2"/>
+            <path d="M1.8 8h12.4M8 1.8c2 2 2 10.4 0 12.4M8 1.8c-2 2-2 10.4 0 12.4"/>
+          </svg>
+          <span id="lang-current">EN</span>
+          <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 5l3 3 3-3"/></svg>
+        </button>
+        <ul class="lang-menu" id="lang-menu" role="listbox" hidden>
+          <li role="option" data-lang="en"><span class="lang-code">EN</span><span class="lang-name">English</span></li>
+          <li role="option" data-lang="ko"><span class="lang-code">KO</span><span class="lang-name">한국어</span></li>
+          <li role="option" data-lang="ja"><span class="lang-code">JA</span><span class="lang-name">日本語</span></li>
+          <li role="option" data-lang="zh"><span class="lang-code">ZH</span><span class="lang-name">中文</span></li>
+        </ul>
+      </div>
+      <a class="btn btn-ghost btn-docs-desktop" href="#docs" data-i18n="nav.docs">Docs</a>
+      <a class="btn btn-primary" href="#install" data-i18n="nav.installCta">Install →</a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-icon" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
+    </div>
+  </div>
+  <!-- Mobile drawer -->
+  <div class="mobile-menu" id="mobile-menu" hidden>
+    <nav class="mobile-nav" aria-label="Mobile primary">
+      <a href="#install" data-i18n="nav.install">Install</a>
+      <a href="#surfaces" data-i18n="nav.surfaces">Surfaces</a>
+      <a href="#usecases" data-i18n="nav.usecases">Use cases</a>
+      <a href="#trust" data-i18n="nav.trust">Trust</a>
+      <a href="#docs" data-i18n="nav.docs">Docs</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" data-screen-label="01 Hero">
+  <div class="wrap hero-grid">
+    <div class="hero-left">
+      <div class="eyebrow">
+        <span class="dot" aria-hidden="true"></span>
+        <span data-i18n="hero.eyebrow">Open-source toolkit · Apache-2.0</span>
+      </div>
+
+      <h1 class="h1">
+        <span data-i18n="hero.h1a">AI agents for</span><br />
+        <span class="ink-accent" data-i18n="hero.h1b">imweb store operations.</span>
+      </h1>
+
+      <p class="lede" data-i18n="hero.lede">Connect Claude, Codex, and other AI agents to the official imweb CLI.</p>
+
+      <!-- Quick install: copy this line, paste into your AI agent -->
+      <div class="hero-quickinstall">
+        <div class="hero-quickinstall-label" data-i18n="hero.quickLabel">Paste into your AI agent</div>
+        <div class="hero-quickinstall-row">
+          <code class="hero-quickinstall-code" id="hero-install-code" data-i18n="hero.quickCode">Install imweb-ai-toolkit from github.com/imwebme/imweb-ai-toolkit</code>
+          <button class="hero-quickinstall-copy" type="button" data-copy-target="#hero-install-code" aria-label="Copy">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="9" height="9" rx="1"/><path d="M3 11V3a1 1 0 0 1 1-1h7"/></svg>
+            <span data-i18n="hero.copy">Copy</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-ctas">
+        <a class="btn btn-primary btn-lg" href="#install">
+          <span data-i18n="hero.ctaPrimary">Full install guide</span>
+          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
+        </a>
+        <a class="btn btn-ghost btn-lg" href="#usecases" data-i18n="hero.ctaSecondary">See it work →</a>
+      </div>
+    </div>
+
+    <!-- Terminal panel -->
+    <aside class="terminal" aria-label="Example interaction">
+      <div class="term-chrome">
+        <span class="term-dots"><i></i><i></i><i></i></span>
+        <span class="term-title" data-i18n="hero.termTitle">claude · imweb-ai-toolkit</span>
+        <span class="term-status">
+          <span class="pulse" aria-hidden="true"></span> <span data-i18n="hero.termStatus">connected</span>
+        </span>
+      </div>
+      <div class="term-body" id="term-body"></div>
+      <div class="term-foot">
+        <span class="kbd">⏎</span>
+        <span class="term-hint" data-i18n="hero.termHint">Natural language → official imweb CLI</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Agents row -->
+  <div class="wrap agents-row">
+    <div class="agents-label" data-i18n="hero.agentsLabel">Works with the agents your team already uses</div>
+    <ul class="agents" role="list">
+      <li><span class="agent-pill">Claude Code</span></li>
+      <li><span class="agent-pill">Codex CLI</span></li>
+      <li><span class="agent-pill">Claude Desktop · MCP</span></li>
+      <li><span class="agent-pill">Claude Desktop · Cowork</span></li>
+      <li><span class="agent-pill">Agent Skills</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FLOW ============ -->
+<section class="flow-section" data-screen-label="02 Flow">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" data-i18n="flow.h2">How a request travels</h2>
+      <p class="section-sub" data-i18n="flow.sub">The toolkit sits between your AI agent and the official imweb CLI.</p>
+    </div>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M6 22c0-4 4-7 10-7s10 3 10 7"/>
+            <circle cx="16" cy="11" r="4"/>
+            <path d="M11 26h10"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow.s1.label">You ask</div>
+        <div class="flow-desc" data-i18n="flow.s1.desc">“Check today’s suspicious orders.”</div>
+      </div>
+
+      <div class="flow-arrow" aria-hidden="true">→</div>
+
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="5" y="7" width="22" height="18" rx="1.5"/>
+            <path d="M5 12h22M9 18h6M9 21h10"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow.s2.label">Your AI agent</div>
+        <div class="flow-desc" data-i18n="flow.s2.desc">Claude, Codex, or another supported surface.</div>
+      </div>
+
+      <div class="flow-arrow" aria-hidden="true">→</div>
+
+      <div class="flow-step flow-step-accent">
+        <div class="flow-num">3</div>
+        <div class="flow-icon flow-icon-mark" aria-hidden="true">
+          <img src="assets/imweb-logo-orange.png" alt="" />
+        </div>
+        <div class="flow-label" data-i18n="flow.s3.label">imweb-ai-toolkit</div>
+        <div class="flow-desc" data-i18n="flow.s3.desc">Plugin metadata, skills, local MCP bridge.</div>
+      </div>
+
+      <div class="flow-arrow" aria-hidden="true">→</div>
+
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="4" y="6" width="24" height="20" rx="1.5"/>
+            <path d="M9 13l3 3-3 3M16 19h7"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow.s4.label">Official imweb CLI</div>
+        <div class="flow-desc" data-i18n="flow.s4.desc">Local install · reuses your imweb auth.</div>
+      </div>
+
+      <div class="flow-arrow" aria-hidden="true">→</div>
+
+      <div class="flow-step">
+        <div class="flow-num">5</div>
+        <div class="flow-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
+            <path d="M6 24V8l10-3 10 3v16"/>
+            <path d="M6 24h20M11 14h10M11 18h7"/>
+          </svg>
+        </div>
+        <div class="flow-label" data-i18n="flow.s5.label">Store data</div>
+        <div class="flow-desc" data-i18n="flow.s5.desc">Orders · products · reviews · members.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSTALL ============ -->
+<section class="install" id="install" data-screen-label="03 Install">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" data-i18n="install.h2">One sentence. Any AI agent.</h2>
+    </div>
+
+    <div class="install-one">
+      <div class="install-main">
+        <div class="install-step-num" aria-hidden="true">01</div>
+        <h3 class="install-step-title" data-i18n="install.s1.t">Paste this into your AI agent.</h3>
+        <p class="install-step-desc" data-i18n="install.s1.d">Claude Code, Codex, Claude Desktop — whichever your team runs. The toolkit detects the surface and installs itself.</p>
+        <div class="copy-line">
+          <code class="copy-line-text" id="install-copy-text" data-i18n="install.s1.copy">github.com/imwebme/imweb-ai-toolkit — install this for me</code>
+          <button class="copy-btn-static" type="button" data-copy-target="#install-copy-text" data-i18n="hero.copy">Copy</button>
+        </div>
+        <p class="install-step-after" data-i18n="install.s1.after">Then ask in plain language — “check recent orders”, “review product details”, etc.</p>
+      </div>
+
+      <aside class="install-aside" aria-label="Supported surfaces">
+        <div class="install-aside-h" data-i18n="install.asideH">Supported out of the box</div>
+        <ul class="install-surfaces" role="list">
+          <li><span class="ag-mark" aria-hidden="true">●</span> Claude Code</li>
+          <li><span class="ag-mark" aria-hidden="true">●</span> Codex CLI / App</li>
+          <li><span class="ag-mark" aria-hidden="true">●</span> Claude Desktop · MCP</li>
+          <li><span class="ag-mark" aria-hidden="true">●</span> Claude Desktop · Cowork</li>
+          <li><span class="ag-mark" aria-hidden="true">●</span> Agent Skills</li>
+        </ul>
+        <a class="install-aside-link" href="surface-support-matrix.md" data-i18n="install.asideLink">See the full support matrix →</a>
+      </aside>
+    </div>
+
+    <div class="install-foot">
+      <div class="install-foot-item">
+        <div class="install-foot-num">A</div>
+        <div>
+          <div class="install-foot-title" data-i18n="install.foot.a.t">Prerequisite</div>
+          <div class="install-foot-body" data-i18n-html="install.foot.a.b">Node 18+ and an imweb account with CLI access.</div>
+        </div>
+      </div>
+      <div class="install-foot-item">
+        <div class="install-foot-num">B</div>
+        <div>
+          <div class="install-foot-title" data-i18n="install.foot.b.t">What it does</div>
+          <div class="install-foot-body" data-i18n-html="install.foot.b.b">The agent installs / updates the official <code>imweb</code> CLI locally and reuses your existing auth.</div>
+        </div>
+      </div>
+      <div class="install-foot-item">
+        <div class="install-foot-num">C</div>
+        <div>
+          <div class="install-foot-title" data-i18n="install.foot.c.t">Then ask</div>
+          <div class="install-foot-body" data-i18n-html="install.foot.c.b">Open the agent and try: <em>“List recent orders.”</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SURFACE SUPPORT ============ -->
+<section class="surfaces" id="surfaces" data-screen-label="04 Surface support">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" data-i18n="surfaces.h2">Surface support matrix.</h2>
+    </div>
+
+    <div class="matrix-scroll">
+    <div class="matrix" role="table" aria-label="Surface support matrix">
+      <div class="matrix-row matrix-head" role="row">
+        <div role="columnheader" data-i18n="surfaces.col.surface">Surface</div>
+        <div role="columnheader" data-i18n="surfaces.col.install">Install</div>
+        <div role="columnheader" data-i18n="surfaces.col.skills">Skills</div>
+        <div role="columnheader" data-i18n="surfaces.col.bridge">Local CLI bridge</div>
+        <div role="columnheader" data-i18n="surfaces.col.status">Status</div>
+      </div>
+
+      <div class="matrix-row" role="row">
+        <div role="cell" class="m-name" data-i18n="surfaces.rows.cc">Claude Code</div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
+      </div>
+
+      <div class="matrix-row" role="row">
+        <div role="cell" class="m-name" data-i18n="surfaces.rows.codex">Codex CLI / App</div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
+      </div>
+
+      <div class="matrix-row" role="row">
+        <div role="cell" class="m-name" data-i18n="surfaces.rows.skills">Agent Skills CLI</div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-mid">◐</span></div>
+        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
+      </div>
+
+      <div class="matrix-row" role="row">
+        <div role="cell" class="m-name" data-i18n="surfaces.rows.mcp">Claude Desktop · Local MCP</div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
+      </div>
+
+      <div class="matrix-row" role="row">
+        <div role="cell" class="m-name" data-i18n="surfaces.rows.cowork">Claude Desktop · Cowork</div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-yes">●</span></div>
+        <div role="cell"><span class="cell-mid">◐</span></div>
+        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
+      </div>
+    </div>
+    </div>
+
+    <div class="matrix-legend">
+      <span><span class="cell-yes">●</span> <span data-i18n="surfaces.legend.yes">First-class</span></span>
+      <span><span class="cell-mid">◐</span> <span data-i18n="surfaces.legend.mid">Partial / manual</span></span>
+      <span><span class="cell-no">○</span> <span data-i18n="surfaces.legend.no">Not yet</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ USE CASES ============ -->
+<section class="usecases" id="usecases" data-screen-label="05 Use cases">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" data-i18n="usecases.h2">Ask the way you actually think.</h2>
+    </div>
+
+    <div class="cases" id="cases-grid">
+      <!-- populated by site.js from i18n.usecases.cards + .wide -->
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST ============ -->
+<section class="trust" id="trust" data-screen-label="06 Trust">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" data-i18n="trust.h2">What the toolkit will and won’t do.</h2>
+    </div>
+
+    <div class="trust-grid">
+      <div class="trust-col trust-will">
+        <div class="trust-col-head">
+          <span class="trust-col-mark">+</span>
+          <h3 data-i18n="trust.will">Will</h3>
+        </div>
+        <ul id="trust-will-list"></ul>
+      </div>
+
+      <div class="trust-col trust-wont">
+        <div class="trust-col-head">
+          <span class="trust-col-mark">—</span>
+          <h3 data-i18n="trust.wont">Won’t</h3>
+        </div>
+        <ul id="trust-wont-list"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DOCS ============ -->
+<section class="docs" id="docs" data-screen-label="07 Docs">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="h2" data-i18n="docs.h2">Read before you ship.</h2>
+    </div>
+
+    <ul class="doclist" role="list" id="doclist"></ul>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="endcta" data-screen-label="08 End CTA">
+  <div class="wrap endcta-inner">
+    <div class="endcta-copy">
+      <h2 class="h2" data-i18n="endcta.h2">Stop clicking through the admin for the same five questions.</h2>
+      <p class="section-sub" data-i18n="endcta.sub">Install the toolkit, point your AI agent at it, and ask in plain language.</p>
+    </div>
+    <div class="endcta-actions">
+      <a class="btn btn-primary btn-lg" href="#install" data-i18n="endcta.primary">Install the toolkit</a>
+      <a class="btn btn-ghost btn-lg" href="https://github.com/imwebme/imweb-ai-toolkit" rel="noopener" data-i18n="endcta.secondary">View on GitHub →</a>
+    </div>
+  </div>
+  <div class="endcta-bigmark" aria-hidden="true">
+    <img src="assets/imweb-logo-orange.png" alt="" />
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <!-- imweb.me cross-promo: for visitors who don't yet have an imweb site -->
+    <a class="foot-promo" href="https://imweb.me" target="_blank" rel="noopener">
+      <div class="foot-promo-text">
+        <div class="foot-promo-eyebrow" data-i18n="foot.promo.eyebrow">아직 imweb 사이트가 없으신가요?</div>
+        <div class="foot-promo-title" data-i18n="foot.promo.title">먼저 imweb에서 사이트를 만들고, 이 툴킷을 연결하세요.</div>
+      </div>
+      <span class="foot-promo-cta">
+        <span data-i18n="foot.promo.cta">imweb.me</span>
+        <span aria-hidden="true">→</span>
+      </span>
+    </a>
+
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <img class="foot-logo" src="assets/imweb-logo-black.png" alt="" />
+        <span>ai-toolkit</span>
+      </div>
+      <nav class="foot-nav" aria-label="Footer">
+        <a href="#install" data-i18n="nav.install">Install</a>
+        <a href="#surfaces" data-i18n="nav.surfaces">Surfaces</a>
+        <a href="#usecases" data-i18n="nav.usecases">Use cases</a>
+        <a href="#trust" data-i18n="nav.trust">Trust</a>
+        <a href="#docs" data-i18n="nav.docs">Docs</a>
+      </nav>
+    </div>
+
+    <div class="foot-meta">
+      <span data-i18n="foot.meta1">Apache-2.0</span>
+      <span class="foot-dot" aria-hidden="true">·</span>
+      <span data-i18n="foot.meta2">Open-source toolkit</span>
+      <span class="foot-dot" aria-hidden="true">·</span>
+      <span data-i18n="foot.meta3">Open-source toolkit for imweb CLI workflows</span>
+    </div>
+  </div>
+</footer>
+
+<script src="i18n.js"></script>
+<script src="site.js"></script>
+</body>
+</html>
