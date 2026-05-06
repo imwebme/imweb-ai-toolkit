@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "interface": {
-    "displayName": "imweb AI toolkit"
+    "displayName": "imweb tool"
   },
   "plugins": [
     {

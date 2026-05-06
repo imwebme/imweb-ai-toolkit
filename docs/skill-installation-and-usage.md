@@ -48,7 +48,7 @@ npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both
 npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
 ```
 
-`--uninstall`은 toolkit marketplace/plugin 연결, 복사된 `imweb` skill, 생성된 `.plugin`/`.skill`/`.mcpb` artifact를 제거합니다. CLI는 installer가 관리하는 위치에 있을 때만 제거하며 imweb 로그인/auth 데이터는 지우지 않습니다. Plugin 연결만 제거하고 CLI를 유지하려면 `--keep-cli`를 추가합니다.
+`--uninstall`은 toolkit marketplace/plugin 연결, 복사된 `imweb` skill, toolkit이 소유한 plugin cache/data, 생성된 `.plugin`/`.skill`/`.mcpb` artifact를 제거합니다. CLI는 installer가 관리하는 위치에 있을 때만 제거하며 imweb 로그인/auth 데이터는 지우지 않습니다. Plugin 연결만 제거하고 CLI를 유지하려면 `--keep-cli`를 추가합니다.
 
 표준 Agent Skills fallback만 필요하면 아래 경로를 사용합니다.
 

@@ -81,9 +81,9 @@ Options:
 Notes:
   - Local plugin installs for Codex and Claude Code install/update the imweb CLI by default.
     Use --no-install-cli only for disposable metadata-only validation.
-  - Uninstall removes toolkit plugin/skill/marketplace wiring and generated package artifacts.
-    It removes the CLI only from the installer-managed location and does not delete imweb
-    login or auth data.
+  - Uninstall removes toolkit plugin/skill/marketplace wiring, toolkit-owned plugin
+    cache/data, and generated package artifacts. It removes the CLI only from the
+    installer-managed location and does not delete imweb login or auth data.
   - The default npx plugin path registers the public Git repository as the marketplace source.
   - Codex CLI currently supports marketplace registration; the installer also copies the
     imweb skill by default so command discovery works immediately.
@@ -558,6 +558,19 @@ function uninstallSkill(tool, opts) {
   removePath(`${tool}-skill`, target, opts);
 }
 
+function claudePluginDataName() {
+  return PLUGIN_ID.replace(/[^A-Za-z0-9_.-]+/g, '-');
+}
+
+function cleanupClaudePluginFiles(opts) {
+  const root = join(homedir(), '.claude', 'plugins');
+  [
+    ['claude-plugin-cache', join(root, 'cache', MARKETPLACE_NAME)],
+    ['claude-plugin-data', join(root, 'data', claudePluginDataName())],
+    ['claude-marketplace-cache', join(root, 'marketplaces', MARKETPLACE_NAME)],
+  ].forEach(([label, path]) => removePath(label, path, opts));
+}
+
 function uninstallCodex(opts) {
   if (commandExists('codex') || opts.dryRun) {
     run('codex', ['plugin', 'marketplace', 'remove', MARKETPLACE_NAME], opts, { allowFailure: true, capture: true });
@@ -575,6 +588,7 @@ function uninstallClaude(opts) {
     noteSkipped(opts, 'claude-plugin', PLUGIN_ID, 'claude command not found');
     noteSkipped(opts, 'claude-marketplace', MARKETPLACE_NAME, 'claude command not found');
   }
+  cleanupClaudePluginFiles(opts);
   uninstallSkill('claude', opts);
 }
 

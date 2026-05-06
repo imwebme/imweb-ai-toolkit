@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "version": "0.2.5",
-  "description": "Rust 기반 imweb-cli를 LLM과 에이전트가 일관되게 호출하도록 설명하는 Codex plugin 메타데이터입니다. 아임웹도구, 아임웹툴, imweb tool, imweb tools 같은 짧은 자연어 alias도 같은 imweb 진입점으로 안내합니다.",
+  "description": "Codex plugin metadata that helps LLMs and agents invoke the Rust-based imweb CLI consistently. Short localized aliases route to the same imweb entrypoint.",
   "author": {
     "name": "imweb",
     "url": "https://github.com/imwebme"
@@ -24,9 +24,9 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "imweb AI toolkit",
-    "shortDescription": "아임웹 OpenAPI용 Rust CLI를 공개 skill `imweb`으로 안전하게 호출하도록 돕는 Codex 표면 메타입니다.",
-    "longDescription": "imweb AI toolkit은 imweb-cli 자체에 AI 기능을 넣지 않고, 이미 있는 Rust 기반 CLI를 LLM과 에이전트가 예측 가능하게 호출하도록 돕는 plugin-first 보조 계층입니다. 사용자가 아임웹도구, 아임웹툴, imweb tool처럼 짧게 불러도 같은 imweb 진입점으로 해석합니다. Codex 표면은 root plugin과 공개 skill `imweb`, 설치 스크립트, 구조화 출력 계약 문서를 함께 기준으로 삼습니다.",
+    "displayName": "imweb tool",
+    "shortDescription": "Codex metadata for safely using the public `imweb` skill with the Rust CLI for Imweb OpenAPI tasks.",
+    "longDescription": "The imweb tool is a plugin-first helper layer for predictable LLM and agent use of the existing Rust-based imweb CLI. Short localized aliases such as imweb tool or imweb toolkit route to the same `imweb` entrypoint. The Codex surface uses the root plugin metadata, public `imweb` skill, install scripts, and structured-output contract together.",
     "developerName": "imweb",
     "category": "developer-tools",
     "capabilities": [
@@ -36,9 +36,9 @@
     ],
     "websiteURL": "https://github.com/imwebme/imweb-ai-toolkit",
     "defaultPrompt": [
-      "먼저 공개 skill `imweb`과 imweb-cli의 --help를 함께 확인하고, 필요한 도메인 절차를 정리해 주세요.",
-      "자동화가 필요한 작업이면 --output json 기준으로 호출 전략을 제안해 주세요.",
-      "실행 전에는 문서화된 계약만 사용하고, 없는 기능은 가정하지 마세요."
+      "First inspect the public `imweb` skill and imweb-cli --help, then summarize the needed domain procedure.",
+      "For automation tasks, prefer an --output json invocation plan.",
+      "Before execution, use only documented contracts and do not assume unavailable features."
     ]
   }
 }
