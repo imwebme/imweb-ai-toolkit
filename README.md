@@ -112,7 +112,7 @@ To remove every local package artifact plus the installer-managed CLI:
 npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
 ```
 
-Uninstall removes toolkit plugin, marketplace, copied skill, toolkit-owned plugin cache/data, generated `.plugin`/`.skill`/`.mcpb` artifacts, and the CLI only when it is in the installer-managed location. It keeps imweb login and auth data. Add `--keep-cli` if you want to keep the `imweb` CLI.
+Uninstall removes toolkit plugin, marketplace, copied skill, toolkit-owned plugin cache/data/logs, generated `.plugin`/`.skill`/`.mcpb` artifacts, and the CLI only when it is in the installer-managed location. It keeps imweb login and auth data. Add `--keep-cli` if you want to keep the `imweb` CLI.
 
 ## Start Here
 
