@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, rmSync, cpSync, lstatSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { existsSync, mkdirSync, rmSync, cpSync, lstatSync, readlinkSync } from 'node:fs';
+import { dirname, join, resolve, relative, isAbsolute } from 'node:path';
 import { homedir, platform } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
@@ -21,6 +21,9 @@ const DEFAULTS = {
   skipCli: false,
   backup: true,
   replace: true,
+  uninstall: false,
+  keepCli: false,
+  removeCli: false,
   source: PUBLIC_GIT_SOURCE,
   ref: PUBLIC_GIT_REF,
   packagePath: '',
@@ -35,6 +38,7 @@ function usage() {
 
 Usage:
   npx -y github:imwebme/imweb-ai-toolkit --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
+  npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
   npm exec --yes --package github:imwebme/imweb-ai-toolkit -- imweb-ai-toolkit --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
   node install/imweb-ai-toolkit-install.mjs --tool cli|codex|claude-code|claude-desktop|claude-cowork|both|all [options]
 
@@ -52,6 +56,11 @@ Options:
   --no-skill                  Skip skill discovery install.
   --install-cli               Install or update the imweb CLI before tool wiring.
   --no-install-cli            Skip the default CLI install/update for local plugin installs.
+  --uninstall                 Remove toolkit wiring for the selected tool instead of installing.
+  --keep-cli                  During uninstall, keep the imweb CLI even if the selected tool
+                              normally installs it.
+  --remove-cli                During uninstall, also remove the installer-managed imweb CLI
+                              when uninstalling package-only Desktop/Cowork artifacts.
   --source SOURCE             Marketplace source. Default: ${PUBLIC_GIT_SOURCE}
   --ref REF                   Git ref for Codex marketplace add. Default: ${PUBLIC_GIT_REF}
   --package PATH              Create Claude Desktop Cowork plugin package. Use a .plugin
@@ -72,6 +81,9 @@ Options:
 Notes:
   - Local plugin installs for Codex and Claude Code install/update the imweb CLI by default.
     Use --no-install-cli only for disposable metadata-only validation.
+  - Uninstall removes toolkit plugin/skill/marketplace wiring and generated package artifacts.
+    It removes the CLI only from the installer-managed location and does not delete imweb
+    login or auth data.
   - The default npx plugin path registers the public Git repository as the marketplace source.
   - Codex CLI currently supports marketplace registration; the installer also copies the
     imweb skill by default so command discovery works immediately.
@@ -84,7 +96,7 @@ Notes:
     the plugin command and imweb Skill fallback; do not ask Cowork to use computer-use or
     Claude Desktop UI automation to install itself. Current Claude Desktop Cowork builds may
     reject slash text before the task starts, so after install use a natural-language request
-    such as "최근 주문중 이상 거래 조사해줘. imweb AI Toolkit을 사용해줘."
+    such as "Use imweb tool to investigate suspicious recent orders."
   - Standard Agent Skills fallback is: npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-code codex.`);
 }
 
@@ -123,6 +135,15 @@ function parseArgs(argv) {
         break;
       case '--no-install-cli':
         opts.skipCli = true;
+        break;
+      case '--uninstall':
+        opts.uninstall = true;
+        break;
+      case '--keep-cli':
+        opts.keepCli = true;
+        break;
+      case '--remove-cli':
+        opts.removeCli = true;
         break;
       case '--source':
         opts.source = readValue(arg);
@@ -322,9 +343,94 @@ function commandExists(command) {
   const checker = platform() === 'win32' ? 'where' : 'sh';
   const args = platform() === 'win32'
     ? [command]
-    : ['-c', 'command -v -- "$1" >/dev/null 2>&1', 'sh', command];
+    : ['-c', 'command -v "$1" >/dev/null 2>&1', 'sh', command];
   const result = spawnSync(checker, args, { stdio: 'ignore' });
   return result.status === 0;
+}
+
+function getLstat(path) {
+  try {
+    return lstatSync(path);
+  } catch (error) {
+    if (error && error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
+function isSubpath(candidate, parent) {
+  const relativePath = relative(resolve(parent), resolve(candidate));
+  return relativePath === '' || (relativePath && !relativePath.startsWith('..') && !isAbsolute(relativePath));
+}
+
+function recordUninstallStep(opts, message) {
+  opts.steps.push(message);
+  if (!opts.json) console.log(`+ ${message}`);
+}
+
+function noteSkipped(opts, label, path, reason) {
+  opts.skipped.push({ label, path, reason });
+  if (!opts.json) console.log(`  skip ${label}: ${reason}`);
+}
+
+function removePath(label, path, opts) {
+  if (!path) return false;
+  const stat = getLstat(path);
+  if (!stat) {
+    noteSkipped(opts, label, path, 'not found');
+    return false;
+  }
+  recordUninstallStep(opts, `remove ${label} ${quote(path)}`);
+  if (opts.dryRun) {
+    noteSkipped(opts, label, path, 'dry-run');
+    return false;
+  }
+  rmSync(path, {
+    recursive: stat.isDirectory() && !stat.isSymbolicLink(),
+    force: true,
+  });
+  opts.removed.push({ label, path });
+  return true;
+}
+
+function defaultCliInstallRoot() {
+  if (platform() === 'win32') {
+    return join(process.env.LOCALAPPDATA || join(homedir(), 'AppData', 'Local'), 'imweb-cli');
+  }
+  return join(homedir(), '.local', 'share', 'imweb-cli');
+}
+
+function defaultCliBinDir() {
+  if (platform() === 'win32') {
+    return join(defaultCliInstallRoot(), 'bin');
+  }
+  return join(homedir(), '.local', 'bin');
+}
+
+function imwebBinaryName() {
+  return platform() === 'win32' ? 'imweb.exe' : 'imweb';
+}
+
+function symlinkTargetPath(linkPath) {
+  const raw = readlinkSync(linkPath);
+  return isAbsolute(raw) ? raw : resolve(dirname(linkPath), raw);
+}
+
+function removeCliBinLink(binPath, installRoot, opts) {
+  const stat = getLstat(binPath);
+  if (!stat) {
+    noteSkipped(opts, 'cli-bin', binPath, 'not found');
+    return false;
+  }
+  if (!stat.isSymbolicLink()) {
+    noteSkipped(opts, 'cli-bin', binPath, 'not installer-managed symlink');
+    return false;
+  }
+  const target = symlinkTargetPath(binPath);
+  if (!isSubpath(target, installRoot)) {
+    noteSkipped(opts, 'cli-bin', binPath, `symlink target is outside ${installRoot}`);
+    return false;
+  }
+  return removePath('cli-bin', binPath, opts);
 }
 
 function requireCommand(command, opts) {
@@ -387,9 +493,16 @@ function installCli(opts) {
 }
 
 function shouldInstallCli(opts) {
+  if (opts.uninstall) return false;
   if (opts.skipCli) return false;
   if (opts.installCli || opts.tool === 'cli') return true;
   return ['codex', 'claude', 'both', 'all'].includes(opts.tool);
+}
+
+function shouldUninstallCli(opts) {
+  if (!opts.uninstall || opts.keepCli) return false;
+  if (opts.removeCli) return true;
+  return ['cli', 'codex', 'claude', 'both', 'all'].includes(opts.tool);
 }
 
 function createPackage(opts) {
@@ -433,6 +546,44 @@ function installClaude(opts) {
   run('claude', ['plugin', 'install', PLUGIN_ID, '--scope', opts.scope], opts);
 }
 
+function uninstallCli(opts) {
+  const installRoot = defaultCliInstallRoot();
+  const binPath = join(defaultCliBinDir(), imwebBinaryName());
+  removeCliBinLink(binPath, installRoot, opts);
+  removePath('cli-install-root', installRoot, opts);
+}
+
+function uninstallSkill(tool, opts) {
+  const target = join(defaultSkillTarget(tool, opts.scope), 'imweb');
+  removePath(`${tool}-skill`, target, opts);
+}
+
+function uninstallCodex(opts) {
+  if (commandExists('codex') || opts.dryRun) {
+    run('codex', ['plugin', 'marketplace', 'remove', MARKETPLACE_NAME], opts, { allowFailure: true, capture: true });
+  } else {
+    noteSkipped(opts, 'codex-marketplace', MARKETPLACE_NAME, 'codex command not found');
+  }
+  uninstallSkill('codex', opts);
+}
+
+function uninstallClaude(opts) {
+  if (commandExists('claude') || opts.dryRun) {
+    run('claude', ['plugin', 'uninstall', PLUGIN_ID, '--scope', opts.scope, '--keep-data', '-y'], opts, { allowFailure: true, capture: true });
+    run('claude', ['plugin', 'marketplace', 'remove', MARKETPLACE_NAME], opts, { allowFailure: true, capture: true });
+  } else {
+    noteSkipped(opts, 'claude-plugin', PLUGIN_ID, 'claude command not found');
+    noteSkipped(opts, 'claude-marketplace', MARKETPLACE_NAME, 'claude command not found');
+  }
+  uninstallSkill('claude', opts);
+}
+
+function uninstallPackages(opts) {
+  if (opts.packagePath) removePath('cowork-plugin-package', opts.packagePath, opts);
+  if (opts.skillPackagePath) removePath('cowork-skill-package', opts.skillPackagePath, opts);
+  if (opts.mcpbPath) removePath('desktop-mcpb-package', opts.mcpbPath, opts);
+}
+
 function shouldInstallSkill(tool, opts) {
   if (opts.skill === 'yes') return true;
   if (opts.skill === 'no') return false;
@@ -444,9 +595,52 @@ function main() {
   opts.steps = [];
   opts.backupRoot = null;
   opts.backupEntries = [];
+  opts.removed = [];
+  opts.skipped = [];
 
   if (needsLocalBackup(opts)) {
     createBackup(opts);
+  }
+
+  if (opts.uninstall) {
+    uninstallPackages(opts);
+
+    const tools = (opts.tool === 'both' || opts.tool === 'all') ? ['codex', 'claude'] : (['codex', 'claude'].includes(opts.tool) ? [opts.tool] : []);
+    for (const tool of tools) {
+      if (tool === 'codex') uninstallCodex(opts);
+      if (tool === 'claude') uninstallClaude(opts);
+    }
+
+    if (shouldUninstallCli(opts)) {
+      uninstallCli(opts);
+    }
+
+    const summary = {
+      ok: true,
+      uninstall: true,
+      packageRoot: REPO_ROOT,
+      tool: opts.tool || null,
+      scope: opts.scope,
+      backupRoot: opts.backupRoot,
+      packagePath: opts.packagePath || null,
+      skillPackagePath: opts.skillPackagePath || null,
+      mcpbPath: opts.mcpbPath || null,
+      keepCli: opts.keepCli,
+      removed: opts.removed,
+      skipped: opts.skipped,
+      authDataRemoved: false,
+      steps: opts.steps,
+    };
+
+    if (opts.json) {
+      console.log(JSON.stringify(summary, null, 2));
+    } else {
+      console.log('imweb-ai-toolkit uninstall completed');
+      if (opts.backupRoot) console.log(`  backup: ${opts.backupRoot}`);
+      console.log(`  tool: ${opts.tool || 'package-only'}`);
+      console.log('  auth_data_removed: false');
+    }
+    return;
   }
 
   if (shouldInstallCli(opts)) {
@@ -484,6 +678,8 @@ function main() {
     packagePath: opts.packagePath || null,
     skillPackagePath: opts.skillPackagePath || null,
     mcpbPath: opts.mcpbPath || null,
+    removed: opts.removed,
+    skipped: opts.skipped,
     steps: opts.steps,
   };
 

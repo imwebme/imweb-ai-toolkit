@@ -98,6 +98,22 @@ npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-c
 
 すべての installer flag、検証手順、manual clone fallback は [docs/ai-agent-installation.md](docs/ai-agent-installation.md) を参照してください。高度なローカル設定や固定バージョンのテストは [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md) を参照してください。
 
+## アンインストール
+
+Codex と Claude Code のローカル設定を削除するには、次を実行します。
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both
+```
+
+生成されたローカル package artifact と installer 管理下の CLI までまとめて削除するには、次を実行します。
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
+```
+
+アンインストールでは toolkit plugin、marketplace、コピー済み skill、生成された `.plugin`/`.skill`/`.mcpb` artifact を削除します。CLI は installer 管理下の場所にある場合だけ削除し、imweb のログイン/auth データは残します。`imweb` CLI を残す場合は `--keep-cli` を追加します。
+
 ## 最初に読むもの
 
 1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)
