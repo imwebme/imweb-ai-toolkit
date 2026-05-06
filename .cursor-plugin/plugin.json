@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "description": "imweb CLI와 공개 skill `imweb`, 수동 MCP 연결 기준을 Cursor 워크스페이스에 맞춰 정리한 Cursor 표면 메타데이터입니다. 아임웹도구, 아임웹툴, imweb tool, imweb tools 같은 짧은 자연어 alias도 같은 imweb 진입점으로 안내합니다.",
+  "description": "Cursor surface metadata for the public `imweb` skill, imweb CLI guidance, and manual MCP connection references. Short localized aliases route to the same imweb entrypoint.",
   "version": "0.2.5",
   "author": {
     "name": "imweb",

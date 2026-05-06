@@ -110,7 +110,7 @@ For the generated Desktop/Cowork artifacts plus the installer-managed CLI:
 npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
 ```
 
-Use `--tool cli` to remove only the installer-managed `imweb` CLI, or `--tool claude-cowork` / `--tool claude-desktop` from the folder where the package artifacts were created to remove those generated files. Add `--keep-cli` when removing plugin wiring but keeping the CLI. The uninstall path does not delete imweb login or auth data.
+Use `--tool cli` to remove only the installer-managed `imweb` CLI, or `--tool claude-cowork` / `--tool claude-desktop` from the folder where the package artifacts were created to remove those generated files. Add `--keep-cli` when removing plugin wiring but keeping the CLI. The uninstall path removes toolkit-owned plugin cache/data, but does not delete imweb login or auth data.
 
 ## What The Installer Does
 
@@ -122,8 +122,8 @@ Use `--tool cli` to remove only the installer-managed `imweb` CLI, or `--tool cl
 - For Claude Desktop local MCP, creates `imweb-ai-toolkit.mcpb`, a bundle with `manifest.json`, `bin/imweb-mcp.mjs`, and the CLI installer/update scripts.
 - For Claude Desktop Cowork plugin workflows, creates `imweb-ai-toolkit.plugin` in the directory where the agent ran the command. The plugin package includes `commands/imweb.md`, `.mcp.json`, `bin/imweb-mcp.mjs`, and `skills/imweb/`. The MCP bridge exposes read-only setup/auth/context/order/product/member/promotion/community tools plus plugin-managed CLI install/update and auth tools for onboarding.
 - For Claude Cowork skill packaging, creates `imweb.skill`, a custom Skill package whose root folder is `imweb/` and whose entrypoint is `SKILL.md`.
-- Replaces existing `imweb-ai-toolkit` marketplace/plugin entries by default while preserving Claude plugin data.
-- With `--uninstall`, removes toolkit marketplace/plugin wiring, copied `imweb` skills, generated package artifacts, and the installer-managed CLI when the selected tool owns that CLI path. It keeps imweb login and auth data.
+- Replaces existing `imweb-ai-toolkit` marketplace/plugin entries by default while preserving imweb login/auth data.
+- With `--uninstall`, removes toolkit marketplace/plugin wiring, copied `imweb` skills, toolkit-owned plugin cache/data, generated package artifacts, and the installer-managed CLI when the selected tool owns that CLI path. It keeps imweb login and auth data.
 
 Use `--no-replace` to avoid replacing existing entries. Use `--no-backup` only in disposable automation environments.
 

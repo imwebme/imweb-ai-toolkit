@@ -1,50 +1,49 @@
-# Claude plugin surface
+# Claude Plugin Surface
 
-Claude 표면은 Claude Code와 Claude Desktop Cowork를 plugin-first 흐름으로 연결합니다. 설치 흐름은 [../docs/skill-installation-and-usage.md](../docs/skill-installation-and-usage.md), 공개 지원 범위는 [../docs/surface-support-matrix.md](../docs/surface-support-matrix.md)를 기준으로 읽습니다.
+The Claude surface connects Claude Code and Claude Desktop Cowork through the plugin-first flow. Use [../docs/skill-installation-and-usage.md](../docs/skill-installation-and-usage.md) for install details and [../docs/surface-support-matrix.md](../docs/surface-support-matrix.md) for the public support contract.
 
-## 이 문서에서 확인할 것
+## What To Check
 
-- Claude 기본 지원 범위: Claude Code, Claude Desktop Cowork
-- skill 자산: `skills/imweb/`
-- canonical entrypoint: `plugin.json`
-- marketplace 메타: `marketplace.json`
-- `manifest.json`은 compatibility entrypoint로만 유지
+- Primary Claude surfaces: Claude Code and Claude Desktop Cowork
+- Skill assets: `skills/imweb/`
+- Canonical entrypoint: `plugin.json`
+- Marketplace metadata: `marketplace.json`
+- `manifest.json` is kept only as a compatibility entrypoint
 
-## 시작 경로
+## Start Paths
 
 ### Claude Code
 
-1. `claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user` 또는 `./install/install-plugins.sh --tool claude --scope user`
-2. `claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user`
-3. 기존 Claude Code 세션이면 `/reload-plugins`를 실행하거나 새 세션 시작
-4. `/imweb-ai-toolkit:imweb`로 시작
+1. Run `claude plugin marketplace add imwebme/imweb-ai-toolkit --scope user` or `./install/install-plugins.sh --tool claude --scope user`.
+2. Run `claude plugin install imweb-ai-toolkit@imweb-ai-toolkit --scope user`.
+3. In an existing Claude Code session, run `/reload-plugins` or start a new session.
+4. Start with `/imweb-ai-toolkit:imweb` when you need a deterministic plugin smoke entry.
 
-CLI smoke나 non-interactive `claude -p` 검증처럼 plugin skill 로드를 결정적으로 확인해야 하는 경우에는 일반 요청문보다 namespaced slash 시작점을 사용합니다.
-비대화형 smoke에서 bundle-local docs 읽기까지 확인하려면 설치된 plugin cache를 `--add-dir`로 허용하고 `Read` tool을 명시합니다.
+For non-interactive `claude -p` smoke tests, the namespaced slash entry is more deterministic than a general prompt. To verify bundle-local docs, allow the installed plugin cache with `--add-dir` and use the `Read` tool:
 
 ```bash
 PLUGIN_DIR="$(claude plugin list --json --available | jq -r '.installed[] | select(.id == "imweb-ai-toolkit@imweb-ai-toolkit") | .installPath')"
-printf '%s\n' '/imweb-ai-toolkit:imweb docs/capability-registry.md 파일의 첫 번째 H1 제목만 알려줘. 명령 실행은 하지 마.' \
+printf '%s\n' '/imweb-ai-toolkit:imweb Tell me only the first H1 title in docs/capability-registry.md. Do not run commands.' \
   | claude -p --no-session-persistence --tools Read --allowedTools Read --add-dir "$PLUGIN_DIR"
 ```
 
 ### Claude Desktop Cowork
 
-1. `./install/install-plugins.sh --package imweb-ai-toolkit.plugin`
-2. `./install/install-plugins.sh --skill-package imweb.skill`
-3. package 안에 `.claude-plugin/plugin.json`, `.mcp.json`, `bin/imweb-mcp.mjs`, `skills/imweb/SKILL.md`가 있는지 검증
-4. Cowork task가 `.plugin`/`.skill` artifact를 host에 제시해 install card가 뜨도록 처리
-5. plugin/skill 설치가 완료된 Cowork surface에서 `/imweb 최근 주문중 이상 거래 조사`, `/imweb 방문자 많은 상품 top 5 가져와서 상세페이지 점검` 또는 자연어 imweb 요청으로 시작
+1. Run `./install/install-plugins.sh --package imweb-ai-toolkit.plugin`.
+2. Run `./install/install-plugins.sh --skill-package imweb.skill`.
+3. Verify that the package contains `.claude-plugin/plugin.json`, `.mcp.json`, `bin/imweb-mcp.mjs`, and `skills/imweb/SKILL.md`.
+4. Present the `.plugin` and `.skill` artifacts so the Cowork host can show install cards.
+5. After the plugin and skill cards are accepted, start with natural language such as `Use imweb tool to investigate suspicious recent orders.` or `Use imweb tool to get the top 5 products with the most visitors and review their detail pages as far as possible.`
 
-Claude Desktop Cowork는 Claude Code CLI의 `~/.claude/plugins` registry나 `~/.claude/skills`를 직접 읽지 않습니다. local Desktop 검증은 Cowork install card 또는 조직 배포 경로를 기준으로 합니다. Cowork shell은 VM일 수 있으므로 plugin 안의 local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth/profile 재사용을 맡습니다. Claude에게 설치를 맡길 때는 computer-use나 Claude Desktop UI 조작을 요청하지 않습니다. package 생성, 검증, `.plugin`/`.skill` artifact 제시 요청문은 [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md)를 봅니다.
+Claude Desktop Cowork does not read Claude Code's `~/.claude/plugins` registry or `~/.claude/skills` directory. Local Desktop verification must use a Cowork install card or an organization deployment path. The Cowork shell can be a VM, so the local MCP bridge inside the plugin should handle host `imweb` CLI install/update and auth/profile reuse. When asking Claude to set up Cowork, do not use computer-use or Claude Desktop UI automation; ask for package creation, verification, and presentation of the `.plugin` and `.skill` artifacts. See [../docs/cowork-ask-claude-install.md](../docs/cowork-ask-claude-install.md).
 
-## 공개 안내 범위
+## Public Scope
 
-이 문서는 현재 공개되는 연결 자산만 설명합니다. Claude 표면은 plugin manifest, marketplace, package 생성 흐름, 공개 skill entrypoint, 지원 수준 문서를 source of truth로 삼습니다.
+This document describes only the public connection assets. The Claude surface uses the plugin manifest, marketplace metadata, package creation flow, public `imweb` skill entrypoint, and support matrix as its source of truth.
 
-## 관련 문서
+## Related Docs
 
-- 루트 시작점: [../README.md](../README.md)
-- 설치/업데이트 계약: [../docs/skill-installation-and-usage.md](../docs/skill-installation-and-usage.md)
-- 지원 수준 해석: [../docs/surface-support-matrix.md](../docs/surface-support-matrix.md)
-- 공개 skill: [../skills/imweb/SKILL.md](../skills/imweb/SKILL.md)
+- Root start point: [../README.md](../README.md)
+- Install/update contract: [../docs/skill-installation-and-usage.md](../docs/skill-installation-and-usage.md)
+- Support interpretation: [../docs/surface-support-matrix.md](../docs/surface-support-matrix.md)
+- Public skill: [../skills/imweb/SKILL.md](../skills/imweb/SKILL.md)

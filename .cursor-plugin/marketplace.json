@@ -4,13 +4,13 @@
     "name": "imweb"
   },
   "metadata": {
-    "description": "imweb AI toolkit plugins for Cursor"
+    "description": "imweb tool plugins for Cursor"
   },
   "plugins": [
     {
       "name": "imweb-ai-toolkit",
       "source": "./",
-      "description": "Connect imweb CLI guidance, the public `imweb` skill, and manual MCP setup for Cursor workspaces. Short aliases include 아임웹도구, 아임웹툴, imweb tool, and imweb tools.",
+      "description": "Connect imweb CLI guidance, the public `imweb` skill, and manual MCP setup for Cursor workspaces. Short localized aliases are supported.",
       "version": "0.2.5",
       "author": {
         "name": "imweb",
