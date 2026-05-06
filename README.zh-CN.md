@@ -112,7 +112,7 @@ npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both
 npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
 ```
 
-卸载会移除 toolkit plugin、marketplace、已复制的 skill、toolkit 拥有的 plugin cache/data，以及生成的 `.plugin`/`.skill`/`.mcpb` artifact。CLI 仅在位于 installer 管理的位置时才会被删除，imweb 登录/auth 数据会保留。若要保留 `imweb` CLI，请添加 `--keep-cli`。
+卸载会移除 toolkit plugin、marketplace、已复制的 skill、toolkit 拥有的 plugin cache/data/log，以及生成的 `.plugin`/`.skill`/`.mcpb` artifact。CLI 仅在位于 installer 管理的位置时才会被删除，imweb 登录/auth 数据会保留。若要保留 `imweb` CLI，请添加 `--keep-cli`。
 
 ## 从这里开始
 

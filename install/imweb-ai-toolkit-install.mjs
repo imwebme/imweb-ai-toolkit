@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, rmSync, cpSync, lstatSync, readlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, rmSync, cpSync, lstatSync, readlinkSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve, relative, isAbsolute } from 'node:path';
 import { homedir, platform } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -82,7 +82,7 @@ Notes:
   - Local plugin installs for Codex and Claude Code install/update the imweb CLI by default.
     Use --no-install-cli only for disposable metadata-only validation.
   - Uninstall removes toolkit plugin/skill/marketplace wiring, toolkit-owned plugin
-    cache/data, and generated package artifacts. It removes the CLI only from the
+    cache/data/logs, and generated package artifacts. It removes the CLI only from the
     installer-managed location and does not delete imweb login or auth data.
   - The default npx plugin path registers the public Git repository as the marketplace source.
   - Codex CLI currently supports marketplace registration; the installer also copies the
@@ -571,6 +571,35 @@ function cleanupClaudePluginFiles(opts) {
   ].forEach(([label, path]) => removePath(label, path, opts));
 }
 
+function claudeCacheRoots() {
+  const roots = new Set();
+  if (process.env.XDG_CACHE_HOME) roots.add(join(process.env.XDG_CACHE_HOME, 'claude-cli-nodejs'));
+  roots.add(join(homedir(), 'Library', 'Caches', 'claude-cli-nodejs'));
+  roots.add(join(homedir(), '.cache', 'claude-cli-nodejs'));
+  if (process.env.LOCALAPPDATA) roots.add(join(process.env.LOCALAPPDATA, 'claude-cli-nodejs'));
+  return [...roots];
+}
+
+function removeMatchingDescendants(root, matches, opts, depth = 4) {
+  const stat = getLstat(root);
+  if (!stat || !stat.isDirectory() || stat.isSymbolicLink() || depth < 0) return;
+  for (const entry of readdirSync(root, { withFileTypes: true })) {
+    const path = join(root, entry.name);
+    if (matches(entry.name)) {
+      removePath('claude-mcp-log', path, opts);
+      continue;
+    }
+    if (entry.isDirectory() && !entry.isSymbolicLink()) {
+      removeMatchingDescendants(path, matches, opts, depth - 1);
+    }
+  }
+}
+
+function cleanupClaudeMcpLogs(opts) {
+  const matches = (name) => name.startsWith('mcp-logs') && name.includes(MARKETPLACE_NAME);
+  claudeCacheRoots().forEach((root) => removeMatchingDescendants(root, matches, opts));
+}
+
 function uninstallCodex(opts) {
   if (commandExists('codex') || opts.dryRun) {
     run('codex', ['plugin', 'marketplace', 'remove', MARKETPLACE_NAME], opts, { allowFailure: true, capture: true });
@@ -589,6 +618,7 @@ function uninstallClaude(opts) {
     noteSkipped(opts, 'claude-marketplace', MARKETPLACE_NAME, 'claude command not found');
   }
   cleanupClaudePluginFiles(opts);
+  cleanupClaudeMcpLogs(opts);
   uninstallSkill('claude', opts);
 }
 
