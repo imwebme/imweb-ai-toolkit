@@ -98,6 +98,22 @@ npx skills add imwebme/imweb-ai-toolkit --skill imweb --copy -y --agent claude-c
 
 完整 installer flag、验证步骤和 manual clone fallback 见 [docs/ai-agent-installation.md](docs/ai-agent-installation.md)。高级本地设置或固定版本测试请参见 [docs/skill-installation-and-usage.md](docs/skill-installation-and-usage.md)。
 
+## 卸载
+
+若要移除 Codex 和 Claude Code 的本地设置，请运行：
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both
+```
+
+若要一并清理生成的本地 package artifact 和 installer 管理的 CLI，请运行：
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
+```
+
+卸载会移除 toolkit plugin、marketplace、已复制的 skill，以及生成的 `.plugin`/`.skill`/`.mcpb` artifact。CLI 仅在位于 installer 管理的位置时才会被删除，imweb 登录/auth 数据会保留。若要保留 `imweb` CLI，请添加 `--keep-cli`。
+
 ## 从这里开始
 
 1. [docs/ai-agent-installation.md](docs/ai-agent-installation.md)

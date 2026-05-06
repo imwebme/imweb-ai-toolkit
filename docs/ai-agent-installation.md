@@ -96,6 +96,22 @@ npx -y github:imwebme/imweb-ai-toolkit --tool cli
 
 If an agent is running inside a sandbox or task VM and no host MCP bridge is available, it may need to install the CLI inside that runtime. Use the same CLI-only command above, then run `imweb --output json auth status`, `imweb --output json auth doctor`, and `imweb --output json auth login` if login is needed. The user should only be asked to complete the browser login or click a visible allow button.
 
+## Quick Uninstall
+
+For Codex and Claude Code local setup:
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both
+```
+
+For the generated Desktop/Cowork artifacts plus the installer-managed CLI:
+
+```bash
+npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
+```
+
+Use `--tool cli` to remove only the installer-managed `imweb` CLI, or `--tool claude-cowork` / `--tool claude-desktop` from the folder where the package artifacts were created to remove those generated files. Add `--keep-cli` when removing plugin wiring but keeping the CLI. The uninstall path does not delete imweb login or auth data.
+
 ## What The Installer Does
 
 - Creates a timestamped backup under `~/.imweb-ai-toolkit-local-install-backups/` when it changes Codex or Claude Code local config. Package-only Claude Desktop and Cowork runs do not create a backup.
@@ -107,6 +123,7 @@ If an agent is running inside a sandbox or task VM and no host MCP bridge is ava
 - For Claude Desktop Cowork plugin workflows, creates `imweb-ai-toolkit.plugin` in the directory where the agent ran the command. The plugin package includes `commands/imweb.md`, `.mcp.json`, `bin/imweb-mcp.mjs`, and `skills/imweb/`. The MCP bridge exposes read-only setup/auth/context/order/product/member/promotion/community tools plus plugin-managed CLI install/update and auth tools for onboarding.
 - For Claude Cowork skill packaging, creates `imweb.skill`, a custom Skill package whose root folder is `imweb/` and whose entrypoint is `SKILL.md`.
 - Replaces existing `imweb-ai-toolkit` marketplace/plugin entries by default while preserving Claude plugin data.
+- With `--uninstall`, removes toolkit marketplace/plugin wiring, copied `imweb` skills, generated package artifacts, and the installer-managed CLI when the selected tool owns that CLI path. It keeps imweb login and auth data.
 
 Use `--no-replace` to avoid replacing existing entries. Use `--no-backup` only in disposable automation environments.
 
