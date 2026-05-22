@@ -1,420 +1,632 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title data-i18n="meta.title">imweb-ai-toolkit — AI agents for imweb store operations</title>
-<meta name="description" data-i18n-attr="content:meta.description" content="Connect Claude, Codex, and other AI agents to the official imweb CLI." />
+<title>imweb-ai-toolkit — imweb 운영 데이터를 한 문장으로 확인하는 방법</title>
+<meta name="description" content="평소 쓰는 AI(Claude, Codex)에 한 문장만 던지면 공식 imweb CLI가 제공하는 주문·상품·회원·리뷰·프로모션 데이터를 로컬에서 확인합니다." />
 <link rel="icon" type="image/png" href="assets/imweb-logo-orange.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="site.css" />
 </head>
 <body>
 
-<!-- ============ TOP BAR ============ -->
+<!-- ================= TOP BAR ================= -->
 <header class="topbar" data-screen-label="Top bar">
   <div class="wrap topbar-inner">
-    <a class="brand" href="#top" aria-label="imweb-ai-toolkit home">
-      <img class="brand-logo" src="assets/imweb-logo-black.png" alt="" />
-      <span class="brand-name">ai-toolkit</span>
+    <a class="brand" href="#top">
+      <img src="assets/imweb-logo-black.png" alt="" />
+      <span>ai-toolkit</span>
     </a>
     <nav class="topnav" aria-label="Primary">
-      <a href="#install" data-i18n="nav.install">Install</a>
-      <a href="#surfaces" data-i18n="nav.surfaces">Surfaces</a>
-      <a href="#usecases" data-i18n="nav.usecases">Use cases</a>
-      <a href="#trust" data-i18n="nav.trust">Trust</a>
-      <a href="#docs" data-i18n="nav.docs">Docs</a>
+      <a href="#shelf">예시</a>
+      <span class="topnav-sep" aria-hidden="true"></span>
+      <a href="#flow">동작</a>
+      <span class="topnav-sep" aria-hidden="true"></span>
+      <a href="#surfaces">지원 환경</a>
+      <span class="topnav-sep" aria-hidden="true"></span>
+      <a href="#trust">신뢰</a>
+      <span class="topnav-sep" aria-hidden="true"></span>
+      <a href="#docs">문서</a>
     </nav>
-    <div class="topbar-cta">
-      <!-- Lang switcher -->
-      <div class="lang" role="group" aria-label="Language">
-        <button class="lang-btn" id="lang-toggle" aria-haspopup="listbox" aria-expanded="false">
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <circle cx="8" cy="8" r="6.2"/>
-            <path d="M1.8 8h12.4M8 1.8c2 2 2 10.4 0 12.4M8 1.8c-2 2-2 10.4 0 12.4"/>
-          </svg>
-          <span id="lang-current">EN</span>
-          <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 5l3 3 3-3"/></svg>
-        </button>
-        <ul class="lang-menu" id="lang-menu" role="listbox" hidden>
-          <li role="option" data-lang="en"><span class="lang-code">EN</span><span class="lang-name">English</span></li>
-          <li role="option" data-lang="ko"><span class="lang-code">KO</span><span class="lang-name">한국어</span></li>
-          <li role="option" data-lang="ja"><span class="lang-code">JA</span><span class="lang-name">日本語</span></li>
-          <li role="option" data-lang="zh"><span class="lang-code">ZH</span><span class="lang-name">中文</span></li>
-        </ul>
-      </div>
-      <a class="btn btn-ghost btn-docs-desktop" href="#docs" data-i18n="nav.docs">Docs</a>
-      <a class="btn btn-primary" href="#install" data-i18n="nav.installCta">Install →</a>
-      <button class="menu-toggle" id="menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
-        <span class="menu-icon" aria-hidden="true">
-          <span></span><span></span><span></span>
-        </span>
-      </button>
-    </div>
-  </div>
-  <!-- Mobile drawer -->
-  <div class="mobile-menu" id="mobile-menu" hidden>
-    <nav class="mobile-nav" aria-label="Mobile primary">
-      <a href="#install" data-i18n="nav.install">Install</a>
-      <a href="#surfaces" data-i18n="nav.surfaces">Surfaces</a>
-      <a href="#usecases" data-i18n="nav.usecases">Use cases</a>
-      <a href="#trust" data-i18n="nav.trust">Trust</a>
-      <a href="#docs" data-i18n="nav.docs">Docs</a>
-    </nav>
+    <a class="top-cta" href="#install">설치 →</a>
   </div>
 </header>
 
-<!-- ============ HERO ============ -->
+<!-- ================= HERO ================= -->
 <section class="hero" id="top" data-screen-label="01 Hero">
-  <div class="wrap hero-grid">
-    <div class="hero-left">
-      <div class="eyebrow">
-        <span class="dot" aria-hidden="true"></span>
-        <span data-i18n="hero.eyebrow">Open-source toolkit · Apache-2.0</span>
-      </div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow"><span class="dot"></span>imweb 운영이 한 줄로 끝나는 방법</span>
 
-      <h1 class="h1">
-        <span data-i18n="hero.h1a">AI agents for</span><br />
-        <span class="ink-accent" data-i18n="hero.h1b">imweb store operations.</span>
-      </h1>
+    <h1>
+      <span class="strong">묻기만 하세요.</span><br />
+      답이 옵니다.
+    </h1>
 
-      <p class="lede" data-i18n="hero.lede">Connect Claude, Codex, and other AI agents to the official imweb CLI.</p>
+    <p class="hero-lede">
+      어드민 열 필요 없이, 명령어 외울 필요 없이 —
+      <b>이미 쓰는 AI에 내 브랜드에 대해 한 문장</b>만 던지면,
+      Claude나 Codex가 공식 imweb CLI를 통해 답을 가져옵니다.
+    </p>
 
-      <!-- Quick install: copy this line, paste into your AI agent -->
-      <div class="hero-quickinstall">
-        <div class="hero-quickinstall-label" data-i18n="hero.quickLabel">Paste into your AI agent</div>
-        <div class="hero-quickinstall-row">
-          <code class="hero-quickinstall-code" id="hero-install-code" data-i18n="hero.quickCode">Install imweb-ai-toolkit from github.com/imwebme/imweb-ai-toolkit</code>
-          <button class="hero-quickinstall-copy" type="button" data-copy-target="#hero-install-code" aria-label="Copy">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="9" height="9" rx="1"/><path d="M3 11V3a1 1 0 0 1 1-1h7"/></svg>
-            <span data-i18n="hero.copy">Copy</span>
+    <div class="prompt-card" id="promptCard">
+      <div class="prompt-inner">
+        <div class="prompt-row">
+          <span class="prompt-label">묻기</span>
+          <input class="prompt-input" id="promptInput" type="text" placeholder="예) 최근 주문 중 이상한 거 있어?" autocomplete="off" spellcheck="false" />
+          <button class="prompt-go" id="promptGo" type="button">
+            <span>물어보기</span>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
           </button>
         </div>
-      </div>
-
-      <div class="hero-ctas">
-        <a class="btn btn-primary btn-lg" href="#install">
-          <span data-i18n="hero.ctaPrimary">Full install guide</span>
-          <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-        </a>
-        <a class="btn btn-ghost btn-lg" href="#usecases" data-i18n="hero.ctaSecondary">See it work →</a>
+        <div class="prompt-suggest">
+          <span class="sug-label">이렇게 물어보세요</span>
+          <button class="chip" data-q="최근 주문 중 이상한 거 있어?">이상 주문</button>
+          <button class="chip" data-q="상품 목록에서 재고 확인 후보를 골라줘">재고 확인</button>
+          <button class="chip" data-q="한 달째 안 팔리는 상품 정리해줘">안 팔리는 상품</button>
+          <button class="chip" data-q="별점 낮은 리뷰 중에 답변 안 한 거 모아줘">미답변 저평점</button>
+          <button class="chip" data-q="무통장 입금 아직 안 들어온 주문 있어?">무통장 미입금</button>
+          <button class="chip" data-q="발급된 쿠폰과 포인트 로그를 점검해줘">쿠폰·포인트</button>
+        </div>
       </div>
     </div>
 
-    <!-- Terminal panel -->
-    <aside class="terminal" aria-label="Example interaction">
-      <div class="term-chrome">
-        <span class="term-dots"><i></i><i></i><i></i></span>
-        <span class="term-title" data-i18n="hero.termTitle">claude · imweb-ai-toolkit</span>
-        <span class="term-status">
-          <span class="pulse" aria-hidden="true"></span> <span data-i18n="hero.termStatus">connected</span>
-        </span>
+    <div class="demo" id="demo">
+      <div class="demo-bar">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span>claude · imweb-ai-toolkit · live preview</span>
+        <span class="status"><span class="pulse"></span>working</span>
       </div>
-      <div class="term-body" id="term-body"></div>
-      <div class="term-foot">
-        <span class="kbd">⏎</span>
-        <span class="term-hint" data-i18n="hero.termHint">Natural language → official imweb CLI</span>
-      </div>
-    </aside>
-  </div>
-
-  <!-- Agents row -->
-  <div class="wrap agents-row">
-    <div class="agents-label" data-i18n="hero.agentsLabel">Works with the agents your team already uses</div>
-    <ul class="agents" role="list">
-      <li><span class="agent-pill">Claude Code</span></li>
-      <li><span class="agent-pill">Codex CLI</span></li>
-      <li><span class="agent-pill">Claude Desktop · MCP</span></li>
-      <li><span class="agent-pill">Claude Desktop · Cowork</span></li>
-      <li><span class="agent-pill">Agent Skills</span></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============ FLOW ============ -->
-<section class="flow-section" data-screen-label="02 Flow">
-  <div class="wrap">
-    <div class="section-head">
-      <h2 class="h2" data-i18n="flow.h2">How a request travels</h2>
-      <p class="section-sub" data-i18n="flow.sub">The toolkit sits between your AI agent and the official imweb CLI.</p>
+      <div class="demo-body" id="demoBody"></div>
     </div>
 
-    <div class="flow">
-      <div class="flow-step">
-        <div class="flow-num">1</div>
-        <div class="flow-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
-            <path d="M6 22c0-4 4-7 10-7s10 3 10 7"/>
-            <circle cx="16" cy="11" r="4"/>
-            <path d="M11 26h10"/>
-          </svg>
-        </div>
-        <div class="flow-label" data-i18n="flow.s1.label">You ask</div>
-        <div class="flow-desc" data-i18n="flow.s1.desc">“Check today’s suspicious orders.”</div>
-      </div>
-
-      <div class="flow-arrow" aria-hidden="true">→</div>
-
-      <div class="flow-step">
-        <div class="flow-num">2</div>
-        <div class="flow-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
-            <rect x="5" y="7" width="22" height="18" rx="1.5"/>
-            <path d="M5 12h22M9 18h6M9 21h10"/>
-          </svg>
-        </div>
-        <div class="flow-label" data-i18n="flow.s2.label">Your AI agent</div>
-        <div class="flow-desc" data-i18n="flow.s2.desc">Claude, Codex, or another supported surface.</div>
-      </div>
-
-      <div class="flow-arrow" aria-hidden="true">→</div>
-
-      <div class="flow-step flow-step-accent">
-        <div class="flow-num">3</div>
-        <div class="flow-icon flow-icon-mark" aria-hidden="true">
-          <img src="assets/imweb-logo-orange.png" alt="" />
-        </div>
-        <div class="flow-label" data-i18n="flow.s3.label">imweb-ai-toolkit</div>
-        <div class="flow-desc" data-i18n="flow.s3.desc">Plugin metadata, skills, local MCP bridge.</div>
-      </div>
-
-      <div class="flow-arrow" aria-hidden="true">→</div>
-
-      <div class="flow-step">
-        <div class="flow-num">4</div>
-        <div class="flow-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
-            <rect x="4" y="6" width="24" height="20" rx="1.5"/>
-            <path d="M9 13l3 3-3 3M16 19h7"/>
-          </svg>
-        </div>
-        <div class="flow-label" data-i18n="flow.s4.label">Official imweb CLI</div>
-        <div class="flow-desc" data-i18n="flow.s4.desc">Local install · reuses your imweb auth.</div>
-      </div>
-
-      <div class="flow-arrow" aria-hidden="true">→</div>
-
-      <div class="flow-step">
-        <div class="flow-num">5</div>
-        <div class="flow-icon" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4">
-            <path d="M6 24V8l10-3 10 3v16"/>
-            <path d="M6 24h20M11 14h10M11 18h7"/>
-          </svg>
-        </div>
-        <div class="flow-label" data-i18n="flow.s5.label">Store data</div>
-        <div class="flow-desc" data-i18n="flow.s5.desc">Orders · products · reviews · members.</div>
-      </div>
+    <div class="hero-agents">
+      <span class="hero-agents-label">이미 쓰는 AI에 그대로 연결됩니다</span>
+      <ul class="hero-agents-list">
+        <li>Claude Code</li>
+        <li>Codex CLI / App</li>
+        <li>Claude Desktop · MCP</li>
+        <li>Claude Desktop · Cowork</li>
+        <li>Agent Skills</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- ============ INSTALL ============ -->
-<section class="install" id="install" data-screen-label="03 Install">
+<!-- ================= WHY ================= -->
+<section class="why" data-screen-label="02 Why">
   <div class="wrap">
-    <div class="section-head">
-      <h2 class="h2" data-i18n="install.h2">One sentence. Any AI agent.</h2>
-    </div>
-
-    <div class="install-one">
-      <div class="install-main">
-        <div class="install-step-num" aria-hidden="true">01</div>
-        <h3 class="install-step-title" data-i18n="install.s1.t">Paste this into your AI agent.</h3>
-        <p class="install-step-desc" data-i18n="install.s1.d">Claude Code, Codex, Claude Desktop — whichever your team runs. The toolkit detects the surface and installs itself.</p>
-        <div class="copy-line">
-          <code class="copy-line-text" id="install-copy-text" data-i18n="install.s1.copy">github.com/imwebme/imweb-ai-toolkit — install this for me</code>
-          <button class="copy-btn-static" type="button" data-copy-target="#install-copy-text" data-i18n="hero.copy">Copy</button>
-        </div>
-        <p class="install-step-after" data-i18n="install.s1.after">Then ask in plain language — “check recent orders”, “review product details”, etc.</p>
-      </div>
-
-      <aside class="install-aside" aria-label="Supported surfaces">
-        <div class="install-aside-h" data-i18n="install.asideH">Supported out of the box</div>
-        <ul class="install-surfaces" role="list">
-          <li><span class="ag-mark" aria-hidden="true">●</span> Claude Code</li>
-          <li><span class="ag-mark" aria-hidden="true">●</span> Codex CLI / App</li>
-          <li><span class="ag-mark" aria-hidden="true">●</span> Claude Desktop · MCP</li>
-          <li><span class="ag-mark" aria-hidden="true">●</span> Claude Desktop · Cowork</li>
-          <li><span class="ag-mark" aria-hidden="true">●</span> Agent Skills</li>
-        </ul>
-        <a class="install-aside-link" href="surface-support-matrix.md" data-i18n="install.asideLink">See the full support matrix →</a>
-      </aside>
-    </div>
-
-    <div class="install-foot">
-      <div class="install-foot-item">
-        <div class="install-foot-num">A</div>
-        <div>
-          <div class="install-foot-title" data-i18n="install.foot.a.t">Prerequisite</div>
-          <div class="install-foot-body" data-i18n-html="install.foot.a.b">Node 18+ and an imweb account with CLI access.</div>
+    <div class="why-grid">
+      <div>
+        <div class="sec-num">§ 01 · WHY</div>
+        <h2 class="why-title">
+          10분 걸리던 일이<br />
+          <span class="hl">5초로 끝납니다.</span>
+        </h2>
+        <div class="why-body">
+          <p>하루에 같은 데이터를 다섯 번씩 봅니다. 매번 같은 메뉴를 누르고, 같은 필터를 걸고, 엑셀로 옮겨 적죠. <b>답은 항상 비슷한데 가는 길만 길어요.</b></p>
+          <p>이제는 — 궁금한 게 생길 때마다, 그 자리에서, 그냥 물어보면 됩니다. <b>명령어도, 메뉴 경로도 외울 필요 없이.</b></p>
         </div>
       </div>
-      <div class="install-foot-item">
-        <div class="install-foot-num">B</div>
-        <div>
-          <div class="install-foot-title" data-i18n="install.foot.b.t">What it does</div>
-          <div class="install-foot-body" data-i18n-html="install.foot.b.b">The agent installs / updates the official <code>imweb</code> CLI locally and reuses your existing auth.</div>
+      <div class="switch-stack">
+        <div class="switch">
+          <span class="now">매일 아침 첫 5분</span>
+          <h3>최근 주문 점검</h3>
+          <div class="row">
+            <span class="from"><b>어드민 → 주문 목록 → 여러 필터 반복</b><br />이상 신호를 찾기 위해 화면을 계속 오간다</span>
+            <span class="ar">→</span>
+            <span class="to"><b>“최근 주문 중 이상한 거 있어?”</b><br />· 확인할 주문 번호와 이유를 먼저 받는다</span>
+          </div>
         </div>
-      </div>
-      <div class="install-foot-item">
-        <div class="install-foot-num">C</div>
-        <div>
-          <div class="install-foot-title" data-i18n="install.foot.c.t">Then ask</div>
-          <div class="install-foot-body" data-i18n-html="install.foot.c.b">Open the agent and try: <em>“List recent orders.”</em></div>
+
+        <div class="switch">
+          <span class="now">CS 답변 전</span>
+          <h3>리뷰·문의 확인</h3>
+          <div class="row">
+            <span class="from"><b>리뷰와 Q&A를 따로 열고 미답변만 추린다</b><br />낮은 평점부터 봐야 하는데 우선순위가 흐려진다</span>
+            <span class="ar">→</span>
+            <span class="to"><b>“별점 낮은 리뷰 중에 답변 안 한 거 모아줘”</b><br />· CLI가 읽을 수 있는 범위에서 점검 목록을 만든다</span>
+          </div>
+        </div>
+
+        <div class="switch">
+          <span class="now">재고 소진이 너무 잘되는 상품</span>
+          <h3>품절 임박 탐지</h3>
+          <div class="row">
+            <span class="from"><b>상품 → 재고 → 옵션 필터 × 수십 번</b><br />놓치면 품절로 아침을 맞는다</span>
+            <span class="ar">→</span>
+            <span class="to"><b>“상품 목록에서 재고 확인 후보를 골라줘”</b><br />· 상품·옵션 데이터를 확인할 대상을 좁힌다</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ SURFACE SUPPORT ============ -->
-<section class="surfaces" id="surfaces" data-screen-label="04 Surface support">
+<!-- ================= SHELF ================= -->
+<section class="shelf" id="shelf" data-screen-label="03 Shelf">
   <div class="wrap">
-    <div class="section-head">
-      <h2 class="h2" data-i18n="surfaces.h2">Surface support matrix.</h2>
+    <div class="shelf-head">
+      <div class="sec-num">§ 02 · 예시</div>
+      <h2 class="shelf-title">
+        이런 것도 다 — <span class="title-hl">물어볼 수 있어요.</span>
+      </h2>
+      <p class="shelf-sub">
+        아래 질문을 눌러보세요. 입력란에 자동으로 들어가고, 에이전트가 어떻게 답하는지 데모로 보여드려요.
+      </p>
     </div>
+
+    <div class="shelf-cats">
+      <div class="cat">
+        <div class="cat-head">
+          <div class="cat-icon">주</div>
+          <div class="cat-name">주문 점검</div>
+          <span class="cat-count">5</span>
+        </div>
+        <button class="cat-q" data-q="최근 주문 중 이상한 거 있어?">최근 이상 주문</button>
+        <button class="cat-q" data-q="무통장 입금 아직 안 들어온 주문 있어?">무통장 미입금</button>
+        <button class="cat-q" data-q="배송 상태를 확인해야 할 주문 골라줘">배송 상태 확인</button>
+        <button class="cat-q" data-q="취소나 환불 흐름을 점검해줘">취소·환불 점검</button>
+        <button class="cat-q" data-q="특정 주문 상세를 열어 확인할 항목 정리해줘">주문 상세 확인</button>
+      </div>
+
+      <div class="cat">
+        <div class="cat-head">
+          <div class="cat-icon">상</div>
+          <div class="cat-name">상품 · 재고</div>
+          <span class="cat-count">5</span>
+        </div>
+        <button class="cat-q" data-q="상품 목록에서 재고 확인 후보를 골라줘">재고 확인 후보</button>
+        <button class="cat-q" data-q="한 달째 안 팔리는 상품 정리해줘">한 달 안 팔린 상품</button>
+        <button class="cat-q" data-q="상품 상세에서 가격과 상태를 점검해줘">가격·상태 점검</button>
+        <button class="cat-q" data-q="옵션 정보가 빠진 상품이 있는지 확인해줘">옵션 정보 확인</button>
+        <button class="cat-q" data-q="상품과 리뷰를 함께 보고 점검 후보를 알려줘">상품·리뷰 함께 보기</button>
+      </div>
+
+      <div class="cat">
+        <div class="cat-head">
+          <div class="cat-icon">주</div>
+          <div class="cat-name">주문 · CS</div>
+          <span class="cat-count">5</span>
+        </div>
+        <button class="cat-q" data-q="최근 주문을 운영자가 볼 체크리스트로 정리해줘">주문 체크리스트</button>
+        <button class="cat-q" data-q="송장 처리 전에 확인해야 할 주문을 골라줘">송장 전 확인</button>
+        <button class="cat-q" data-q="교환이나 반품 처리 전에 볼 주문 정보를 정리해줘">교환·반품 사전 확인</button>
+        <button class="cat-q" data-q="무통장 입금 확인 전에 주문 정보를 읽어줘">입금 확인 전 조회</button>
+        <button class="cat-q" data-q="주문 상세에서 결제 상태를 확인해줘">결제 상태 확인</button>
+      </div>
+
+      <div class="cat">
+        <div class="cat-head">
+          <div class="cat-icon">회</div>
+          <div class="cat-name">회원</div>
+          <span class="cat-count">4</span>
+        </div>
+        <button class="cat-q" data-q="회원 목록에서 확인할 대상을 찾아줘">회원 목록 조회</button>
+        <button class="cat-q" data-q="회원 상세에서 등급과 그룹 정보를 확인해줘">등급·그룹 확인</button>
+        <button class="cat-q" data-q="회원 등급 변경 전에 필요한 정보를 점검해줘">등급 변경 사전 점검</button>
+        <button class="cat-q" data-q="쿠폰 발급 전에 회원 정보를 확인해줘">쿠폰 발급 전 회원 확인</button>
+      </div>
+
+      <div class="cat">
+        <div class="cat-head">
+          <div class="cat-icon">리</div>
+          <div class="cat-name">리뷰 · 평판</div>
+          <span class="cat-count">4</span>
+        </div>
+        <button class="cat-q" data-q="별점 낮은 리뷰 중에 답변 안 한 거 모아줘">미답변 저평점 리뷰</button>
+        <button class="cat-q" data-q="이번 주 새로 달린 리뷰 요약해줘">이번 주 리뷰 요약</button>
+        <button class="cat-q" data-q="자주 등장하는 불만 키워드 뽑아줘">불만 키워드 정리</button>
+        <button class="cat-q" data-q="상품 리뷰를 보고 운영자가 확인할 항목을 정리해줘">상품 리뷰 점검</button>
+      </div>
+
+      <div class="cat">
+        <div class="cat-head">
+          <div class="cat-icon">프</div>
+          <div class="cat-name">프로모션</div>
+          <span class="cat-count">4</span>
+        </div>
+        <button class="cat-q" data-q="발급된 쿠폰과 포인트 로그를 점검해줘">쿠폰·포인트 점검</button>
+        <button class="cat-q" data-q="쿠폰 발급 전에 필요한 정보를 확인해줘">쿠폰 발급 전 확인</button>
+        <button class="cat-q" data-q="회원별 쿠폰 발급 이력을 찾아줘">회원별 쿠폰 이력</button>
+        <button class="cat-q" data-q="포인트 변경 전에 현재 포인트 로그를 읽어줘">포인트 변경 전 조회</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FLOW ================= -->
+<section class="flow" id="flow" data-screen-label="04 Flow">
+  <div class="wrap">
+    <div class="sec-num">§ 03 · 동작 흐름</div>
+    <h2 class="sec-title">
+      한 문장이 — <em>브랜드 데이터까지 가는 길.</em>
+    </h2>
+    <p class="sec-sub">
+      툴킷은 AI 에이전트와 공식 imweb CLI 사이에서만 동작합니다 — <b>데이터를 호스팅하지 않고, 변경 작업을 자동 실행하지 않습니다.</b>
+    </p>
+
+    <div class="flow-strip">
+      <div class="flow-step">
+        <div class="flow-step-n">1</div>
+        <div class="flow-step-label">한 문장</div>
+        <div class="flow-step-desc">"최근 주문 중 이상한 거 있어?"</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <div class="flow-step-n">2</div>
+        <div class="flow-step-label">AI 에이전트</div>
+        <div class="flow-step-desc">Claude, Codex, Claude Desktop</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step flow-step-on">
+        <div class="flow-step-n">3</div>
+        <div class="flow-step-label">imweb-ai-toolkit</div>
+        <div class="flow-step-desc">스킬 · 로컬 MCP 브리지</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <div class="flow-step-n">4</div>
+        <div class="flow-step-label">공식 imweb CLI</div>
+        <div class="flow-step-desc">내 컴퓨터에서 로컬 실행</div>
+      </div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">
+        <div class="flow-step-n">5</div>
+        <div class="flow-step-label">브랜드 데이터</div>
+        <div class="flow-step-desc">주문 · 상품 · 리뷰 · 회원</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSTALL (detailed, multi-path) ================= -->
+<section class="install" id="install" data-screen-label="05 Install">
+  <div class="wrap">
+    <div class="sec-num">§ 04 · 설치</div>
+    <h2 class="sec-title">
+      평소 쓰는 AI 에이전트에 — <em class="title-hl-em">이 한 줄.</em>
+    </h2>
+    <p class="sec-sub">
+      외울 명령어, 환경별 다른 설명서 — 없습니다. <b>가장 쉬운 건 AI 에이전트에게 직접 부탁하는 것.</b>
+    </p>
+
+    <div class="install-hero">
+      <div class="install-hero-tag">가장 쉬운 방법</div>
+      <div class="install-hero-title">Claude · Codex · Claude Desktop — 이미 쓰는 AI 대화창에 그대로 붙여넣으세요.</div>
+      <div class="copy-row big">
+        <code id="copyTextMain">github.com/imwebme/imweb-ai-toolkit 보고 설치해줘</code>
+        <button id="copyBtnMain" type="button" data-copy="github.com/imwebme/imweb-ai-toolkit 보고 설치해줘">복사</button>
+      </div>
+      <p class="install-hero-after">
+        에이전트가 환경을 알아서 감지하고, 공식 imweb CLI 설치까지 같이 처리합니다.
+        설치 후엔 — <em>"최근 주문 중 이상한 거 있어?"</em> 같은 한 문장만 보내면 끝.
+      </p>
+    </div>
+
+    <!-- Surface-specific install tabs -->
+    <div class="install-tabs" id="installTabs">
+      <div class="tabs-head">
+        <div class="tabs-head-label">또는 환경별로 직접 설치하기</div>
+        <div class="tabs-buttons" role="tablist" aria-label="설치 방법">
+          <button class="tab-btn is-on" role="tab" aria-selected="true" data-tab="claude-code">Claude Code</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="codex">Codex</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="claude-desktop">Claude Desktop · MCP</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="cowork">Cowork</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="cli-only">CLI만</button>
+          <button class="tab-btn" role="tab" aria-selected="false" data-tab="uninstall">제거</button>
+        </div>
+      </div>
+
+      <!-- Claude Code -->
+      <div class="tab-panel is-on" role="tabpanel" data-tab="claude-code">
+        <p class="tab-desc">Claude Code 채팅창에 — 아래 두 줄을 순서대로 실행하면 끝.</p>
+        <div class="copy-row">
+          <code>/plugin marketplace add imwebme/imweb-ai-toolkit
+/plugin install imweb-ai-toolkit@imweb-ai-toolkit</code>
+          <button type="button" data-copy="/plugin marketplace add imwebme/imweb-ai-toolkit
+/plugin install imweb-ai-toolkit@imweb-ai-toolkit">복사</button>
+        </div>
+        <p class="tab-note">설치되는 것 — <em>imweb 스킬 + 로컬 CLI 브리지</em>. 첫 사용 시 imweb 로그인을 브라우저에서 한번 마치면 됩니다.</p>
+      </div>
+
+      <!-- Codex -->
+      <div class="tab-panel" role="tabpanel" data-tab="codex">
+        <p class="tab-desc">Codex CLI 또는 앱에서 — 마켓플레이스에 등록한 뒤 Plugins UI에서 추가하세요.</p>
+        <div class="copy-row">
+          <code>codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main</code>
+          <button type="button" data-copy="codex plugin marketplace add imwebme/imweb-ai-toolkit --ref main">복사</button>
+        </div>
+        <p class="tab-note">등록 후 Plugins UI에서 <em>imweb-ai-toolkit</em> 을 활성화하면 Codex 세션에서 바로 사용할 수 있습니다.</p>
+      </div>
+
+      <!-- Claude Desktop MCP -->
+      <div class="tab-panel" role="tabpanel" data-tab="claude-desktop">
+        <p class="tab-desc">Claude Desktop을 쓰신다면 — 원클릭 MCPB 번들을 만들어 설치합니다.</p>
+        <div class="copy-row">
+          <code>npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop</code>
+          <button type="button" data-copy="npx -y github:imwebme/imweb-ai-toolkit --tool claude-desktop">복사</button>
+        </div>
+        <p class="tab-note">생성된 <code>imweb-ai-toolkit.mcpb</code> 를 Claude Desktop으로 열고 Install — 번들 안의 MCP 브리지가 첫 사용 시 CLI 설치/업데이트를 관리합니다.</p>
+      </div>
+
+      <!-- Cowork -->
+      <div class="tab-panel" role="tabpanel" data-tab="cowork">
+        <p class="tab-desc">Claude Desktop Cowork task 안에서 — Claude에게 이 한 마디를 보내세요.</p>
+        <div class="copy-row">
+          <code>아임웹 도구 패키지를 설치해줘:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+imweb-ai-toolkit.plugin과 imweb.skill을 저장할 수 있게 보여줘.</code>
+          <button type="button" data-copy="아임웹 도구 패키지를 설치해줘:
+npx -y github:imwebme/imweb-ai-toolkit --tool claude-cowork
+imweb-ai-toolkit.plugin과 imweb.skill을 저장할 수 있게 보여줘.">복사</button>
+        </div>
+        <p class="tab-note">plugin · skill 카드를 수락한 다음 — <em>"아임웹툴로 최근 주문 중 이상 거래를 조사해줘"</em> 처럼 자연어로 일을 시키면 됩니다.</p>
+      </div>
+
+      <!-- CLI only -->
+      <div class="tab-panel" role="tabpanel" data-tab="cli-only">
+        <p class="tab-desc">에이전트 없이 — <code>imweb</code> CLI만 깔고 싶으시다면.</p>
+        <div class="copy-row">
+          <code>npx -y github:imwebme/imweb-ai-toolkit --tool cli</code>
+          <button type="button" data-copy="npx -y github:imwebme/imweb-ai-toolkit --tool cli">복사</button>
+        </div>
+        <p class="tab-note">Codex와 Claude Code에 동시 설치하실 거면 — <code>--tool both</code> 로 한 번에 끝낼 수도 있습니다.</p>
+      </div>
+
+      <!-- Uninstall -->
+      <div class="tab-panel" role="tabpanel" data-tab="uninstall">
+        <p class="tab-desc">정리하고 싶으시면 — Codex와 Claude Code 설정을 한 번에 제거합니다.</p>
+        <div class="copy-row">
+          <code>npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both</code>
+          <button type="button" data-copy="npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool both">복사</button>
+        </div>
+        <p class="tab-note">생성된 <code>.plugin</code> / <code>.skill</code> / <code>.mcpb</code> 아티팩트와 CLI까지 모두 정리하려면 — <code>--tool all</code> 로 끝까지 청소할 수 있습니다. imweb 로그인 데이터는 그대로 유지돼요.</p>
+      </div>
+    </div>
+
+    <div class="install-foot-grid">
+      <div class="install-foot-item">
+        <div class="install-foot-n">A</div>
+        <div>
+          <div class="install-foot-title">사전 준비</div>
+          <div class="install-foot-body">Node 18+ · imweb 계정.</div>
+        </div>
+      </div>
+      <div class="install-foot-item">
+        <div class="install-foot-n">B</div>
+        <div>
+          <div class="install-foot-title">동작</div>
+          <div class="install-foot-body">로컬 설치 · 기존 imweb 인증 재사용.</div>
+        </div>
+      </div>
+      <div class="install-foot-item">
+        <div class="install-foot-n">C</div>
+        <div>
+          <div class="install-foot-title">수동 설치</div>
+          <div class="install-foot-body"><a href="ai-agent-installation.md">환경별 명령어 보기 →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SURFACES ================= -->
+<section class="surfaces" id="surfaces" data-screen-label="06 Surfaces">
+  <div class="wrap">
+    <div class="sec-num">§ 05 · 지원 환경</div>
+    <h2 class="sec-title">
+      어디까지 정식 지원이고, <em>어디부터 수동 설정인지.</em>
+    </h2>
 
     <div class="matrix-scroll">
-    <div class="matrix" role="table" aria-label="Surface support matrix">
-      <div class="matrix-row matrix-head" role="row">
-        <div role="columnheader" data-i18n="surfaces.col.surface">Surface</div>
-        <div role="columnheader" data-i18n="surfaces.col.install">Install</div>
-        <div role="columnheader" data-i18n="surfaces.col.skills">Skills</div>
-        <div role="columnheader" data-i18n="surfaces.col.bridge">Local CLI bridge</div>
-        <div role="columnheader" data-i18n="surfaces.col.status">Status</div>
+      <div class="matrix" role="table" aria-label="지원 환경 매트릭스">
+        <div class="matrix-row matrix-head" role="row">
+          <div role="columnheader">환경</div>
+          <div role="columnheader">설치</div>
+          <div role="columnheader">스킬</div>
+          <div role="columnheader">로컬 CLI 브리지</div>
+          <div role="columnheader">상태</div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="m-name" role="cell">Claude Code</div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="pill pill-go">지원</span></div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="m-name" role="cell">Codex CLI / 앱</div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="pill pill-go">지원</span></div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="m-name" role="cell">Agent Skills CLI</div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-mid">◐</span></div>
+          <div role="cell"><span class="pill pill-go">지원</span></div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="m-name" role="cell">Claude Desktop · 로컬 MCP</div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="pill pill-go">지원</span></div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="m-name" role="cell">Claude Desktop · Cowork</div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-yes">●</span></div>
+          <div role="cell"><span class="cell-mid">◐</span></div>
+          <div role="cell"><span class="pill pill-go">지원</span></div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="m-name" role="cell">Cursor 워크스페이스</div>
+          <div role="cell"><span class="cell-mid">◐</span></div>
+          <div role="cell"><span class="cell-mid">◐</span></div>
+          <div role="cell"><span class="cell-no">○</span></div>
+          <div role="cell"><span class="pill pill-warn">수동 설정</span></div>
+        </div>
       </div>
-
-      <div class="matrix-row" role="row">
-        <div role="cell" class="m-name" data-i18n="surfaces.rows.cc">Claude Code</div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
-      </div>
-
-      <div class="matrix-row" role="row">
-        <div role="cell" class="m-name" data-i18n="surfaces.rows.codex">Codex CLI / App</div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
-      </div>
-
-      <div class="matrix-row" role="row">
-        <div role="cell" class="m-name" data-i18n="surfaces.rows.skills">Agent Skills CLI</div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-mid">◐</span></div>
-        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
-      </div>
-
-      <div class="matrix-row" role="row">
-        <div role="cell" class="m-name" data-i18n="surfaces.rows.mcp">Claude Desktop · Local MCP</div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
-      </div>
-
-      <div class="matrix-row" role="row">
-        <div role="cell" class="m-name" data-i18n="surfaces.rows.cowork">Claude Desktop · Cowork</div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-yes">●</span></div>
-        <div role="cell"><span class="cell-mid">◐</span></div>
-        <div role="cell"><span class="pill pill-go" data-i18n="surfaces.pillGo">Supported</span></div>
-      </div>
-    </div>
     </div>
 
     <div class="matrix-legend">
-      <span><span class="cell-yes">●</span> <span data-i18n="surfaces.legend.yes">First-class</span></span>
-      <span><span class="cell-mid">◐</span> <span data-i18n="surfaces.legend.mid">Partial / manual</span></span>
-      <span><span class="cell-no">○</span> <span data-i18n="surfaces.legend.no">Not yet</span></span>
+      <span><span class="cell-yes">●</span> 정식 지원</span>
+      <span><span class="cell-mid">◐</span> 부분 / 수동</span>
+      <span><span class="cell-no">○</span> 미지원</span>
     </div>
   </div>
 </section>
 
-<!-- ============ USE CASES ============ -->
-<section class="usecases" id="usecases" data-screen-label="05 Use cases">
+<!-- ================= TRUST ================= -->
+<section class="trust" id="trust" data-screen-label="07 Trust">
   <div class="wrap">
-    <div class="section-head">
-      <h2 class="h2" data-i18n="usecases.h2">Ask the way you actually think.</h2>
-    </div>
-
-    <div class="cases" id="cases-grid">
-      <!-- populated by site.js from i18n.usecases.cards + .wide -->
-    </div>
-  </div>
-</section>
-
-<!-- ============ TRUST ============ -->
-<section class="trust" id="trust" data-screen-label="06 Trust">
-  <div class="wrap">
-    <div class="section-head">
-      <h2 class="h2" data-i18n="trust.h2">What the toolkit will and won’t do.</h2>
-    </div>
+    <div class="sec-num">§ 06 · 신뢰와 경계</div>
+    <h2 class="sec-title">
+      이 툴킷이 <em>하는 일과 하지 않는 일.</em>
+    </h2>
+    <p class="sec-sub">
+      이것은 호스팅 서비스가 아닙니다. 코드는 공개되어 있고, 내 컴퓨터에서만 동작합니다.
+    </p>
 
     <div class="trust-grid">
       <div class="trust-col trust-will">
         <div class="trust-col-head">
-          <span class="trust-col-mark">+</span>
-          <h3 data-i18n="trust.will">Will</h3>
+          <span class="trust-mark">+</span>
+          <h3>이런 일은 합니다</h3>
         </div>
-        <ul id="trust-will-list"></ul>
+        <ul>
+          <li>AI 에이전트를 <b>공식 imweb CLI</b> 에 연결합니다.</li>
+          <li>CLI를 <b>로컬에서</b> 설치 / 업데이트합니다.</li>
+          <li><b>기존 imweb 인증</b> 을 재사용하며, 필요할 때 브라우저 로그인을 요청합니다.</li>
+          <li>플러그인 메타데이터, 스킬 자산, 설치 스크립트, 문서, 예시를 제공합니다.</li>
+          <li>Claude Desktop 흐름을 위한 <b>로컬 MCP 브리지</b> 를 제공합니다.</li>
+        </ul>
       </div>
-
       <div class="trust-col trust-wont">
         <div class="trust-col-head">
-          <span class="trust-col-mark">—</span>
-          <h3 data-i18n="trust.wont">Won’t</h3>
+          <span class="trust-mark">−</span>
+          <h3>이런 일은 안 합니다</h3>
         </div>
-        <ul id="trust-wont-list"></ul>
+        <ul>
+          <li>데이터를 호스팅하거나 클라우드 서비스로 중계하지 않습니다.</li>
+          <li>쇼핑몰에 자동으로 <b>변경 작업</b> 을 실행하지 않습니다 (읽기 전용).</li>
+          <li>CLI가 제공하지 않는 트래픽 순위나 비공개 지표를 약속하지 않습니다.</li>
+          <li>공식 imweb CLI를 대체하지 않습니다 — 옆에서 함께 동작합니다.</li>
+          <li>이 사이트에서 텔레메트리나 추적 스크립트를 보내지 않습니다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="trust-foot">
+      <div class="trust-foot-item">
+        <div class="tf-label">라이선스</div>
+        <div class="tf-value">Apache-2.0 · 툴킷 자산</div>
+      </div>
+      <div class="trust-foot-item">
+        <div class="tf-label">상표</div>
+        <div class="tf-value"><a href="../TRADEMARKS.md">TRADEMARKS.md →</a></div>
+      </div>
+      <div class="trust-foot-item">
+        <div class="tf-label">배포</div>
+        <div class="tf-value">공개 레포 · GitHub Pages</div>
+      </div>
+      <div class="trust-foot-item">
+        <div class="tf-label">실행 위치</div>
+        <div class="tf-value">내 컴퓨터에서 로컬 실행</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ DOCS ============ -->
-<section class="docs" id="docs" data-screen-label="07 Docs">
+<!-- ================= DOCS ================= -->
+<section class="docs" id="docs" data-screen-label="09 Docs">
   <div class="wrap">
-    <div class="section-head">
-      <h2 class="h2" data-i18n="docs.h2">Read before you ship.</h2>
-    </div>
+    <div class="sec-num">§ 07 · 문서</div>
+    <h2 class="sec-title">사용 전에 — <em>한번 읽어보세요.</em></h2>
 
-    <ul class="doclist" role="list" id="doclist"></ul>
+    <ul class="doclist">
+      <li><a class="doc" href="ai-agent-installation.md">
+        <span class="doc-n">01</span>
+        <span class="doc-body">
+          <span class="doc-title">AI 에이전트 설치</span>
+          <span class="doc-desc">지원 환경별 단계별 설치 가이드.</span>
+        </span>
+        <span class="doc-ar">→</span>
+      </a></li>
+      <li><a class="doc" href="skill-installation-and-usage.md">
+        <span class="doc-n">02</span>
+        <span class="doc-body">
+          <span class="doc-title">스킬 설치 및 사용</span>
+          <span class="doc-desc">스킬이 imweb CLI 명령을 어떻게 감싸는지 설명.</span>
+        </span>
+        <span class="doc-ar">→</span>
+      </a></li>
+      <li><a class="doc" href="cli-toolkit-integration.md">
+        <span class="doc-n">03</span>
+        <span class="doc-body">
+          <span class="doc-title">CLI · 툴킷 연동</span>
+          <span class="doc-desc">툴킷이 로컬에서 공식 imweb CLI를 호출하는 방식.</span>
+        </span>
+        <span class="doc-ar">→</span>
+      </a></li>
+      <li><a class="doc" href="surface-support-matrix.md">
+        <span class="doc-n">04</span>
+        <span class="doc-body">
+          <span class="doc-title">지원 환경 매트릭스</span>
+          <span class="doc-desc">정식 지원과 수동 지원 환경의 공식 목록.</span>
+        </span>
+        <span class="doc-ar">→</span>
+      </a></li>
+      <li><a class="doc" href="../README.ko.md">
+        <span class="doc-n">R</span>
+        <span class="doc-body">
+          <span class="doc-title">README.md</span>
+          <span class="doc-desc">프로젝트 개요, 범위, 기여 안내.</span>
+        </span>
+        <span class="doc-ar">→</span>
+      </a></li>
+    </ul>
   </div>
 </section>
 
-<!-- ============ FINAL CTA ============ -->
-<section class="endcta" data-screen-label="08 End CTA">
+<!-- ================= MANIFESTO / END CTA ================= -->
+<section class="endcta" data-screen-label="10 End CTA">
   <div class="wrap endcta-inner">
-    <div class="endcta-copy">
-      <h2 class="h2" data-i18n="endcta.h2">Stop clicking through the admin for the same five questions.</h2>
-      <p class="section-sub" data-i18n="endcta.sub">Install the toolkit, point your AI agent at it, and ask in plain language.</p>
-    </div>
+    <div class="sec-num endcta-num">§ 08 · 시작하기</div>
+    <h2 class="endcta-h2">
+      매번 같은 질문 때문에 —<br />
+      <em>어드민 들락거리지 마세요.</em>
+    </h2>
+    <p class="endcta-sub">
+      설치하고, 에이전트를 연결하고, 평소처럼 물어보세요.
+    </p>
     <div class="endcta-actions">
-      <a class="btn btn-primary btn-lg" href="#install" data-i18n="endcta.primary">Install the toolkit</a>
-      <a class="btn btn-ghost btn-lg" href="https://github.com/imwebme/imweb-ai-toolkit" rel="noopener" data-i18n="endcta.secondary">View on GitHub →</a>
+      <a class="btn btn-primary" href="#install">툴킷 설치하기</a>
+      <a class="btn btn-ghost" href="https://github.com/imwebme/imweb-ai-toolkit" rel="noopener">GitHub에서 보기 →</a>
     </div>
-  </div>
-  <div class="endcta-bigmark" aria-hidden="true">
-    <img src="assets/imweb-logo-orange.png" alt="" />
+    <div class="endcta-bigmark" aria-hidden="true">
+      <img src="assets/imweb-logo-orange.png" alt="" />
+    </div>
   </div>
 </section>
 
-<!-- ============ FOOTER ============ -->
+<!-- ================= FOOTER ================= -->
 <footer class="foot">
   <div class="wrap">
-    <!-- imweb.me cross-promo: for visitors who don't yet have an imweb site -->
+    <!-- imweb.me cross-promo -->
     <a class="foot-promo" href="https://imweb.me" target="_blank" rel="noopener">
       <div class="foot-promo-text">
-        <div class="foot-promo-eyebrow" data-i18n="foot.promo.eyebrow">아직 imweb 사이트가 없으신가요?</div>
-        <div class="foot-promo-title" data-i18n="foot.promo.title">먼저 imweb에서 사이트를 만들고, 이 툴킷을 연결하세요.</div>
+        <div class="foot-promo-eyebrow">아직 imweb 사이트가 없으신가요?</div>
+        <div class="foot-promo-title">먼저 imweb에서 사이트를 만들고, 이 툴킷을 연결하세요.</div>
       </div>
       <span class="foot-promo-cta">
-        <span data-i18n="foot.promo.cta">imweb.me</span>
+        <span>imweb.me</span>
         <span aria-hidden="true">→</span>
       </span>
     </a>
@@ -425,25 +637,25 @@
         <span>ai-toolkit</span>
       </div>
       <nav class="foot-nav" aria-label="Footer">
-        <a href="#install" data-i18n="nav.install">Install</a>
-        <a href="#surfaces" data-i18n="nav.surfaces">Surfaces</a>
-        <a href="#usecases" data-i18n="nav.usecases">Use cases</a>
-        <a href="#trust" data-i18n="nav.trust">Trust</a>
-        <a href="#docs" data-i18n="nav.docs">Docs</a>
+        <a href="#shelf">예시</a>
+        <a href="#flow">동작</a>
+        <a href="#install">설치</a>
+        <a href="#surfaces">지원 환경</a>
+        <a href="#trust">신뢰</a>
+        <a href="#docs">문서</a>
       </nav>
     </div>
 
     <div class="foot-meta">
-      <span data-i18n="foot.meta1">Apache-2.0</span>
-      <span class="foot-dot" aria-hidden="true">·</span>
-      <span data-i18n="foot.meta2">Open-source toolkit</span>
-      <span class="foot-dot" aria-hidden="true">·</span>
-      <span data-i18n="foot.meta3">Open-source toolkit for imweb CLI workflows</span>
+      <span>Apache-2.0</span>
+      <span class="foot-dot">·</span>
+      <span>오픈소스 툴킷</span>
+      <span class="foot-dot">·</span>
+      <span>imweb 운영을 한 문장으로 끝내는 오픈소스 도구</span>
     </div>
   </div>
 </footer>
 
-<script src="i18n.js"></script>
 <script src="site.js"></script>
 </body>
 </html>
