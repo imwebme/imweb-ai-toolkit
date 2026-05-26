@@ -242,9 +242,19 @@ const tools = [
         limit: {
           type: 'integer',
           minimum: 1,
-          maximum: 100,
-          description: 'Maximum members to read.',
+          maximum: 1000,
+          description: 'Maximum members to read per cursor page.',
           default: 5,
+        },
+        cursor: {
+          type: 'string',
+          description: 'Optional cursor to start from for cursor-based member pagination.',
+        },
+        direction: {
+          type: 'string',
+          enum: ['next', 'previous'],
+          description: 'Cursor direction to follow.',
+          default: 'next',
         },
         unitCode: {
           type: 'string',
@@ -658,7 +668,10 @@ function productCategories(args) {
 
 function memberList(args) {
   const cliArgs = ['--output', 'json', 'member', 'list'];
-  cliArgs.push('--limit', String(clampInteger(args.limit, 5, 1, 100)));
+  cliArgs.push('--limit', String(clampInteger(args.limit, 5, 1, 1000)));
+  if (args.cursor) cliArgs.push('--cursor', String(args.cursor));
+  const direction = args.direction === 'previous' ? 'previous' : args.direction === 'next' ? 'next' : null;
+  if (direction) cliArgs.push('--direction', direction);
   if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
   const result = runJson(cliArgs);
   if (result.ok && args.redactSensitive !== false) {
