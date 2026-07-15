@@ -2,7 +2,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { homedir, platform } from 'node:os';
+import { homedir, platform, userInfo } from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const PLUGIN_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
@@ -794,11 +794,14 @@ function truncate(value, limit) {
 }
 
 function run(command, args, options = {}) {
+  const home = hostHome();
   const result = spawnSync(command, args, {
-    cwd: homedir(),
+    cwd: home,
     encoding: 'utf8',
     env: {
       ...process.env,
+      HOME: home,
+      ...(platform() === 'win32' ? { USERPROFILE: home } : {}),
       NO_COLOR: '1',
     },
     timeout: options.timeout || 60000,
@@ -813,6 +816,21 @@ function run(command, args, options = {}) {
     stdout: result.stdout || '',
     stderr: result.stderr || (result.error ? String(result.error.message || result.error) : ''),
   };
+}
+
+function hostHome() {
+  const override = String(process.env.IMWEB_AI_TOOLKIT_HOST_HOME || '').trim();
+  if (override) return override;
+
+  try {
+    // Desktop apps can replace HOME per task; the OS account home keeps CLI auth shared.
+    const accountHome = String(userInfo().homedir || '').trim();
+    if (accountHome) return accountHome;
+  } catch {
+    // Some restricted hosts do not expose the OS account database.
+  }
+
+  return homedir();
 }
 
 function preferredPowerShell() {
@@ -843,10 +861,11 @@ function findImwebBinary() {
 }
 
 function candidateBinaries() {
+  const home = hostHome();
   const name = platform() === 'win32' ? 'imweb.exe' : 'imweb';
   const candidates = [
-    join(homedir(), '.local', 'bin', name),
-    join(homedir(), '.local', 'share', 'imweb-cli', 'current', name),
+    join(home, '.local', 'bin', name),
+    join(home, '.local', 'share', 'imweb-cli', 'current', name),
   ];
 
   if (platform() === 'darwin') {
@@ -854,7 +873,7 @@ function candidateBinaries() {
   }
 
   if (platform() === 'win32') {
-    candidates.push(join(homedir(), 'AppData', 'Local', 'imweb-cli', 'current', name));
+    candidates.push(join(home, 'AppData', 'Local', 'imweb-cli', 'current', name));
   }
 
   return candidates;
