@@ -5,6 +5,7 @@
 ## 범위
 - 사이트 정보 조회
 - 사이트 유닛 확인
+- 사이트 메뉴와 접근 메타데이터 조회
 - CLI가 노출한 integration 관련 실행
 
 ## 하지 않는 일
@@ -15,7 +16,7 @@
 ## 우선 확인할 registry/대표 path
 - `imweb --output json config command-capabilities --domain site`
 - exact 확인이 필요하면 `imweb --output json config command-capabilities --path "site integration complete"`
-- 대표 leaf 예시: `site info`, `site unit`, `site integration info`, `site integration complete`
+- 대표 leaf 예시: `site info`, `site unit`, `site menu`, `site integration info`, `site integration complete`
 
 ## 실행 전 체크
 - 현재 profile
@@ -25,7 +26,8 @@
 
 ## 실행 원칙
 - 커맨드군을 문서에 복제하지 말고 registry의 `domain`, `surface`, `public_leaf_paths`를 먼저 봅니다.
-- 먼저 `info`/`unit`으로 현재 상태를 읽습니다.
+- 먼저 `info`/`unit`/`menu`로 현재 상태와 접근 가능한 메뉴를 읽습니다.
+- MCP가 연결된 surface에서는 `imweb_site_info`, `imweb_site_menu`를 read-only 진입점으로 사용할 수 있습니다.
 - `site integration info|complete|cancellation`은 integration write/operation 계열로 다룹니다.
 - 변경성 호출은 `--dry-run`으로 요청을 확인합니다.
 - 입력과 대상이 확정된 뒤에만 `--yes`를 사용합니다.

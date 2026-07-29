@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Codex plugin metadata that helps LLMs and agents invoke the Rust-based imweb CLI consistently. Short localized aliases route to the same imweb entrypoint.",
   "author": {
     "name": "imweb",
