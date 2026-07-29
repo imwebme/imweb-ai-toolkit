@@ -6,7 +6,7 @@
 - 회원 목록/상세 조회
 - 회원 카트/위시리스트 조회
 - 등급/그룹과 소속 회원 조회
-- 회원 등급/그룹 update
+- 회원 등급/그룹 단건·일괄 update
 
 ## 하지 않는 일
 - 쿠폰 발급, 포인트 변경 같은 promotion 실행
@@ -19,7 +19,7 @@
 ## 우선 확인할 registry/대표 path
 - `imweb --output json config command-capabilities --domain member`
 - exact 확인이 필요하면 `imweb --output json config command-capabilities --path "member update"`
-- 대표 leaf 예시: `member list`, `member get`, `member grades members`, `member groups members`, `member update grade`
+- 대표 leaf 예시: `member list`, `member get`, `member grades members`, `member groups members`, `member update grade`, `member update grade-bulk`, `member update groups-bulk`
 
 ## 실행 전 체크
 - 현재 profile
@@ -29,6 +29,8 @@
 
 ## 실행 원칙
 - 커맨드군을 문서에 복제하지 말고 registry의 `domain`, `surface`, `public_leaf_paths`를 먼저 봅니다.
+- 추천인/수정 시각 조회는 `member list --recommend-code ... --edit-time-range-type ... --edit-time-range-value ...`를 사용합니다. MCP `imweb_member_list`에도 같은 필터가 있습니다.
+- `grade-bulk`, `groups-bulk`는 한 요청에 회원을 최대 30명까지 받습니다. 10명을 초과하는 실제 실행에는 dry-run이 발급한 bulk confirmation token이 필요합니다.
 - 변경 전에는 관련 `list`/`get`으로 현재 상태를 먼저 읽습니다.
 - write는 항상 `--dry-run`으로 요청 형태를 먼저 확인합니다.
 - 대상, 입력 JSON, 변경 의도가 확정된 뒤에만 `--yes`를 사용합니다.

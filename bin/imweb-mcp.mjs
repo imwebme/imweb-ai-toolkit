@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const PLUGIN_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 const SERVER_NAME = 'imweb-cli';
-const SERVER_VERSION = '0.1.0';
+const SERVER_VERSION = '0.2.0';
 const PROTOCOL_VERSION = '2024-11-05';
 
 let inputBuffer = Buffer.alloc(0);
@@ -121,6 +121,14 @@ const tools = [
           type: 'string',
           description: 'Optional imweb unit code override.',
         },
+        shippingPlaceCode: {
+          type: 'string',
+          description: 'Optional shipping or return place code filter.',
+        },
+        orderSectionStatus: {
+          type: 'string',
+          description: 'Optional order section status filter, including EXCHANGE_COMPLETE.',
+        },
         redactSensitive: {
           type: 'boolean',
           description: 'Redact customer contact, address, and bank fields before returning data.',
@@ -164,12 +172,53 @@ const tools = [
     },
   },
   {
+    name: 'imweb_order_shipping_places',
+    description: 'Read shipping and return places through the local official imweb CLI. Redacts address and contact fields by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        shippingPlaceCode: {
+          type: 'string',
+          description: 'Optional shipping or return place code filter.',
+        },
+        shippingPlaceName: {
+          type: 'string',
+          description: 'Optional shipping or return place name filter.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact address and contact fields before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
     name: 'imweb_site_info',
     description: 'Read the current imweb site information through the local official imweb CLI.',
     inputSchema: {
       type: 'object',
       additionalProperties: false,
       properties: {},
+    },
+  },
+  {
+    name: 'imweb_site_menu',
+    description: 'Read the current unit menu and access metadata through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
     },
   },
   {
@@ -233,6 +282,33 @@ const tools = [
     },
   },
   {
+    name: 'imweb_product_options_batch',
+    description: 'Read options for up to 10 products through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['prodNos'],
+      properties: {
+        prodNos: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 10,
+          items: {
+            oneOf: [
+              { type: 'integer' },
+              { type: 'string' },
+            ],
+          },
+          description: 'Product numbers to inspect.',
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
+    },
+  },
+  {
     name: 'imweb_member_list',
     description: 'Read imweb member list data through the local official imweb CLI. Redacts member fields by default.',
     inputSchema: {
@@ -259,6 +335,24 @@ const tools = [
         unitCode: {
           type: 'string',
           description: 'Optional imweb unit code override.',
+        },
+        recommendCode: {
+          type: 'string',
+          description: 'Optional referrer code filter.',
+        },
+        editTimeRangeType: {
+          type: 'string',
+          enum: ['GTE', 'LTE', 'BETWEEN'],
+          description: 'Member edit time comparison.',
+        },
+        editTimeRangeValue: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 2,
+          items: {
+            type: 'string',
+          },
+          description: 'One timestamp for GTE/LTE or two timestamps for BETWEEN.',
         },
         redactSensitive: {
           type: 'boolean',
@@ -291,6 +385,319 @@ const tools = [
         unitCode: {
           type: 'string',
           description: 'Optional imweb unit code override.',
+        },
+        editDateType: {
+          type: 'string',
+          enum: ['GTE', 'LTE', 'BETWEEN'],
+          description: 'Coupon edit date comparison.',
+        },
+        editDateValue: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 2,
+          items: {
+            type: 'string',
+          },
+          description: 'One timestamp for GTE/LTE or two timestamps for BETWEEN.',
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_promotion_coupon_targets_by_coupon',
+    description: 'Read targeted-issue members for one coupon through the local official imweb CLI. Redacts member identifiers by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['shopCouponCode'],
+      properties: {
+        shopCouponCode: {
+          type: 'string',
+          description: 'Coupon code to inspect.',
+        },
+        memberUid: {
+          type: 'string',
+          description: 'Optional member identifier filter.',
+        },
+        page: {
+          type: 'integer',
+          minimum: 1,
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          default: 10,
+        },
+        all: {
+          type: 'boolean',
+          default: false,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact member identifiers before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_promotion_coupon_targets_by_member',
+    description: 'Read targeted-issue coupons for one member through the local official imweb CLI. Redacts member identifiers by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['memberUid'],
+      properties: {
+        memberUid: {
+          type: 'string',
+          description: 'Member identifier to inspect.',
+        },
+        page: {
+          type: 'integer',
+          minimum: 1,
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          default: 10,
+        },
+        all: {
+          type: 'boolean',
+          default: false,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact member identifiers before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_promotion_point_log',
+    description: 'Read imweb point history through the local official imweb CLI. Redacts member, admin, and order identifiers by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          default: 10,
+        },
+        all: {
+          type: 'boolean',
+          default: false,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        memberUids: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+          description: 'Optional member identifiers.',
+        },
+        timeType: {
+          type: 'string',
+          enum: ['GTE', 'LTE', 'BETWEEN'],
+          description: 'Point log time comparison.',
+        },
+        timeValue: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 2,
+          items: {
+            type: 'string',
+          },
+          description: 'One timestamp for GTE/LTE or two timestamps for BETWEEN.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact member, admin, and order identifiers before returning data.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_community_forms_list',
+    description: 'Read imweb input-form definitions through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          default: 10,
+        },
+        all: {
+          type: 'boolean',
+          default: false,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        formCreateTimeType: {
+          type: 'string',
+          enum: ['GTE', 'LTE', 'BETWEEN'],
+        },
+        formCreateTime: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 2,
+          items: {
+            type: 'string',
+          },
+        },
+        formEditTimeType: {
+          type: 'string',
+          enum: ['GTE', 'LTE', 'BETWEEN'],
+        },
+        formEditTime: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 2,
+          items: {
+            type: 'string',
+          },
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_community_form_get',
+    description: 'Read one imweb input-form definition through the local official imweb CLI.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['formNo'],
+      properties: {
+        formNo: {
+          oneOf: [
+            { type: 'integer' },
+            { type: 'string' },
+          ],
+          description: 'Input-form board number.',
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_community_form_submissions_list',
+    description: 'Read imweb input-form submissions through the local official imweb CLI. Returns compact metadata with submitted values removed by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        page: {
+          type: 'integer',
+          minimum: 1,
+          default: 1,
+        },
+        limit: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 100,
+          default: 10,
+        },
+        all: {
+          type: 'boolean',
+          default: false,
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        formNo: {
+          oneOf: [
+            { type: 'integer' },
+            { type: 'string' },
+          ],
+          description: 'Optional input-form board number filter.',
+        },
+        formSubmitTimeType: {
+          type: 'string',
+          enum: ['GTE', 'LTE', 'BETWEEN'],
+        },
+        formSubmitTime: {
+          type: 'array',
+          minItems: 1,
+          maxItems: 2,
+          items: {
+            type: 'string',
+          },
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact submitted values and member fields before returning data.',
+          default: true,
+        },
+        compact: {
+          type: 'boolean',
+          description: 'Return submission metadata without arbitrary submitted values.',
+          default: true,
+        },
+      },
+    },
+  },
+  {
+    name: 'imweb_community_form_submission_get',
+    description: 'Read one imweb input-form submission through the local official imweb CLI. Returns compact metadata with submitted values removed by default.',
+    inputSchema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['submitCode'],
+      properties: {
+        submitCode: {
+          type: 'string',
+          description: 'Submission code to inspect.',
+        },
+        unitCode: {
+          type: 'string',
+          description: 'Optional imweb unit code override.',
+        },
+        redactSensitive: {
+          type: 'boolean',
+          description: 'Redact submitted values and member fields before returning data.',
+          default: true,
+        },
+        compact: {
+          type: 'boolean',
+          description: 'Return submission metadata without arbitrary submitted values.',
+          default: true,
         },
       },
     },
@@ -433,12 +840,22 @@ function callTool(id, params) {
     imweb_order_list: orderList,
     imweb_order_get: orderGet,
     imweb_order_parcel_companies: orderParcelCompanies,
+    imweb_order_shipping_places: orderShippingPlaces,
     imweb_site_info: siteInfo,
+    imweb_site_menu: siteMenu,
     imweb_product_list: productList,
     imweb_product_get: productGet,
     imweb_product_categories: productCategories,
+    imweb_product_options_batch: productOptionsBatch,
     imweb_member_list: memberList,
     imweb_promotion_coupon_list: promotionCouponList,
+    imweb_promotion_coupon_targets_by_coupon: promotionCouponTargetsByCoupon,
+    imweb_promotion_coupon_targets_by_member: promotionCouponTargetsByMember,
+    imweb_promotion_point_log: promotionPointLog,
+    imweb_community_forms_list: communityFormsList,
+    imweb_community_form_get: communityFormGet,
+    imweb_community_form_submissions_list: communityFormSubmissionsList,
+    imweb_community_form_submission_get: communityFormSubmissionGet,
     imweb_community_review_list: communityReviewList,
   }[name];
 
@@ -603,12 +1020,10 @@ function commandCapabilities(args) {
 
 function orderList(args) {
   const cliArgs = ['--output', 'json', 'order', 'list'];
-  if (args.all) {
-    cliArgs.push('--all');
-  } else {
-    cliArgs.push('--page', String(clampInteger(args.page, 1, 1, 100000)), '--limit', String(clampInteger(args.limit, 5, 1, 100)));
-  }
+  appendPageArgs(cliArgs, args, 5);
   if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  if (args.shippingPlaceCode) cliArgs.push('--shipping-place-code', String(args.shippingPlaceCode));
+  if (args.orderSectionStatus) cliArgs.push('--order-section-status', String(args.orderSectionStatus));
 
   const result = runJson(cliArgs);
   if (result.ok && args.redactSensitive !== false) {
@@ -639,8 +1054,27 @@ function orderParcelCompanies() {
   return runJson(['--output', 'json', 'order', 'parcel-companies']);
 }
 
+function orderShippingPlaces(args) {
+  const cliArgs = ['--output', 'json', 'order', 'shipping-places'];
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  if (args.shippingPlaceCode) cliArgs.push('--shipping-place-code', String(args.shippingPlaceCode));
+  if (args.shippingPlaceName) cliArgs.push('--shipping-place-name', String(args.shippingPlaceName));
+  const result = runJson(cliArgs);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redactMatchingKeys(result.data, /address|addr|call|phone|mobile|cell|tel|contact|zip|postal|postcode/i);
+    result.redacted = true;
+  }
+  return result;
+}
+
 function siteInfo() {
   return runJson(['--output', 'json', 'site', 'info']);
+}
+
+function siteMenu(args) {
+  const cliArgs = ['--output', 'json', 'site', 'menu'];
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runJson(cliArgs);
 }
 
 function productList(args) {
@@ -666,6 +1100,19 @@ function productCategories(args) {
   return runJson(cliArgs);
 }
 
+function productOptionsBatch(args) {
+  const prodNos = Array.isArray(args.prodNos)
+    ? args.prodNos.map((value) => String(value).trim()).filter(Boolean)
+    : [];
+  if (prodNos.length === 0 || prodNos.length > 10) {
+    return { ok: false, message: 'prodNos must contain between 1 and 10 product numbers.' };
+  }
+  const cliArgs = ['--output', 'json', 'product', 'options', 'batch'];
+  for (const prodNo of prodNos) cliArgs.push('--prod-no', prodNo);
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runJson(cliArgs);
+}
+
 function memberList(args) {
   const cliArgs = ['--output', 'json', 'member', 'list'];
   cliArgs.push('--limit', String(clampInteger(args.limit, 5, 1, 1000)));
@@ -673,6 +1120,15 @@ function memberList(args) {
   const direction = args.direction === 'previous' ? 'previous' : args.direction === 'next' ? 'next' : null;
   if (direction) cliArgs.push('--direction', direction);
   if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  if (args.recommendCode) cliArgs.push('--recommend-code', String(args.recommendCode));
+  const rangeError = appendRangeArgs(
+    cliArgs,
+    args.editTimeRangeType,
+    args.editTimeRangeValue,
+    '--edit-time-range-type',
+    '--edit-time-range-value',
+  );
+  if (rangeError) return { ok: false, message: rangeError };
   const result = runJson(cliArgs);
   if (result.ok && args.redactSensitive !== false) {
     result.data = redact(result.data);
@@ -685,7 +1141,146 @@ function promotionCouponList(args) {
   const cliArgs = ['--output', 'json', 'promotion', 'coupon', 'list'];
   cliArgs.push('--page', String(clampInteger(args.page, 1, 1, 100000)), '--limit', String(clampInteger(args.limit, 10, 1, 100)));
   if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  const rangeError = appendRangeArgs(
+    cliArgs,
+    args.editDateType,
+    args.editDateValue,
+    '--edit-date-type',
+    '--edit-date-value',
+  );
+  if (rangeError) return { ok: false, message: rangeError };
   return runJson(cliArgs);
+}
+
+function promotionCouponTargetsByCoupon(args) {
+  if (!args.shopCouponCode) {
+    return { ok: false, message: 'shopCouponCode is required.' };
+  }
+  const cliArgs = [
+    '--output',
+    'json',
+    'promotion',
+    'coupon',
+    'targets',
+    'by-coupon',
+    String(args.shopCouponCode),
+  ];
+  appendPageArgs(cliArgs, args, 10);
+  if (args.memberUid) cliArgs.push('--member-uid', String(args.memberUid));
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runWithIdentifierRedaction(cliArgs, args);
+}
+
+function promotionCouponTargetsByMember(args) {
+  if (!args.memberUid) {
+    return { ok: false, message: 'memberUid is required.' };
+  }
+  const cliArgs = [
+    '--output',
+    'json',
+    'promotion',
+    'coupon',
+    'targets',
+    'by-member',
+    String(args.memberUid),
+  ];
+  appendPageArgs(cliArgs, args, 10);
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runWithIdentifierRedaction(cliArgs, args);
+}
+
+function promotionPointLog(args) {
+  const cliArgs = ['--output', 'json', 'promotion', 'point', 'log'];
+  appendPageArgs(cliArgs, args, 10);
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  if (Array.isArray(args.memberUids)) {
+    for (const memberUid of args.memberUids) {
+      if (String(memberUid).trim()) cliArgs.push('--member-uid', String(memberUid));
+    }
+  }
+  const rangeError = appendRangeArgs(
+    cliArgs,
+    args.timeType,
+    args.timeValue,
+    '--time-type',
+    '--time-value',
+  );
+  if (rangeError) return { ok: false, message: rangeError };
+  const result = runJson(cliArgs);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redactMatchingKeys(
+      result.data,
+      /^(memberUid|adminUid|orderNo|orderCode|paymentNo|shopCouponIssueCode)$/i,
+    );
+    result.redacted = true;
+  }
+  return result;
+}
+
+function communityFormsList(args) {
+  const cliArgs = ['--output', 'json', 'community', 'forms', 'list'];
+  appendPageArgs(cliArgs, args, 10);
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  const createRangeError = appendRangeArgs(
+    cliArgs,
+    args.formCreateTimeType,
+    args.formCreateTime,
+    '--form-create-time-type',
+    '--form-create-time',
+  );
+  if (createRangeError) return { ok: false, message: createRangeError };
+  const editRangeError = appendRangeArgs(
+    cliArgs,
+    args.formEditTimeType,
+    args.formEditTime,
+    '--form-edit-time-type',
+    '--form-edit-time',
+  );
+  if (editRangeError) return { ok: false, message: editRangeError };
+  return runJson(cliArgs);
+}
+
+function communityFormGet(args) {
+  if (args.formNo === undefined || args.formNo === null || String(args.formNo).trim() === '') {
+    return { ok: false, message: 'formNo is required.' };
+  }
+  const cliArgs = ['--output', 'json', 'community', 'forms', 'get', String(args.formNo)];
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runJson(cliArgs);
+}
+
+function communityFormSubmissionsList(args) {
+  const cliArgs = ['--output', 'json', 'community', 'form-submissions', 'list'];
+  appendPageArgs(cliArgs, args, 10);
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  if (args.formNo !== undefined && args.formNo !== null && String(args.formNo).trim()) {
+    cliArgs.push('--form-no', String(args.formNo));
+  }
+  const rangeError = appendRangeArgs(
+    cliArgs,
+    args.formSubmitTimeType,
+    args.formSubmitTime,
+    '--form-submit-time-type',
+    '--form-submit-time',
+  );
+  if (rangeError) return { ok: false, message: rangeError };
+  return runFormSubmission(cliArgs, args);
+}
+
+function communityFormSubmissionGet(args) {
+  if (!args.submitCode) {
+    return { ok: false, message: 'submitCode is required.' };
+  }
+  const cliArgs = [
+    '--output',
+    'json',
+    'community',
+    'form-submissions',
+    'get',
+    String(args.submitCode),
+  ];
+  if (args.unitCode) cliArgs.push('--unit-code', String(args.unitCode));
+  return runFormSubmission(cliArgs, args);
 }
 
 function communityReviewList(args) {
@@ -695,6 +1290,67 @@ function communityReviewList(args) {
   if (result.ok && args.redactSensitive !== false) {
     result.data = redact(result.data);
     result.redacted = true;
+  }
+  return result;
+}
+
+function appendPageArgs(cliArgs, args, defaultLimit) {
+  if (args.all) {
+    cliArgs.push('--all');
+  } else {
+    cliArgs.push(
+      '--page',
+      String(clampInteger(args.page, 1, 1, 100000)),
+      '--limit',
+      String(clampInteger(args.limit, defaultLimit, 1, 100)),
+    );
+  }
+}
+
+function appendRangeArgs(cliArgs, type, values, typeFlag, valueFlag) {
+  const normalizedType = type === undefined || type === null ? '' : String(type).trim();
+  const normalizedValues = Array.isArray(values)
+    ? values.map((value) => String(value).trim()).filter(Boolean)
+    : [];
+  if (!normalizedType && normalizedValues.length === 0) return null;
+  if (!normalizedType) return `${typeFlag} is required when ${valueFlag} is provided.`;
+  if (!['GTE', 'LTE', 'BETWEEN'].includes(normalizedType)) {
+    return `${typeFlag} must be GTE, LTE, or BETWEEN.`;
+  }
+  const expectedCount = normalizedType === 'BETWEEN' ? 2 : 1;
+  if (normalizedValues.length !== expectedCount) {
+    return `${valueFlag} requires ${expectedCount} value(s) when ${typeFlag} is ${normalizedType}.`;
+  }
+  cliArgs.push(typeFlag, normalizedType);
+  for (const value of normalizedValues) cliArgs.push(valueFlag, value);
+  return null;
+}
+
+function runWithIdentifierRedaction(cliArgs, args) {
+  const result = runJson(cliArgs);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redactMatchingKeys(
+      result.data,
+      /^(memberUid|writerMemberCode|shopCouponIssueCode)$/i,
+    );
+    result.redacted = true;
+  }
+  return result;
+}
+
+function runFormSubmission(cliArgs, args) {
+  const result = runJson(cliArgs);
+  if (result.ok && args.redactSensitive !== false) {
+    result.data = redactMatchingKeys(
+      result.data,
+      /^(value|valueList|etcValue|files|writerMemberCode|memberUid|name|email|phone|mobile|cell|tel|call|contact|address|addr|memo|message)$/i,
+    );
+    result.redacted = true;
+  }
+  if (result.ok && args.compact !== false) {
+    result.data = compactFormSubmissionData(result.data);
+    result.compact = true;
+    result.compactGuidance = 'Set compact=false only when submitted values are required. Sensitive values remain redacted unless redactSensitive=false is also set.';
   }
   return result;
 }
@@ -885,6 +1541,53 @@ function clampInteger(value, fallback, min, max) {
   return Math.max(min, Math.min(max, parsed));
 }
 
+function compactFormSubmissionData(data) {
+  if (Array.isArray(data)) return data.map(compactFormSubmissionRecord);
+  if (!data || typeof data !== 'object') return data;
+  if (data.data && typeof data.data === 'object') {
+    return {
+      ...pickObject(data, ['statusCode']),
+      data: compactFormSubmissionData(data.data),
+    };
+  }
+  if (Array.isArray(data.list)) {
+    return pickObject(
+      {
+        ...data,
+        list: data.list.map(compactFormSubmissionRecord),
+      },
+      ['currentPage', 'pageSize', 'totalCount', 'totalPage', 'unitCode', 'list'],
+    );
+  }
+  return compactFormSubmissionRecord(data);
+}
+
+function compactFormSubmissionRecord(submission) {
+  if (!submission || typeof submission !== 'object') return submission;
+  const items = Array.isArray(submission.item)
+    ? submission.item.map((item) => pickObject(item, ['itemCode', 'itemType', 'itemSubject']))
+    : submission.item;
+  return pickObject(
+    {
+      ...submission,
+      item: items,
+      itemCount: Array.isArray(submission.item) ? submission.item.length : undefined,
+    },
+    [
+      'unitCode',
+      'submitNo',
+      'submitCode',
+      'formNo',
+      'formCode',
+      'formName',
+      'writerMemberCode',
+      'wtime',
+      'itemCount',
+      'item',
+    ],
+  );
+}
+
 function compactOrderListData(data) {
   if (Array.isArray(data)) return data.map(compactOrderRecord);
   if (!data || typeof data !== 'object') return data;
@@ -1015,6 +1718,21 @@ function redact(value) {
       redacted[key] = '[REDACTED]';
     } else {
       redacted[key] = redact(inner);
+    }
+  }
+  return redacted;
+}
+
+function redactMatchingKeys(value, keyPattern) {
+  if (Array.isArray(value)) return value.map((item) => redactMatchingKeys(item, keyPattern));
+  if (!value || typeof value !== 'object') return value;
+
+  const redacted = {};
+  for (const [key, inner] of Object.entries(value)) {
+    if (keyPattern.test(key)) {
+      redacted[key] = '[REDACTED]';
+    } else {
+      redacted[key] = redactMatchingKeys(inner, keyPattern);
     }
   }
   return redacted;

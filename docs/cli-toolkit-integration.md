@@ -112,12 +112,31 @@ toolkit은 아래 전제를 가지고 CLI를 소비합니다.
 - `imweb --help`가 공개 command truth를 제공합니다.
 - `imweb --output json`이 자동화 가능한 출력 truth를 제공합니다.
 - `--dry-run`과 `--yes`의 의미는 CLI가 정의합니다.
+- OpenAPI 2026-07 동기화 경로를 사용하는 toolkit 0.2.6은 `imweb` CLI 0.1.13 이상을 전제로 합니다.
 - toolkit은 이 계약을 문서화하고 작업 절차에 반영하지만, 임의로 확장하지 않습니다.
 
 세부 내용은 [../skills/imweb/docs/execution-contract.md](../skills/imweb/docs/execution-contract.md)와 [../skills/imweb/docs/capability-registry.md](../skills/imweb/docs/capability-registry.md)를 함께 봅니다.
 
+## MCP read-only 동기화 범위
+
+local MCP bridge는 CLI command registry 전체를 그대로 노출하지 않고, AI surface에서 안전하게 조회할 수 있는 read 경로만 도구로 제공합니다.
+
+| 도메인 | MCP read 경로 | 기본 보호 |
+| --- | --- | --- |
+| site | 사이트 정보, 메뉴 | read-only |
+| order | 목록/상세, 택배사, 출고·반품 교환지 | 주문·주소·연락처 마스킹, 목록 축약 |
+| product | 목록/상세, 카테고리, 상품 10개 이하 옵션 일괄 조회 | read-only, batch 수 제한 |
+| member | 목록과 추천인/수정 시각 필터 | 회원·연락처 마스킹 |
+| promotion | 쿠폰 목록/수정일 필터, 지정 발행 대상, 포인트 로그 | 회원·관리자·주문 식별자 마스킹 |
+| community | 입력폼 정의/제출, 리뷰 목록 | 제출값 기본 제거, 회원 식별자 마스킹 |
+
+입력폼 제출은 `compact=true`, `redactSensitive=true`가 기본입니다. 원문이 필요한 업무에서만 축약을 해제하고, 마스킹 해제는 사용자가 민감정보 원문을 명시적으로 요구한 경우에만 사용합니다.
+
+회원 일괄 변경, 쿠폰 생성/발급, 포인트 변경 같은 write 경로는 local MCP tool로 노출하지 않습니다. 해당 작업은 CLI의 dry-run과 명시적 실행 확인 계약을 그대로 사용합니다.
+
 ## 개발자가 점검할 것
 
+- toolkit이 요구하는 최소 CLI 버전이 공개 stable channel에 먼저 배포되었는지
 - 설치 문서의 경로와 실제 스크립트 경로가 일치하는지
 - root `plugin.json`의 entrypoint가 실제 표면 파일을 가리키는지
 - 표면 README가 현재 지원 수준과 일치하는지

@@ -4,7 +4,7 @@
 
 ## 범위
 - 상품 조회/생성
-- 상품 정보, 가격, 상태, 재고, 옵션 관련 업데이트
+- 상품 정보, 가격, 상태, 재고, 옵션 조회와 관련 업데이트
 - 카테고리/쇼케이스/배송설정 조회
 - 상품 이미지 업로드
 
@@ -16,7 +16,7 @@
 ## 우선 확인할 registry/대표 path
 - `imweb --output json config command-capabilities --domain product`
 - exact 확인이 필요하면 `imweb --output json config command-capabilities --path "product update"`
-- 대표 leaf 예시: `product list`, `product create`, `product options list`, `product update price`, `product images upload`
+- 대표 leaf 예시: `product list`, `product create`, `product options list`, `product options batch`, `product update price`, `product images upload`
 
 ## 실행 전 체크
 - 현재 profile
@@ -26,6 +26,7 @@
 
 ## 실행 원칙
 - 커맨드군을 문서에 복제하지 말고 registry의 `domain`, `surface`, `public_leaf_paths`를 먼저 봅니다.
+- 여러 상품의 옵션 조회는 `product options batch --prod-no ...`를 사용하며 한 요청에 최대 10개 상품만 전달합니다. MCP에서는 `imweb_product_options_batch`가 같은 제한을 적용합니다.
 - 변경 전에는 `list`/`get`과 관련 조회 커맨드로 현재 상태를 먼저 확인합니다.
 - write는 항상 `--dry-run`을 먼저 실행합니다.
 - payload와 대상이 확정된 뒤에만 `--yes`를 사용합니다.
