@@ -28,6 +28,7 @@
 - Cowork의 shell은 VM일 수 있으므로 plugin에 포함된 local MCP bridge가 host `imweb` CLI 설치/업데이트와 auth/profile 재사용을 맡는 경로를 우선합니다. host imweb MCP tool이 보이지 않으면 package artifact 제시까지가 안전한 no-UI 경로입니다.
 - `.mcp.json`의 `imweb-cli` server는 `CLAUDE_PLUGIN_ROOT`가 있으면 plugin root를, 없으면 현재 project cwd를 기준으로 `bin/imweb-mcp.mjs`를 실행합니다. 그래서 plugin package 내부와 public repo clone을 Claude Code project MCP로 직접 연 경우 모두 같은 bridge를 가리킵니다.
 - local MCP bridge는 CLI 0.1.13 이상의 신규 OpenAPI read 경로만 선별 노출합니다. 입력폼 제출값과 회원/주문/프로모션 식별자는 기본 축약·마스킹하며, 신규 write 경로는 MCP에 노출하지 않습니다.
+- 이미지 전용 업로드와 옵션 색상·썸네일 수정은 CLI 0.1.14 이상을 직접 실행할 수 있는 환경에서 지원합니다. Claude Desktop local MCP/Cowork에서는 기존 상품·옵션 도구로 현재 상태를 조회할 수 있으며, 업로드·수정 도구는 제공하지 않습니다. 자세한 절차는 [상품 실행](../skills/imweb/references/product.md)을 따릅니다.
 - Cursor는 marketplace 메타를 제공하지만 실제 연결은 여전히 `.mcp.json`을 기준으로 수동 설정합니다.
 
 ## 권장 확인 순서

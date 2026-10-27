@@ -113,6 +113,7 @@ toolkit은 아래 전제를 가지고 CLI를 소비합니다.
 - `imweb --output json`이 자동화 가능한 출력 truth를 제공합니다.
 - `--dry-run`과 `--yes`의 의미는 CLI가 정의합니다.
 - OpenAPI 2026-07 동기화 경로를 사용하는 toolkit 0.2.6은 `imweb` CLI 0.1.13 이상을 전제로 합니다.
+- 상품 이미지 전용 업로드(`product images upload-asset`)와 옵션 색상·썸네일 수정(`product update option`)은 CLI 0.1.14 이상과 해당 capability/help를 확인합니다. 이 기능의 버전 조건은 기존 조회 기능과 별도로 적용합니다. 공식 업데이트 후에도 지원 버전이나 경로가 없으면 해당 변경 작업을 보류합니다.
 - toolkit은 이 계약을 문서화하고 작업 절차에 반영하지만, 임의로 확장하지 않습니다.
 
 세부 내용은 [../skills/imweb/docs/execution-contract.md](../skills/imweb/docs/execution-contract.md)와 [../skills/imweb/docs/capability-registry.md](../skills/imweb/docs/capability-registry.md)를 함께 봅니다.
@@ -133,6 +134,8 @@ local MCP bridge는 CLI command registry 전체를 그대로 노출하지 않고
 입력폼 제출은 `compact=true`, `redactSensitive=true`가 기본입니다. 원문이 필요한 업무에서만 축약을 해제하고, 마스킹 해제는 사용자가 민감정보 원문을 명시적으로 요구한 경우에만 사용합니다.
 
 회원 일괄 변경, 쿠폰 생성/발급, 포인트 변경 같은 write 경로는 local MCP tool로 노출하지 않습니다. 해당 작업은 CLI의 dry-run과 명시적 실행 확인 계약을 그대로 사용합니다.
+
+상품 이미지 업로드와 옵션 색상·썸네일 수정도 CLI 실행 환경에서 처리합니다. 기존 MCP `imweb_product_get`, `imweb_product_options_batch`로 상품과 옵션을 조회할 수 있고, 옵션 응답의 `color`, `imageUrl`을 확인할 수 있습니다. MCP 전용 환경에서는 변경을 실행하지 않으며 Cowork VM shell이나 raw API로 우회하지 않습니다. 업로드 결과의 `code/path`를 옵션에 연결하고 수정 후 재조회하는 절차는 [상품 실행](../skills/imweb/references/product.md)을 따릅니다.
 
 ## 개발자가 점검할 것
 
