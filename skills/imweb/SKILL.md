@@ -68,7 +68,7 @@ CLI/런타임 게이트:
 도메인 라우팅:
 - 주문, 취소, 반품, 교환, 송장, 배송: [`references/order.md`](./references/order.md)
 - 무통장 입금 확인: [`references/payment.md`](./references/payment.md)
-- 상품, 카테고리, 재고, 옵션, 이미지: [`references/product.md`](./references/product.md)
+- 상품, 카테고리, 재고, 옵션, 이미지 업로드, 옵션 색상·썸네일: [`references/product.md`](./references/product.md). 이미지 전용 업로드와 옵션 색상·썸네일 수정에는 CLI 0.1.14 이상이 필요합니다. MCP에서는 기존 도구로 현재 상태를 조회할 수 있습니다.
 - 회원 조회, 등급, 그룹, 카트, 위시리스트: [`references/member.md`](./references/member.md)
 - 쿠폰, 포인트: [`references/promotion.md`](./references/promotion.md)
 - Q&A, 리뷰, 리뷰 답변: [`references/community.md`](./references/community.md)

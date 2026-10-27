@@ -127,6 +127,8 @@ Uninstall removes toolkit plugin, marketplace, copied skill, toolkit-owned plugi
 
 Codex App/CLI, Claude Code, Claude Desktop local MCP, and Claude Desktop Cowork are the primary supported surfaces. Cursor remains documented as a limited/manual connection surface. The authoritative support detail is [docs/surface-support-matrix.md](docs/surface-support-matrix.md).
 
+With CLI 0.1.14 or later, agents that can run the CLI can upload product image assets and update option colors and thumbnails. The skill checks the installed version and command capabilities, previews writes, and verifies the result. Desktop MCP/Cowork supports product and option inspection through existing read tools. See the [product workflow](skills/imweb/references/product.md) for requirements and steps.
+
 ## License
 
 Toolkit assets in this repository are licensed under [Apache-2.0](LICENSE).

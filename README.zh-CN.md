@@ -127,6 +127,8 @@ npx -y github:imwebme/imweb-ai-toolkit --uninstall --tool all
 
 Codex App/CLI、Claude Code 和 Claude Desktop Cowork 是主要支持的 plugin surface。Cursor 被记录为有限/手动连接 surface。权威 support detail 请参见 [docs/surface-support-matrix.md](docs/surface-support-matrix.md)。
 
+能够运行 CLI 0.1.14 或更高版本的代理可以上传商品图片并修改选项颜色和缩略图。技能会检查已安装的版本和命令支持情况，预览变更并重新查询结果。Desktop MCP/Cowork 可以通过现有的只读工具查看商品和选项。条件和步骤请参见[商品操作流程](skills/imweb/references/product.md)。
+
 ## 许可证
 
 此仓库中的 toolkit asset 根据 [Apache-2.0](LICENSE) 授权。

@@ -50,8 +50,25 @@ imweb community form-submissions list --form-no 1
 
 ## 원칙
 
-- `imweb --version`으로 0.1.13 이상인지 확인한 뒤 새 경로를 사용합니다.
+- 기능별 최소 버전과 실제 capability/help를 확인한 뒤 새 경로를 사용합니다.
 - 세부 인자 형태는 항상 실제 `--help`를 다시 확인합니다.
 - 자동화는 `--output json`을 우선 사용합니다.
 - write는 `--dry-run` 후 `--yes` 순서를 지킵니다.
 - 현재 런타임이 Claude Desktop Cowork이면 `uname -s && uname -m`으로 실행 환경을 확인하고, 사용자 Mac과 같은 환경이라고 가정하지 않습니다.
+
+## 상품 이미지와 옵션 색상·썸네일
+
+CLI **0.1.14 이상**이 필요합니다. 이전 버전에서는 공식 설치 경로로 업데이트하고 버전과 capability를 다시 확인합니다. 여전히 지원하지 않으면 해당 작업을 보류합니다.
+
+```bash
+imweb --output json config command-capabilities --path "product images upload-asset"
+imweb --output json config command-capabilities --path "product update option"
+imweb --output json product images upload-asset --file red.png --dry-run
+imweb --output json product options get 10000001 O_OPTION --unit-code u_UNIT
+imweb --output json product update option 10000001 O_OPTION --unit-code u_UNIT --data '{"optionValueList":[{"optionValueCode":"O_VALUE","optionValueName":"Red","color":"#FF0000"}]}' --dry-run
+```
+
+- `red.png`와 예시 식별자는 실제 파일과 조회값으로 바꿉니다. 업로드는 반복 `--file`을 받고 상품 번호·unitCode가 필요하지 않습니다.
+- 업로드 결과 `data.images[]`의 `code/path`를 옵션 값의 `imageCode/imagePath`로 함께 전달합니다. 썸네일은 비조합 선택형·색상형 옵션만 지원합니다.
+- 옵션 수정 실행에는 같은 요청의 dry-run에서 받은 `confirmation_token`을 `--yes --confirm-token`과 함께 사용합니다.
+- 전체 절차와 검증 규칙은 [상품 실행](../references/product.md)을 따릅니다. MCP는 조회만 지원합니다.
