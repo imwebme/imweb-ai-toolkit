@@ -1,6 +1,6 @@
 {
   "name": "imweb-ai-toolkit",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Plugin-first metadata for connecting the public `imweb` skill and imweb CLI consistently across Codex, Claude, and Cursor surfaces. Short localized aliases route to the same imweb entrypoint.",
   "author": {
     "name": "imweb",

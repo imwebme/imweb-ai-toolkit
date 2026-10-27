@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "description": "Cursor surface metadata for the public `imweb` skill, imweb CLI guidance, and manual MCP connection references. Short localized aliases route to the same imweb entrypoint.",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "author": {
     "name": "imweb",
     "url": "https://github.com/imwebme"

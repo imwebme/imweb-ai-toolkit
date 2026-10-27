@@ -1,7 +1,7 @@
 {
   "name": "imweb-ai-toolkit",
   "description": "Claude surface metadata that connects the public `imweb` skill and imweb CLI for Claude Code and Claude Desktop Cowork. Short localized aliases are supported.",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "author": {
     "name": "imweb",
     "url": "https://github.com/imwebme"
